@@ -104,10 +104,24 @@
     }
     @else {
     <div id="update-form-action-buttons">
-      <button type="button" class="update-form-btn save-btn" (click)="onSave()">Save</button>
+      <button type="button" class="update-form-btn save-btn" (click)="onSaveClick()">Save</button>
       <button type="button" class="update-form-btn cancel-btn" (click)="onCancel()">Cancel</button>
-      <button type="button" class="update-form-btn reset-btn" (click)="onReset()">Reset</button>
+      <button type="button" class="update-form-btn reset-btn" (click)="onResetClick()">Reset</button>
     </div>
     }
   </form>
+
+  <!-- Confirmation Dialog -->
+  <kendo-dialog *ngIf="showDialog" title="Action required" (close)="onDialogClose()">
+    <p style="margin: 30px; text-align: center;">
+      {{ dialogAction === 'save' ? 'Do you want to save changes?' : 'Do you want to reset the form?' }}
+    </p>
+
+    <kendo-dialog-actions>
+      <button kendoButton themeColor="primary" (click)="onDialogAccept()">
+        Yes
+      </button>
+      <button kendoButton (click)="onDialogDecline()">No</button>
+    </kendo-dialog-actions>
+  </kendo-dialog>
 </div>

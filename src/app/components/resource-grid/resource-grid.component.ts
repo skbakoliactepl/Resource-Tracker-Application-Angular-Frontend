@@ -83,7 +83,7 @@ export class ResourceGridComponent {
 
     const a = document.createElement('a');
     a.setAttribute('href', url);
-    a.setAttribute('download', 'resources.csv');
+    a.setAttribute('download', `resources_${new Date().toString()}.csv`);
     a.click();
   };
 

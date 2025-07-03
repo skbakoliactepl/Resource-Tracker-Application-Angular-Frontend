@@ -11,6 +11,7 @@ import { KENDO_INPUTS } from "@progress/kendo-angular-inputs";
 import { KENDO_LABEL } from "@progress/kendo-angular-label";
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { CreateResourceRequest } from '../../models';
+import { KENDO_DIALOGS } from "@progress/kendo-angular-dialog";
 
 @Component({
   selector: 'app-resource-form',
@@ -23,6 +24,7 @@ import { CreateResourceRequest } from '../../models';
     KENDO_INPUTS,
     KENDO_LABEL,
     KENDO_BUTTONS,
+    KENDO_DIALOGS,
     DropDownsModule,
   ],
   templateUrl: './resource-form.component.html',
@@ -35,7 +37,8 @@ export class ResourceFormComponent implements OnInit {
     { text: 'Yes', value: true },
     { text: 'No', value: false }
   ];
-
+  dialogAction: 'save' | 'reset' | null = null;
+  showDialog: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -52,12 +55,6 @@ export class ResourceFormComponent implements OnInit {
       if (id) {
         this.selectedResourceId = id;
         this.resourceService.getById(id).subscribe((resource) => {
-          if (resource.dateOfJoining) {
-            // resource.dateOfJoining = new Date(resource.dateOfJoining.split('T')[0]);
-            // resource.dateOfJoining = new Date(resource.dateOfJoining);
-          }
-
-
           const matchingOption = this.yesNoOptions.find(o => o.value === resource.isBillable);
           this.resourceForm.patchValue({
             ...resource,
@@ -88,108 +85,77 @@ export class ResourceFormComponent implements OnInit {
   onSubmit(): void {
     if (this.resourceForm.valid) {
       const formValue = this.resourceForm.value as Resource;
+      console.log("FormValue", formValue);
 
-      // // Convert dropdown object to boolean
-      // formValue.isBillable = formValue.isBillable ?? null;
-
-      // // Convert skills to array of skills
-      // if (typeof formValue.skills === 'string') {
-      //   formValue.skills = (formValue.skills as string)
-      //     .split(',')
-      //     .map(skill => skill.trim())
-      //     .filter(skill => !!skill);
-      // }
-
-      // Determine whether it's an add or update operation
-      const isEditMode = !!this.selectedResourceId;
-
-      if (isEditMode) {
-        formValue.empId = this.selectedResourceId;
-        this.resourceService.update(this.selectedResourceId!, formValue).subscribe({
-          next: () => {
-            this.afterFormSubmit();
-            this.notificationService.show({
-              content: "Resource updated successfully!",
-              hideAfter: 3000,
-              animation: { type: "fade", duration: 400 },
-              type: { style: "success", icon: true }
-            });
-          },
-          error: (err) => {
-            console.error('Update failed:', err);
-            this.notificationService.show({
-              content: `Error while updated the resource: ${err}`,
-              hideAfter: 3000,
-              animation: { type: "fade", duration: 400 },
-              type: { style: "error", icon: true }
-            });
-          }
-        });
-      } else {
-        console.log("FormValue", formValue);
-        this.resourceService.add(formValue).subscribe({
-          next: () => {
-            this.afterFormSubmit();
-            this.notificationService.show({
-              content: "Resource added successfully!",
-              type: { style: "success", "icon": true },
-              hideAfter: 10000,
-              animation: { type: "slide", duration: 400 },
-            });
-          },
-          error: (err) => {
-            console.error('Add failed:', err);
-            this.notificationService.show({
-              content: `Error while adding resource: ${err}`,
-              type: { style: "error", "icon": true },
-              hideAfter: 10000,
-              animation: { type: "slide", duration: 400 },
-            });
-          }
-        });
-      }
+      this.resourceService.add(formValue).subscribe({
+        next: () => {
+          this.afterFormSubmit();
+          this.notificationService.show({
+            content: "Resource added successfully!",
+            type: { style: "success", "icon": true },
+            hideAfter: 10000,
+            animation: { type: "slide", duration: 400 },
+          });
+        },
+        error: (err) => {
+          console.error('Add failed:', err);
+          this.notificationService.show({
+            content: `Error while adding resource: ${err}`,
+            type: { style: "error", "icon": true },
+            hideAfter: 10000,
+            animation: { type: "slide", duration: 400 },
+          });
+        }
+      });
     } else {
       this.resourceForm.markAllAsTouched();
     }
   };
 
 
-  onReset(): void {
-    this.resourceForm.reset({
-      name: '',
-      designation: '',
-      reportingTo: '',
-      isBillable: null,
-      skills: [],
-      projectAllocation: '',
-      location: '',
-      email: '',
-      dateOfJoining: '',
-      remarks: ''
-    });
-  };
-
   onCancel(): void {
     this.router.navigate(['/']);
   };
+  onSaveClick() {
+    this.dialogAction = 'save';
+    this.showDialog = true;
+  };
+  onResetClick() {
+    this.dialogAction = 'reset';
+    this.showDialog = true;
+  };
 
-  onSave(): void {
+
+  // Confirmation Dialog Actions
+  onDialogClose() {
+    this.showDialog = false;
+  };
+  onDialogAccept() {
+    this.showDialog = false;
+    if (this.dialogAction === 'save') {
+      this.onSave();
+    } else if (this.dialogAction === 'reset') {
+      this.onReset();
+    }
+    this.dialogAction = null;
+  };
+  onDialogDecline() {
+    this.showDialog = false;
+  };
+
+  private afterFormSubmit(): void {
+    this.resourceForm.reset();
+    this.router.navigate(['/']);
+  };
+
+  private onSave(): void {
     console.log("Form Already Reset");
     if (this.resourceForm.valid) {
       const formValue = this.resourceForm.value as Resource;
-      formValue.isBillable = formValue.isBillable ?? null;
       console.log("formValue", formValue);
 
       // If editing an existing resource, include its ID
       if (this.selectedResourceId) {
-        // Convert skills to array of skills
-        if (typeof formValue.skills === 'string') {
-          formValue.skills = (formValue.skills as string)
-            .split(',')
-            .map(skill => skill.trim())
-            .filter(skill => !!skill);
-        }
-
         formValue.empId = this.selectedResourceId;
         this.resourceService.update(this.selectedResourceId!, formValue).subscribe({
           next: () => {
@@ -217,8 +183,18 @@ export class ResourceFormComponent implements OnInit {
     }
   };
 
-  private afterFormSubmit(): void {
-    this.resourceForm.reset();
-    this.router.navigate(['/']);
+  private onReset(): void {
+    this.resourceForm.reset({
+      name: '',
+      designation: '',
+      reportingTo: '',
+      isBillable: null,
+      skills: [],
+      projectAllocation: '',
+      location: '',
+      email: '',
+      dateOfJoining: '',
+      remarks: ''
+    });
   };
 }
