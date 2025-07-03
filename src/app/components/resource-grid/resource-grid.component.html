@@ -1,0 +1,67 @@
+<div class="welcome-section">
+    <h1>Welcome to the Resource Tracker</h1>
+    <p>Track, manage, and optimize your resources effortlessly.</p>
+</div>
+
+<section class="resource-grid-container">
+    <div class="resource-table-header">
+        <button ngClass="btn" routerLink="/add-new-resource" routerLinkActive="active-link" class="add-btn">
+            <span class="material-icons" style="font-size: 16px;">add</span>
+            Add Resource
+        </button>
+        <button ngClass="btn" (click)="exportToCSV()">
+            <span class="material-icons" style="font-size: 16px;">file_download</span>
+            Export to CSV
+        </button>
+    </div>
+
+    <kendo-grid kendoGridSelectBy="id" [kendoGridBinding]="resources" [height]="500" [style.width.%]="100"
+        [pageSize]="20" [pageable]="true" [sortable]="true" [groupable]="true" [reorderable]="true" [resizable]="true"
+        [height]="500" [columnMenu]="{ filter: true }" class="resource-list">
+        <kendo-grid-column field="name" title="Resource Name" [width]="150"></kendo-grid-column>
+        <kendo-grid-column field="email" title="Email ID" [width]="200"></kendo-grid-column>
+        <kendo-grid-column field="designation" title="Designation" [width]="120"></kendo-grid-column>
+        <kendo-grid-column field="reportingTo" title="Reporting To" [width]="120"></kendo-grid-column>
+        <kendo-grid-column field="skills" title="Technology Skill" [width]="150"></kendo-grid-column>
+        <kendo-grid-column field="projectAllocation" title="Project Allocation" [width]="150"></kendo-grid-column>
+        <kendo-grid-column field="location" title="Location" [width]="100"></kendo-grid-column>
+        <kendo-grid-column field="dateOfJoining" title="Joining Date" [width]="130">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{dataItem.dateOfJoining | date: 'dd-MM-yy'}}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="isBillable" title="Billable" [width]="100">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{dataItem.isBillable ? "YES" : "No" }}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="remarks" title="Remarks" [width]="200"></kendo-grid-column>
+        <kendo-grid-column title="Actions" [width]="170">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="action-btn">
+                    <button (click)="triggerEdit(dataItem)" class="resource-grid-action-btn">Edit</button>
+                    <button (click)="triggerDetail(dataItem)"
+                        class="resource-grid-action-btn detail-action-btn">Detail</button>
+                    <button (click)="openConfirmDialog(dataItem)"
+                        class="resource-grid-action-btn delete-action-btn">Delete</button>
+                </div>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+
+    <!-- Confirmation Dialog -->
+    @if(showConfirmDialog){
+    <kendo-dialog (close)="cancelDelete()" class="confirmation-dialog">
+        <kendo-dialog-titlebar class="confirmation-dialog-header">
+            Confirm Delete
+        </kendo-dialog-titlebar>
+        <p>Are you sure you want to delete <strong>{{ resourceToDelete?.name }}</strong>?</p>
+        <p>This action cannot be undone.</p>
+        <kendo-dialog-actions>
+            <button kendoButton themeColor="error" (click)="confirmDelete()"
+                class="dialog-action-btn delete-btn">Delete</button>
+            <button kendoButton (click)="cancelDelete()" class="dialog-action-btn cancel-btn">Cancel</button>
+        </kendo-dialog-actions>
+    </kendo-dialog>
+    }
+</section>

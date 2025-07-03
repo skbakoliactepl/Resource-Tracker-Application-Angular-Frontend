@@ -1,0 +1,50 @@
+<div class="resource-detail-container">
+  <h2>Resource Details</h2>
+
+  <div class="resource-card">
+    <div class="detail-row">
+      <span class="label">EmpId</span>
+      <span class="value">{{ resource?.empId }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Name</span>
+      <span class="value">{{ resource?.name }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Email</span>
+      <span class="value">{{ resource?.email }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Designation</span>
+      <span class="value">{{ resource?.designation }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Reporting To</span>
+      <span class="value">{{ resource?.reportingTo }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Skills</span>
+      <span class="value">{{ resource?.skills?.join(', ') }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Project Allocation</span>
+      <span class="value">{{ resource?.projectAllocation }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Location</span>
+      <span class="value">{{ resource?.location }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Joining Date</span>
+      <span class="value">{{ resource?.dateOfJoining | date: 'dd-MM-yyyy' }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Billable</span>
+      <span class="value">{{ resource?.isBillable ? 'Yes' : 'No' }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Remarks</span>
+      <span class="value">{{ resource?.remarks }}</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+<div class="form-wrapper">
+  <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate class="update-resource-form">
+    <!-- Resource Name -->
+    <div class="form-group">
+      <label for="resourceName">Resource Name <span class="required-field">*</span></label>
+      <input id="resourceName" type="text" formControlName="name" placeholder="Enter resource name!" />
+      <div class="error-message" *ngIf="resourceForm.get('name')?.touched && resourceForm.get('name')?.invalid">
+        Resource Name is required.
+      </div>
+    </div>
+
+
+    <!-- Designation -->
+    <div class="form-group">
+      <label for="designation">Designation <span class="required-field">*</span></label>
+      <input id="designation" type="text" formControlName="designation" placeholder="Enter designation!" />
+      <div class="error-message"
+        *ngIf="resourceForm.get('designation')?.touched && resourceForm.get('designation')?.invalid">
+        Designation is required.
+      </div>
+    </div>
+
+    <!-- Reporting To -->
+    <div class="form-group">
+      <label for="reportingTo">Reporting To <span class="required-field">*</span></label>
+      <input id="reportingTo" type="text" formControlName="reportingTo" placeholder="Enter reporting manager name!">
+      <div class="error-message"
+        *ngIf="resourceForm.get('reportingTo')?.touched && resourceForm.get('reportingTo')?.invalid">
+        Reporting To is required.
+      </div>
+    </div>
+
+    <!-- Is Billable -->
+    <div class="form-group">
+      <label for="isBillable">Is Billable <span class="required-field">*</span></label>
+      <kendo-dropdownlist id="isBillable" [data]="yesNoOptions" [textField]="'text'" [valueField]="'value'"
+        formControlName="isBillable" [defaultItem]="{ text: 'Select an option', value: null }">
+      </kendo-dropdownlist>
+      <div class=" error-message"
+        *ngIf="resourceForm.get('isBillable')?.touched && resourceForm.get('isBillable')?.invalid">
+        Please select Yes or No.
+      </div>
+    </div>
+
+    <!-- Technology Skill -->
+    <div class="form-group">
+      <label for="technologySkill">Technology Skill <span class="required-field">*</span></label>
+      <input id="technologySkill" type="text" formControlName="skills" placeholder="Enter your technical skills!" />
+      <div class="error-message" *ngIf="resourceForm.get('skills')?.touched && resourceForm.get('skills')?.invalid">
+        Technology Skill is required.
+      </div>
+    </div>
+
+    <!-- Project Allocation -->
+    <div class="form-group">
+      <label for="projectAllocation">Project Allocation <span class="required-field">*</span></label>
+      <input id="projectAllocation" type="text" formControlName="projectAllocation"
+        placeholder="Enter allocated project." />
+      <div class="error-message"
+        *ngIf="resourceForm.get('projectAllocation')?.touched && resourceForm.get('projectAllocation')?.invalid">
+        Project Allocation is required.
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="form-group">
+      <label for="location">Location <span class="required-field">*</span></label>
+      <input id="location" type="text" formControlName="location" placeholder="Enter resource location!" />
+      <div class="error-message" *ngIf="resourceForm.get('location')?.touched && resourceForm.get('location')?.invalid">
+        Location is required.
+      </div>
+    </div>
+
+    <!-- Email ID -->
+    <div class="form-group">
+      <label for="emailId">Email <span class="required-field">*</span></label>
+      <input id="emailId" type="email" formControlName="email" placeholder="Enter"
+        placeholder="Enter resource email!" />
+      <div class="error-message" *ngIf="resourceForm.get('email')?.touched && resourceForm.get('email')?.invalid">
+        Enter a valid email address.
+      </div>
+    </div>
+
+    <!-- dateOfJoining -->
+    <div class="form-group">
+      <label for="joiningDate">Joining Date <span class="required-field">*</span></label>
+      <kendo-datepicker formControlName="dateOfJoining" [placeholder]="'Select date...'"></kendo-datepicker>
+      <!-- <input id="joiningDate" type="date" formControlName="dateOfJoining" /> -->
+      <div class="error-message"
+        *ngIf="resourceForm.get('dateOfJoining')?.touched && resourceForm.get('dateOfJoining')?.invalid">
+        Joining Date is required.
+      </div>
+    </div>
+
+    <!-- Remarks -->
+    <div class="form-group full-width">
+      <label for="remarks">Remarks</label>
+      <textarea id="remarks" formControlName="remarks" placeholder="Enter remarks!"></textarea>
+    </div>
+
+    <!-- Submit Button -->
+    @if (!resourceService.isResourceSelected){
+    <button type="submit">Submit</button>
+    }
+    @else {
+    <div id="update-form-action-buttons">
+      <button type="button" class="update-form-btn save-btn" (click)="onSave()">Save</button>
+      <button type="button" class="update-form-btn cancel-btn" (click)="onCancel()">Cancel</button>
+      <button type="button" class="update-form-btn reset-btn" (click)="onReset()">Reset</button>
+    </div>
+    }
+  </form>
+</div>

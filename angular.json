@@ -25,6 +25,8 @@
               "src/assets"
             ],
             "styles": [
+              "src/custom-theme.scss",
+              "node_modules/@progress/kendo-theme-default/dist/all.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -84,6 +86,7 @@
               "src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -91,5 +94,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "2d92bd01-d128-497a-b88d-e73cb8494471"
   }
 }

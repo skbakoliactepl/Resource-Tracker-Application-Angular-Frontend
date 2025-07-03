@@ -1,0 +1,154 @@
+:host {
+  display: block;
+  margin-top: 2rem;
+}
+
+.welcome-section {
+  text-align: center;
+  margin-block: 4rem;
+}
+
+.welcome-section h1 {
+  font-size: 24px;
+  color: var(--primary-color);
+  margin-block-end: 10px;
+}
+
+.welcome-section p {
+  font-size: 14px;
+}
+
+.resource-grid-container {
+  background-color: var(--white-color);
+  padding: 1rem;
+}
+
+.resource-grid-container kendo-grid {
+  font-size: 12px;
+}
+
+.resource-table-header {
+  margin-block-end: 10px;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+
+.resource-list {
+  width: 100%;
+}
+
+.resource-list ::ng-deep .k-grid-header th {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.resource-list ::ng-deep .k-grid-header-menu {
+  color: white;
+}
+
+/* .resource-table-header button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 8px 6px;
+  outline: none;
+  border: 2px solid var(--primary-color);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.resource-table-header button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(197, 98, 175, 0.4);
+  background-color: #aa4291;
+  border-color: #aa4291;
+} */
+
+.resource-grid-action-btn {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  color: var(--primary-color);
+}
+
+.resource-grid-action-btn.delete-action-btn {
+  color: var(--danger-color);
+}
+
+.confirmation-dialog-header {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.dialog-action-btn {
+  padding: 8px 6px;
+  border-radius: 6px;
+  outline: none;
+  border: 2px solid black;
+  cursor: pointer;
+}
+
+.detail-action-btn {
+  color: var(--secondary-color);
+}
+
+.cancel-btn {
+  background-color: black;
+  color: white;
+  border-color: black;
+}
+
+.delete-btn {
+  background-color: var(--danger-color);
+  border-color: var(--danger-color);
+  color: white;
+}
+
+
+/* Media Query */
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .welcome-section h1 {
+    font-size: 24px;
+  }
+
+  .welcome-section p {
+    font-size: 14px;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .welcome-section h1 {
+    font-size: 32px;
+  }
+
+  .welcome-section p {
+    font-size: 16px;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+  .welcome-section h1 {
+    font-size: 36px;
+  }
+
+  .welcome-section p {
+    font-size: 18px;
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+  .welcome-section {}
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
+  .welcome-section {}
+}

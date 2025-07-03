@@ -1,1 +1,93 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --primary-color: #C562AF;
+  --primary-color-dark: #aa4291;
+  --danger-color: #FD5D5D;
+  --text-color: #333;
+  --button-radius: 4px;
+  --card-radius: 6px;
+  --bg-color-main: #F5F5F5;
+  --white-color: #FFF;
+  --secondary-color: cornflowerblue;
+  --kendo-color-primary: var(--primary-color);
+  --kendo-color-primary-hover: var(--primary-color);
+  --kendo-color-primary-on-surface: var(--primary-color);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+html,
+body {
+  height: 100vh;
+  width: 100vw;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 6px;
+  font-size: 12px;
+  font-weight: 400;
+  border-radius: var(--button-radius);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+  box-shadow: 0 0 0 transparent;
+  border: 2px solid var(--primary-color);
+  background-color: var(--primary-color);
+}
+
+/* .btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 14px rgba(197, 98, 175, 0.4);
+  background-color: var(--primary-color-dark);
+  border-color: var(--primary-color-dark);
+} */
+
+.action-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+
+/* Media Queries */
+
+@media only screen and (max-width: 600px) {}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .btn {
+    padding: 8px 6px;
+    font-size: 14px;
+  }
+
+  .btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 14px rgba(197, 98, 175, 0.4);
+    background-color: var(--primary-color-dark);
+    border-color: var(--primary-color-dark);
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {}

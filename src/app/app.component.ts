@@ -1,13 +1,35 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NavbarComponent } from "./components/navbar/navbar.component";
+import { NotificationModule } from '@progress/kendo-angular-notification';
+import {
+  KENDO_INDICATORS,
+  LoaderType,
+  LoaderThemeColor,
+  LoaderSize,
+} from "@progress/kendo-angular-indicators";
+import { LoaderServiceService } from './services/loader-service.service';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, NavbarComponent, NotificationModule, KENDO_INDICATORS, CommonModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
   title = 'angular-practice';
+  loading$ = this.loaderService.loading$;
+
+  constructor(private loaderService: LoaderServiceService, private cdr: ChangeDetectorRef) { }
+
+
+  ngAfterViewInit(): void {
+    // Force recheck after first view is rendered
+    this.loading$.subscribe(() => {
+      this.cdr.detectChanges();
+    });
+  };
 }

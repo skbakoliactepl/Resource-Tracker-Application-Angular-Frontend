@@ -1,0 +1,33 @@
+.resource-detail-container {
+  padding: 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.resource-detail-container h2 {
+  font-weight: 400;
+  margin-block: 10px;
+}
+
+.resource-card {
+  background: #f8f9fa;
+  border-radius: var(--card-radius);
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.label {
+  font-weight: 600;
+  color: #333;
+}
+
+.value {
+  color: #555;
+}

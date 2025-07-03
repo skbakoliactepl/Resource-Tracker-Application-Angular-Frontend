@@ -1,0 +1,40 @@
+.nav-bar {
+    padding: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-logo {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-link {
+    color: var(--primary-color);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+    transition: color;
+    transition-duration: 0.2s;
+}
+
+.nav-link mat-icon {
+    font-size: 20px;
+    line-height: 1;
+}

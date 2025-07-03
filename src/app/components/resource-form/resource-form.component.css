@@ -1,0 +1,206 @@
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.update-resource-form {
+  width: 100%;
+  max-width: 800px;
+  padding: 1rem;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+form div {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+label {
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  color: #333;
+  font-size: 14px;
+}
+
+input::placeholder {
+  font-size: 14px;
+}
+
+input,
+textarea {
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #5b82f9;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(91, 130, 249, 0.2);
+}
+
+div.error-message {
+  color: #FD5D5D;
+  font-size: 12px;
+}
+
+.form-group {
+  width: 100%;
+}
+
+li.k-list-item.k-focus.k-selected {
+  background-color: blue;
+}
+
+.form-group kendo-datepicker {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+
+.form-group kendo-dropdownlist {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+button[type="submit"] {
+  grid-column: span 2;
+  width: 100%;
+  background: var(--primary-color);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: var(--button-radius);
+  cursor: pointer;
+  outline-color: aliceblue;
+  transition: background 0.5s ease;
+}
+
+button[type="submit"]:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 14px rgba(197, 98, 175, 0.4);
+  background-color: var(--primary-color-dark);
+  border-color: var(--primary-color-dark);
+}
+
+
+#update-form-action-buttons {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  gap: 8px;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.update-form-btn {
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #C562AF;
+  color: white;
+  outline: none;
+  border: 2px solid #C562AF;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.save-btn {
+  background-color: #C562AF;
+  border-color: #C562AF;
+  grid-column: span 2;
+}
+
+.cancel-btn {
+  background-color: transparent;
+  border-color: #FD5D5D;
+  color: #FD5D5D;
+}
+
+.reset-btn {
+  background-color: transparent;
+  border-color: black;
+  color: black;
+}
+
+.required-field {
+  color: #FD5D5D;
+}
+
+/* Media Query */
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  :host {
+    padding: 1.25rem;
+  }
+
+  input,
+  textarea {
+    font-size: 0.95rem;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .update-resource-form {
+    display: grid;
+    grid-template-columns: auto;
+    gap: 10px;
+  }
+
+  label {
+    font-size: 16px;
+  }
+
+  input::placeholder {
+    font-size: 16px;
+  }
+
+  input,
+  textarea {
+    padding: 0.5rem 0.6rem;
+    font-size: 16px;
+  }
+
+  .full-width {
+    grid-column: span 2;
+  }
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {}
