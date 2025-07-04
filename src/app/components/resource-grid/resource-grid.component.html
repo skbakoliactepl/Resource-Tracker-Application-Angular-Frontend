@@ -13,20 +13,21 @@
             <span class="material-icons" style="font-size: 16px;">file_download</span>
             Export to CSV
         </button> -->
-        <kendo-dropdownbutton [data]="exportOptions" [fillMode]="'none'" ngClass="export-btn-group"
-            (itemClick)="onExportOptionSelected('$event')">
+        <kendo-dropdownbutton [data]="exportOptions" [fillMode]="'none'" ngClass="export-btn-group">
             <span class="material-icons" style="font-size: 16px;">file_download</span>
             Export
             <ng-template kendoDropDownButtonItemTemplate let-dataItem class="export-btn btn">
-                <kendo-svgicon [icon]="dataItem.svgIcon"></kendo-svgicon>
-                <span>{{ dataItem.text }}</span>
+                <div (click)="dataItem.action()">
+                    <kendo-svgicon [icon]="dataItem.svgIcon"></kendo-svgicon>
+                    <span>{{ dataItem.text }}</span>
+                </div>
             </ng-template>
         </kendo-dropdownbutton>
     </div>
 
     <kendo-grid kendoGridSelectBy="id" [kendoGridBinding]="resources" [height]="500" [style.width.%]="100"
         [pageSize]="20" [pageable]="true" [sortable]="true" [groupable]="true" [reorderable]="true" [resizable]="true"
-        [height]="500" [columnMenu]="{ filter: true }" class="resource-list">
+        [height]="500" [columnMenu]="{ filter: true }" class="resource-list" #grid>
         <kendo-grid-column field="name" title="Resource Name" [width]="150"></kendo-grid-column>
         <kendo-grid-column field="email" title="Email ID" [width]="200"></kendo-grid-column>
         <kendo-grid-column field="designation" title="Designation" [width]="120"></kendo-grid-column>
@@ -56,6 +57,9 @@
                 </div>
             </ng-template>
         </kendo-grid-column>
+        <kendo-grid-pdf [allPages]="true" paperSize="A4" [repeatHeaders]="true" [landscape]="true"
+            [fileName]="getPdfName()"></kendo-grid-pdf>
+
     </kendo-grid>
 
     <!-- Confirmation Dialog -->
