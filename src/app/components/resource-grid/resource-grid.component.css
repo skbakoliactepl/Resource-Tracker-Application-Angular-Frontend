@@ -48,23 +48,6 @@
   color: white;
 }
 
-/* .resource-table-header button {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 8px 6px;
-  outline: none;
-  border: 2px solid var(--primary-color);
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.resource-table-header button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(197, 98, 175, 0.4);
-  background-color: #aa4291;
-  border-color: #aa4291;
-} */
-
 .resource-grid-action-btn {
   border: none;
   background-color: transparent;
@@ -74,6 +57,13 @@
 
 .resource-grid-action-btn.delete-action-btn {
   color: var(--danger-color);
+}
+
+.export-btn.k-button {
+  display: inline-flex;
+  background-color: blue !important;
+  outline: none;
+  border: none;
 }
 
 .confirmation-dialog-header {

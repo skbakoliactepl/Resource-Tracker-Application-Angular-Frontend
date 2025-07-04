@@ -9,10 +9,19 @@
             <span class="material-icons" style="font-size: 16px;">add</span>
             Add Resource
         </button>
-        <button ngClass="btn" (click)="exportToCSV()">
+        <!-- <button ngClass="btn" (click)="exportToCSV()">
             <span class="material-icons" style="font-size: 16px;">file_download</span>
             Export to CSV
-        </button>
+        </button> -->
+        <kendo-dropdownbutton [data]="exportOptions" [fillMode]="'none'" ngClass="export-btn-group"
+            (itemClick)="onExportOptionSelected('$event')">
+            <span class="material-icons" style="font-size: 16px;">file_download</span>
+            Export
+            <ng-template kendoDropDownButtonItemTemplate let-dataItem class="export-btn btn">
+                <kendo-svgicon [icon]="dataItem.svgIcon"></kendo-svgicon>
+                <span>{{ dataItem.text }}</span>
+            </ng-template>
+        </kendo-dropdownbutton>
     </div>
 
     <kendo-grid kendoGridSelectBy="id" [kendoGridBinding]="resources" [height]="500" [style.width.%]="100"

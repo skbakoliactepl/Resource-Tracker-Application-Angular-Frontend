@@ -48,6 +48,30 @@ a {
   background-color: var(--primary-color);
 }
 
+
+/* Kendo UI Custom Style */
+.k-menu-button{
+  border: none;
+  outline: none;
+}
+
+.k-menu-item {
+  gap: 4px;
+}
+
+.k-menu-link:hover {
+  background-color: var(--primary-color);
+}
+
+.k-button-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
+  outline: none;
+  border: none;
+}
+
 /* .btn:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 14px rgba(197, 98, 175, 0.4);
