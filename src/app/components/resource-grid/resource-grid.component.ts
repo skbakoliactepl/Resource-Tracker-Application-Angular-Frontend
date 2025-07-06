@@ -30,18 +30,12 @@ type ExportOption = {
   imports: [CommonModule, GridModule, MatIconModule, RouterModule, DialogModule, KENDO_BUTTONS, KENDO_ICONS, KENDO_GRID_PDF_EXPORT],
   styles: [`
       .export-btn-group {
-        font-size: 12px;
-        font-weight: 400;
         border-radius: var(--button-radius);
-        transition: all 0.3s ease;
         color: white;
-        box-shadow: 0 0 0 transparent;
         border: 2px solid var(--primary-color);
         background-color: var(--primary-color);
       } 
       .export-btn-group:hover {
-        transform: scale(1.05);
-        box-shadow: 0 6px 14px rgba(197, 98, 175, 0.4);
         background-color: var(--primary-color-dark);
         border: 2px solid var(--primary-color-dark);
       }
@@ -53,22 +47,25 @@ export class ResourceGridComponent {
   pdfExport!: PDFExportComponent;
 
   resources: Resource[] = [];
-  showConfirmDialog: boolean = false;
+  public selectedToDelete: Resource[] = [];
+  public showConfirmDialog: boolean = false;
+  public showBulkConfirmationDialog: boolean = false;
+
   selectedResource?: Resource;
   resourceToDelete?: Resource;
   public exportOptions: ExportOption[] = [
     {
-      text: "Export to PDF",
+      text: "PDF",
       svgIcon: filePdfIcon,
       action: () => this.grid.saveAsPDF()
     },
     {
-      text: "Export to CSV",
+      text: "CSV",
       svgIcon: fileCsvIcon,
       action: () => this.exportToCSV()
     },
     {
-      text: "Export to JSON",
+      text: "JSON",
       svgIcon: dataJsonIcon,
       action: () => this.exportToJSON()
     }
@@ -115,6 +112,22 @@ export class ResourceGridComponent {
     }
     this.showConfirmDialog = false;
   }
+
+  confirmBulkDelete() {
+    console.log("selectedDetele Array", this.selectedToDelete);
+
+    this.selectedToDelete = this.resources.filter(r => this.selectedToDelete.includes(r));
+    this.showBulkConfirmationDialog = true;
+  };
+
+  confirmBulkDeleteAction() {
+    this.showBulkConfirmationDialog = true;
+  };
+
+  cancelBulkDelete() {
+    this.selectedToDelete = [];
+    this.showBulkConfirmationDialog = false;
+  };
 
   cancelDelete(): void {
     this.showConfirmDialog = false;

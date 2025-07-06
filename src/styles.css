@@ -2,7 +2,9 @@
   --primary-color: #C562AF;
   --primary-color-dark: #aa4291;
   --danger-color: #FD5D5D;
+  --dark-danger-color: #D32F2F;
   --text-color: #333;
+  --light-gray-color: #e0e0e0;
   --button-radius: 4px;
   --card-radius: 6px;
   --bg-color-main: #F5F5F5;
@@ -11,6 +13,7 @@
   --kendo-color-primary: var(--primary-color);
   --kendo-color-primary-hover: var(--primary-color);
   --kendo-color-primary-on-surface: var(--primary-color);
+  --kendo-color-primary-active: var(--primary-color-dark);
 }
 
 * {
@@ -24,6 +27,7 @@ html,
 body {
   height: 100vh;
   width: 100vw;
+  overflow-x: hidden;
 }
 
 a {
@@ -36,23 +40,27 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 8px 6px;
+  padding: 4px 8px;
   font-size: 12px;
   font-weight: 400;
   border-radius: var(--button-radius);
   cursor: pointer;
-  transition: all 0.3s ease;
   color: white;
-  box-shadow: 0 0 0 transparent;
   border: 2px solid var(--primary-color);
   background-color: var(--primary-color);
 }
 
 
 /* Kendo UI Custom Style */
-.k-menu-button{
+.k-menu-button {
   border: none;
   outline: none;
+  padding: 4px 3px;
+  font-size: 12px;
+}
+
+.materia-icons {
+  font-size: 100px;
 }
 
 .k-menu-item {
@@ -72,6 +80,10 @@ a {
   border: none;
 }
 
+.k-menu-popup {
+  width: inherit;
+}
+
 /* .btn:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 14px rgba(197, 98, 175, 0.4);
@@ -87,6 +99,15 @@ a {
   gap: 10px;
 }
 
+.checkbox-accent {
+  accent-color: var(--primary-color);
+}
+
+
+.k-input-md .k-input-inner,
+.k-picker-md .k-input-inner {
+  text-align: end;
+}
 
 /* Media Queries */
 
@@ -94,16 +115,16 @@ a {
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
-  .btn {
+  /* .btn {
     padding: 8px 6px;
     font-size: 14px;
-  }
+  } */
 
   .btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 14px rgba(197, 98, 175, 0.4);
+    /* transform: scale(1.05); */
+    /* box-shadow: 0 6px 14px rgba(197, 98, 175, 0.4); */
     background-color: var(--primary-color-dark);
-    border-color: var(--primary-color-dark);
+    /* border-color: var(--primary-color-dark); */
   }
 }
 

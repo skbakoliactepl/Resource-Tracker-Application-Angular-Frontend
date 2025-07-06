@@ -1,7 +1,62 @@
 .resource-detail-container {
-  padding: 2rem;
-  max-width: 700px;
-  margin: 0 auto;
+  padding: 1rem;
+  /* max-width: 700px; */
+  /* margin: 0 auto; */
+  /* background-color: blue; */
+}
+
+.header-row {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.details-header-row-actions {
+  width: 65%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.action-btns {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-action-btn {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.action-btns .header-action-btn button:disabled {
+  cursor: not-allowed;
+}
+
+.reset-btn {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.vertical-divider {
+  width: 1px;
+  height: 30px;
+  background-color: #ccc;
+}
+
+.header-action-btn input {
+  width: 14px;
+  height: 14px;
+}
+
+.details-header-row-actions label {
+  user-select: none;
 }
 
 .resource-detail-container h2 {
@@ -10,8 +65,8 @@
 }
 
 .resource-card {
-  background: #f8f9fa;
-  border-radius: var(--card-radius);
+  background: #fff;
+  border-radius: 2px;
   padding: 1.5rem 2rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -21,6 +76,7 @@
   justify-content: space-between;
   padding: 8px 0;
   border-bottom: 1px solid #e0e0e0;
+  gap: 2rem;
 }
 
 .label {
@@ -31,3 +87,32 @@
 .value {
   color: #555;
 }
+
+.kendo-edit-mode-input {
+  min-width: fit-content;
+  width: auto;
+  outline: none;
+  border: none;
+  text-align: end;
+}
+
+
+/* Media Query */
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .resource-detail-container {
+    width: 80%;
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {}

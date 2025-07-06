@@ -5,29 +5,38 @@
 
 <section class="resource-grid-container">
     <div class="resource-table-header">
-        <button ngClass="btn" routerLink="/add-new-resource" routerLinkActive="active-link" class="add-btn">
-            <span class="material-icons" style="font-size: 16px;">add</span>
-            Add Resource
-        </button>
-        <!-- <button ngClass="btn" (click)="exportToCSV()">
-            <span class="material-icons" style="font-size: 16px;">file_download</span>
-            Export to CSV
-        </button> -->
-        <kendo-dropdownbutton [data]="exportOptions" [fillMode]="'none'" ngClass="export-btn-group">
-            <span class="material-icons" style="font-size: 16px;">file_download</span>
-            Export
-            <ng-template kendoDropDownButtonItemTemplate let-dataItem class="export-btn btn">
-                <div (click)="dataItem.action()">
-                    <kendo-svgicon [icon]="dataItem.svgIcon"></kendo-svgicon>
-                    <span>{{ dataItem.text }}</span>
-                </div>
-            </ng-template>
-        </kendo-dropdownbutton>
+        <div class="resource-table-btns-group">
+            <button class="delete-selected-btn btn" (click)="confirmBulkDelete()"
+                [disabled]="selectedToDelete.length === 0">
+                <span class="material-icons" style="font-size: 16px;">delete</span>
+                Delete 
+            </button>
+        </div>
+        <div class="resource-table-btns-group">
+            <kendo-dropdownbutton [data]="exportOptions" [fillMode]="'none'" ngClass="export-btn-group">
+                <span class="material-icons" style="font-size: 16px;">file_download</span>
+                Export
+                <ng-template kendoDropDownButtonItemTemplate let-dataItem class="export-btn btn">
+                    <div (click)="dataItem.action()">
+                        <kendo-svgicon [icon]="dataItem.svgIcon" class="kendo-icon-custom-style"></kendo-svgicon>
+                        <span>{{ dataItem.text }}</span>
+                    </div>
+                </ng-template>
+            </kendo-dropdownbutton>
+            <button ngClass="btn" routerLink="/add-new-resource" routerLinkActive="active-link" class="add-btn">
+                <span class="material-icons" style="font-size: 16px;">add</span>
+                Add Resource
+            </button>
+        </div>
     </div>
 
     <kendo-grid kendoGridSelectBy="id" [kendoGridBinding]="resources" [height]="500" [style.width.%]="100"
-        [pageSize]="20" [pageable]="true" [sortable]="true" [groupable]="true" [reorderable]="true" [resizable]="true"
-        [height]="500" [columnMenu]="{ filter: true }" class="resource-list" #grid>
+        [pageSize]="10" [pageable]="true" [sortable]="true" [groupable]="true" [reorderable]="true" [resizable]="true"
+        [navigable]="['table', 'pager']" [height]="500" [columnMenu]="{ filter: true }" class="resource-list"
+        [(selectedKeys)]="selectedToDelete" [selectable]="{ mode: 'multiple', drag: true }" #grid>
+        <kendo-grid-checkbox-column [width]="45" [headerClass]="{ 'text-center': true }"
+            [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true">
+        </kendo-grid-checkbox-column>
         <kendo-grid-column field="name" title="Resource Name" [width]="150"></kendo-grid-column>
         <kendo-grid-column field="email" title="Email ID" [width]="200"></kendo-grid-column>
         <kendo-grid-column field="designation" title="Designation" [width]="120"></kendo-grid-column>
@@ -74,6 +83,21 @@
             <button kendoButton themeColor="error" (click)="confirmDelete()"
                 class="dialog-action-btn delete-btn">Delete</button>
             <button kendoButton (click)="cancelDelete()" class="dialog-action-btn cancel-btn">Cancel</button>
+        </kendo-dialog-actions>
+    </kendo-dialog>
+    }
+
+    @if (showBulkConfirmationDialog) {
+    <kendo-dialog (close)="cancelBulkDelete()" class="confirmation-dialog">
+        <kendo-dialog-titlebar>Confirm Bulk Delete</kendo-dialog-titlebar>
+        <p>You are about to delete <strong>{{ selectedToDelete.length }}</strong> resources.</p>
+        <p>This action cannot be undone.</p>
+        <kendo-dialog-actions>
+            <button kendoButton themeColor="error" (click)="confirmBulkDeleteAction()"
+                class="dialog-action-btn delete-btn">
+                Delete
+            </button>
+            <button kendoButton (click)="cancelBulkDelete()" class="dialog-action-btn cancel-btn">Cancel</button>
         </kendo-dialog-actions>
     </kendo-dialog>
     }

@@ -20,7 +20,9 @@
 
 .resource-grid-container {
   background-color: var(--white-color);
-  padding: 1rem;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  padding: 10px;
 }
 
 .resource-grid-container kendo-grid {
@@ -28,11 +30,41 @@
 }
 
 .resource-table-header {
-  margin-block-end: 10px;
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 12px;
+  justify-content: space-between;
   gap: 10px;
+  padding-block: 10px;
+}
+
+.resource-table-btns-group {
+  display: flex;
+  justify-items: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.delete-selected-btn:disabled {
+  cursor: not-allowed;
+  background-color: var(--light-gray-color);
+  border: none;
+  pointer-events: none;
+}
+
+.delete-selected-btn {
+  background-color: var(--danger-color);  /* Normal state - red */
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.delete-selected-btn:hover:not(:disabled) {
+  background-color: var(--dark-danger-color);  /* Darker red on hover */
 }
 
 .resource-list {
@@ -59,9 +91,11 @@
   color: var(--danger-color);
 }
 
+.export-btn {
+  margin-inline-end: 2rem;
+}
 .export-btn.k-button {
   display: inline-flex;
-  background-color: blue !important;
   outline: none;
   border: none;
 }

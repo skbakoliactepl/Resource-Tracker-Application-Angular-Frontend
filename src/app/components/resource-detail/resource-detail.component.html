@@ -1,5 +1,27 @@
 <div class="resource-detail-container">
-  <h2>Resource Details</h2>
+  <div class="header-row">
+    <h2>Resource Details</h2>
+    <div class="details-header-row-actions">
+      <div class="header-action-btn">
+        <input type="checkbox" [checked]="editMode" (change)=" toggleEditMode()" id="edit-mode"
+          class="checkbox-accent" />
+        <label class="edit-toggle" for="edit-mode">
+          Enable Editing
+        </label>
+      </div>
+      <div class="vertical-divider"></div>
+      <div class="action-btns">
+        <div class="header-action-btn">
+          <button kendoButton themeColor="primary" (click)="saveChanges()"
+            [disabled]="!editMode || !isModified()">Save</button>
+        </div>
+
+        <div class="header-action-btn">
+          <button kendoButton class="reset-btn" (click)="resetEditedResource()" [disabled]="!editMode">Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="resource-card">
     <div class="detail-row">
@@ -8,43 +30,85 @@
     </div>
     <div class="detail-row">
       <span class="label">Name</span>
-      <span class="value">{{ resource?.name }}</span>
+      <span class="value" *ngIf="!editMode">{{ resource?.name }}</span>
+      <kendo-textbox class="kendo-edit-mode-input" *ngIf="editMode" [(ngModel)]="editedResource.name"></kendo-textbox>
     </div>
     <div class="detail-row">
       <span class="label">Email</span>
-      <span class="value">{{ resource?.email }}</span>
+      <span class="value" *ngIf="!editMode">{{ resource?.email }}</span>
+      <kendo-textbox *ngIf="editMode" [(ngModel)]="editedResource.email" type="text"
+        class="kendo-edit-mode-input"></kendo-textbox>
     </div>
     <div class="detail-row">
       <span class="label">Designation</span>
-      <span class="value">{{ resource?.designation }}</span>
+      <span class="value" *ngIf="!editMode">{{ resource?.designation }}</span>
+      <kendo-textbox *ngIf="editMode" [(ngModel)]="editedResource.designation"
+        class="kendo-edit-mode-input"></kendo-textbox>
     </div>
     <div class="detail-row">
       <span class="label">Reporting To</span>
-      <span class="value">{{ resource?.reportingTo }}</span>
+      <span class="value" *ngIf="!editMode">{{ resource?.reportingTo }}</span>
+      <kendo-textbox *ngIf="editMode" [(ngModel)]="editedResource.reportingTo"
+        class="kendo-edit-mode-input"></kendo-textbox>
     </div>
     <div class="detail-row">
       <span class="label">Skills</span>
-      <span class="value">{{ resource?.skills?.join(', ') }}</span>
+      <span class="value" *ngIf="!editMode">{{ resource?.skills?.join(', ') }}</span>
+      <kendo-multiselect *ngIf="editMode" [data]="['Angular', 'React', 'Node.js', 'SQL', 'Azure', 'Python']"
+        [(ngModel)]="editedResource.skills" [placeholder]="'Select skills'"
+        class="kendo-edit-mode-input"></kendo-multiselect>
     </div>
     <div class="detail-row">
       <span class="label">Project Allocation</span>
-      <span class="value">{{ resource?.projectAllocation }}</span>
+      <span class="value" *ngIf="!editMode">{{ resource?.projectAllocation }}</span>
+      <kendo-textbox *ngIf="editMode" [(ngModel)]="editedResource.projectAllocation"
+        class="kendo-edit-mode-input"></kendo-textbox>
     </div>
     <div class="detail-row">
       <span class="label">Location</span>
-      <span class="value">{{ resource?.location }}</span>
+      <span class="value" *ngIf="!editMode">{{ resource?.location }}</span>
+      <kendo-dropdownlist *ngIf="editMode" [data]="['Bangalore', 'Hyderabad', 'Pune', 'Remote']"
+        [(ngModel)]="editedResource.location" [defaultItem]="'Select location'"
+        class="kendo-edit-mode-input"></kendo-dropdownlist>
     </div>
     <div class="detail-row">
       <span class="label">Joining Date</span>
-      <span class="value">{{ resource?.dateOfJoining | date: 'dd-MM-yyyy' }}</span>
+      <span class="value" *ngIf="!editMode">{{ resource?.dateOfJoining | date: 'dd-MM-yyyy' }}</span>
+      <kendo-datepicker *ngIf="editMode" [(ngModel)]="editedResource.dateOfJoining"
+        class="kendo-edit-mode-input"></kendo-datepicker>
     </div>
     <div class="detail-row">
       <span class="label">Billable</span>
-      <span class="value">{{ resource?.isBillable ? 'Yes' : 'No' }}</span>
+      <span class="value" *ngIf="!editMode">{{ resource?.isBillable ? 'Yes' : 'No' }}</span>
+      <kendo-dropdownlist *ngIf="editMode" [data]="[{ text: 'Yes', value: true }, { text: 'No', value: false }]"
+        [textField]="'text'" [valueField]="'value'" [(ngModel)]="editedResource.isBillable" [valuePrimitive]="true"
+        [valueField]="'value'" class="kendo-edit-mode-input"></kendo-dropdownlist>
     </div>
     <div class="detail-row">
       <span class="label">Remarks</span>
-      <span class="value">{{ resource?.remarks }}</span>
+      <span class="value" *ngIf="!editMode">{{ resource?.remarks }}</span>
+      <textarea *ngIf="editMode" kendoTextArea [(ngModel)]="editedResource.remarks" rows="3" cols="100"
+        class="kendo-edit-mode-input"></textarea>
     </div>
   </div>
+
+  <!-- Confirmation Dialog -->
+  <kendo-dialog *ngIf="showConfirmationDialog" title="Action required" (close)="onDialogClose()">
+    <p style="margin: 30px; text-align: center;">
+      {{
+      dialogAction === 'save'
+      ? 'Do you want to save changes?'
+      : dialogAction === 'reset'
+      ? 'Do you want to reset the form?'
+      : 'You have unsaved changes. Discard changes and exit edit mode?'
+      }}
+    </p>
+
+    <kendo-dialog-actions>
+      <button kendoButton themeColor="primary" (click)="onDialogAccept()">
+        Yes
+      </button>
+      <button kendoButton (click)="onDialogDecline()">No</button>
+    </kendo-dialog-actions>
+  </kendo-dialog>
 </div>
