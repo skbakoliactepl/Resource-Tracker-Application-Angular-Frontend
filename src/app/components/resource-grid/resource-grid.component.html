@@ -9,7 +9,8 @@
             <button class="delete-selected-btn btn" (click)="confirmBulkDelete()"
                 [disabled]="selectedToDelete.length === 0">
                 <span class="material-icons" style="font-size: 16px;">delete</span>
-                Delete 
+                {{selectedToDelete.length > 1 ? 'Delete All' : 'Delete'}}
+
             </button>
         </div>
         <div class="resource-table-btns-group">
@@ -30,7 +31,7 @@
         </div>
     </div>
 
-    <kendo-grid kendoGridSelectBy="id" [kendoGridBinding]="resources" [height]="500" [style.width.%]="100"
+    <kendo-grid kendoGridSelectBy="empId" [kendoGridBinding]="resources" [height]="500" [style.width.%]="100"
         [pageSize]="10" [pageable]="true" [sortable]="true" [groupable]="true" [reorderable]="true" [resizable]="true"
         [navigable]="['table', 'pager']" [height]="500" [columnMenu]="{ filter: true }" class="resource-list"
         [(selectedKeys)]="selectedToDelete" [selectable]="{ mode: 'multiple', drag: true }" #grid>
@@ -40,21 +41,21 @@
         <kendo-grid-column field="name" title="Resource Name" [width]="150"></kendo-grid-column>
         <kendo-grid-column field="email" title="Email ID" [width]="200"></kendo-grid-column>
         <kendo-grid-column field="designation" title="Designation" [width]="120"></kendo-grid-column>
-        <kendo-grid-column field="reportingTo" title="Reporting To" [width]="120"></kendo-grid-column>
+        <kendo-grid-column field="reportingTo" title="Reporting To" [width]="120" [hidden]="true"></kendo-grid-column>
         <kendo-grid-column field="skills" title="Technology Skill" [width]="150"></kendo-grid-column>
         <kendo-grid-column field="projectAllocation" title="Project Allocation" [width]="150"></kendo-grid-column>
         <kendo-grid-column field="location" title="Location" [width]="100"></kendo-grid-column>
-        <kendo-grid-column field="dateOfJoining" title="Joining Date" [width]="130">
+        <kendo-grid-column field="dateOfJoining" title="Joining Date" [width]="130" [hidden]="true">
             <ng-template kendoGridCellTemplate let-dataItem>
                 {{dataItem.dateOfJoining | date: 'dd-MM-yy'}}
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="isBillable" title="Billable" [width]="100">
+        <kendo-grid-column field="isBillable" title="Billable" [width]="100" [hidden]="true">
             <ng-template kendoGridCellTemplate let-dataItem>
                 {{dataItem.isBillable ? "YES" : "No" }}
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="remarks" title="Remarks" [width]="200"></kendo-grid-column>
+        <kendo-grid-column field="remarks" title="Remarks" [width]="200" [hidden]="true"></kendo-grid-column>
         <kendo-grid-column title="Actions" [width]="170">
             <ng-template kendoGridCellTemplate let-dataItem>
                 <div class="action-btn">

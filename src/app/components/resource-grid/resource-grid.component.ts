@@ -114,7 +114,7 @@ export class ResourceGridComponent {
   }
 
   confirmBulkDelete() {
-    console.log("selectedDetele Array", this.selectedToDelete);
+    console.log("selectedDetele Array", this.selectedToDelete, this.selectedToDelete.length);
 
     this.selectedToDelete = this.resources.filter(r => this.selectedToDelete.includes(r));
     this.showBulkConfirmationDialog = true;
