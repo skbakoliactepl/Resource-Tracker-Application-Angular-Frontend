@@ -80,15 +80,14 @@
     <div class="detail-row">
       <span class="label">Billable</span>
       <span class="value" *ngIf="!editMode">{{ resource?.isBillable ? 'Yes' : 'No' }}</span>
-      <kendo-dropdownlist *ngIf="editMode" [data]="[{ text: 'Yes', value: true }, { text: 'No', value: false }]"
-        [textField]="'text'" [valueField]="'value'" [(ngModel)]="editedResource.isBillable" [valuePrimitive]="true"
-        [valueField]="'value'" class="kendo-edit-mode-input"></kendo-dropdownlist>
+      <kendo-dropdownlist *ngIf="editMode" [data]="['Yes','No']" [(ngModel)]="editedResource.isBillable"
+        [valuePrimitive]="true" class="kendo-edit-mode-input"></kendo-dropdownlist>
     </div>
     <div class="detail-row">
       <span class="label">Remarks</span>
       <span class="value" *ngIf="!editMode">{{ resource?.remarks }}</span>
-      <textarea *ngIf="editMode" kendoTextArea [(ngModel)]="editedResource.remarks" rows="3" cols="100"
-        class="kendo-edit-mode-input"></textarea>
+      <textarea *ngIf="editMode" kendoTextArea [(ngModel)]="editedResource.remarks" rows="3"
+        style="width: 100%; resize: vertical;" class="kendo-edit-mode-input"></textarea>
     </div>
   </div>
 

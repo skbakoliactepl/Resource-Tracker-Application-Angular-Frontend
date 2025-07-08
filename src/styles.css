@@ -14,6 +14,7 @@
   --kendo-color-primary-hover: var(--primary-color);
   --kendo-color-primary-on-surface: var(--primary-color);
   --kendo-color-primary-active: var(--primary-color-dark);
+  --kendo-color-error: #ccc;
 }
 
 * {
@@ -84,19 +85,28 @@ a {
   width: inherit;
 }
 
-/* .btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 14px rgba(197, 98, 175, 0.4);
-  background-color: var(--primary-color-dark);
-  border-color: var(--primary-color-dark);
-} */
-
 .action-btn {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+}
+
+.k-multiselect .k-input-inner::placeholder {
+  text-align: left;
+  font-size: 16px;
+  display: inline-block;
+}
+
+.kendo-multi-select-input {
+  /* background-color: blue; */
+}
+
+.k-multiselect .k-input-values {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
 .checkbox-accent {
@@ -106,7 +116,7 @@ a {
 
 .k-input-md .k-input-inner,
 .k-picker-md .k-input-inner {
-  text-align: end;
+  text-align: start;
 }
 
 /* Media Queries */

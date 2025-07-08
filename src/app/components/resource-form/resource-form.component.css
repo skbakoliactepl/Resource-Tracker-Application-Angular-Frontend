@@ -3,15 +3,20 @@
   justify-content: flex-start;
   align-items: flex-start;
   padding: 1rem;
+  /* background-color: red; */
 }
 
 .update-resource-form {
   width: 100%;
-  /* max-width: 800px; */
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: flex-start;
+  justify-items: start;
+  gap: 1.2rem;
   padding: 1rem;
   border-radius: 2px;
   background: #fff;
-  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); */
+  /* background-color: blue; */
 }
 
 form div {
@@ -28,12 +33,29 @@ label {
   font-size: 14px;
 }
 
-input::placeholder {
-  font-size: 14px;
+.form-group {
+  width: 100%;
 }
 
+.technical-skills-group {
+  width: inherit;
+  /* background-color: red; */
+}
+
+.kendo-multi-select-input {
+  border-color: #ccc;
+}
+
+input::placeholder,
+.kendo-multi-select-input::placeholder {
+  font-size: 14px;
+  text-align: left;
+}
+
+
 input,
-textarea {
+textarea,
+.kendo-multi-select-input {
   padding: 0.4rem 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -42,7 +64,8 @@ textarea {
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+.kendo-multi-select-input:focus {
   border-color: #5b82f9;
   outline: none;
   box-shadow: 0 0 0 3px rgba(91, 130, 249, 0.2);
@@ -51,10 +74,6 @@ textarea:focus {
 div.error-message {
   color: #FD5D5D;
   font-size: 12px;
-}
-
-.form-group {
-  width: 100%;
 }
 
 li.k-list-item.k-focus.k-selected {
@@ -68,7 +87,6 @@ li.k-list-item.k-focus.k-selected {
   font-size: 14px;
   transition: border 0.2s;
 }
-
 
 .form-group kendo-dropdownlist {
   padding: 0.35rem 0.5rem;
@@ -85,7 +103,7 @@ textarea {
 }
 
 button[type="submit"] {
-  grid-column: span 2;
+  /* grid-column: span 2; */
   width: 100%;
   background: var(--primary-color);
   color: white;
@@ -100,15 +118,13 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-  /* transform: scale(1.02); */
-  /* box-shadow: 0 6px 14px rgba(197, 98, 175, 0.4); */
   background-color: var(--primary-color-dark);
   border-color: var(--primary-color-dark);
 }
 
 
 #update-form-action-buttons {
-  grid-column: span 2;
+  /* background-color: red; */
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   align-items: center;
@@ -127,6 +143,10 @@ button[type="submit"]:hover {
   border-radius: 4px;
   cursor: pointer;
   font-weight: 500;
+}
+
+.submit-btn {
+  background-color: blue;
 }
 
 .save-btn {
@@ -170,11 +190,7 @@ button[type="submit"]:hover {
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
-  .update-resource-form {
-    display: grid;
-    grid-template-columns: auto;
-    gap: 10px;
-  }
+
 
   label {
     font-size: 16px;
@@ -190,22 +206,33 @@ button[type="submit"]:hover {
     font-size: 16px;
   }
 
-  .full-width {
+  /* .full-width {
     grid-column: span 2;
-  }
+  } */
 
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (min-width: 768px) {}
+@media only screen and (min-width: 768px) {
+  .update-resource-form {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .submit-btn {
+    grid-column: span 2;
+  }
+
+  #update-form-action-buttons {
+    grid-column: span 2;
+  }
+}
 
 /* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 992px) {
-
-.update-resource-form {
-  width: 80%;
-}
-}
+@media only screen and (min-width: 992px) {}
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
-@media only screen and (min-width: 1200px) {}
+@media only screen and (min-width: 1200px) {
+  .update-resource-form {
+    width: 80%;
+  }
+}

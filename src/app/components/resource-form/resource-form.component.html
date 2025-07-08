@@ -33,8 +33,8 @@
     <!-- Is Billable -->
     <div class="form-group">
       <label for="isBillable">Is Billable <span class="required-field">*</span></label>
-      <kendo-dropdownlist id="isBillable" [data]="yesNoOptions" [textField]="'text'" [valueField]="'value'"
-        formControlName="isBillable" [defaultItem]="{ text: 'Select an option', value: null }">
+      <kendo-dropdownlist id="isBillable" [data]="yesNoOptions" formControlName="isBillable"
+        [defaultItem]="'Select an option'">
       </kendo-dropdownlist>
       <div class=" error-message"
         *ngIf="resourceForm.get('isBillable')?.touched && resourceForm.get('isBillable')?.invalid">
@@ -43,13 +43,18 @@
     </div>
 
     <!-- Technology Skill -->
-    <div class="form-group">
+    <div class="form-group technical-skills-group">
       <label for="technologySkill">Technology Skill <span class="required-field">*</span></label>
-      <input id="technologySkill" type="text" formControlName="skills" placeholder="Enter your technical skills!" />
+      <!-- <input id="technologySkill" type="text" formControlName="skills" placeholder="Enter your technical skills!" /> -->
+      <kendo-multiselect [data]="['Angular', 'React', 'Node.js', 'SQL', 'Azure', 'Python']"
+        [placeholder]="'Enter your technical skills'" id="technologySkill" formControlName="skills"
+        class="kendo-multi-select-input"></kendo-multiselect>
       <div class="error-message" *ngIf="resourceForm.get('skills')?.touched && resourceForm.get('skills')?.invalid">
         Technology Skill is required.
       </div>
     </div>
+
+
 
     <!-- Project Allocation -->
     <div class="form-group">
@@ -100,7 +105,7 @@
 
     <!-- Submit Button -->
     @if (!resourceService.isResourceSelected){
-    <button type="submit">Submit</button>
+    <button type="submit" class="submit-btn">Submit</button>
     }
     @else {
     <div id="update-form-action-buttons">

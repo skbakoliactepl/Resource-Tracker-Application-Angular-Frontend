@@ -9,7 +9,7 @@ import { DropDownButton, KENDO_BUTTONS } from "@progress/kendo-angular-buttons";
 import { KENDO_DATEINPUTS } from "@progress/kendo-angular-dateinputs";
 import { KENDO_INPUTS } from "@progress/kendo-angular-inputs";
 import { KENDO_LABEL } from "@progress/kendo-angular-label";
-import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
+import { DropDownsModule, MultiSelectModule } from '@progress/kendo-angular-dropdowns';
 import { CreateResourceRequest } from '../../models';
 import { KENDO_DIALOGS } from "@progress/kendo-angular-dialog";
 
@@ -26,17 +26,15 @@ import { KENDO_DIALOGS } from "@progress/kendo-angular-dialog";
     KENDO_BUTTONS,
     KENDO_DIALOGS,
     DropDownsModule,
+    MultiSelectModule
   ],
   templateUrl: './resource-form.component.html',
-  styleUrls: ['./resource-form.component.css']
+  styleUrls: ['./resource-form.component.css'],
 })
 export class ResourceFormComponent implements OnInit {
   resourceForm!: FormGroup;
-  selectedResourceId?: string;
-  yesNoOptions = [
-    { text: 'Yes', value: true },
-    { text: 'No', value: false }
-  ];
+  selectedResourceId?: number;
+  yesNoOptions = ['Yes', 'No'];
   dialogAction: 'save' | 'reset' | null = null;
   showDialog: boolean = false;
 
@@ -51,14 +49,12 @@ export class ResourceFormComponent implements OnInit {
   ngOnInit(): void {
     this.initializeForm();
     this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
+      const id = parseInt(params.get('id')!!);
       if (id) {
         this.selectedResourceId = id;
         this.resourceService.getById(id).subscribe((resource) => {
-          const matchingOption = this.yesNoOptions.find(o => o.value === resource.isBillable);
           this.resourceForm.patchValue({
             ...resource,
-            isBillable: matchingOption ?? null
           });
         });
       }
@@ -85,7 +81,7 @@ export class ResourceFormComponent implements OnInit {
   onSubmit(): void {
     if (this.resourceForm.valid) {
       const formValue = this.resourceForm.value as Resource;
-      console.log("FormValue", formValue);
+      console.log("FORMValue", formValue);
 
       this.resourceService.add(formValue).subscribe({
         next: () => {
@@ -149,10 +145,8 @@ export class ResourceFormComponent implements OnInit {
   };
 
   private onSave(): void {
-    console.log("Form Already Reset");
     if (this.resourceForm.valid) {
       const formValue = this.resourceForm.value as Resource;
-      console.log("formValue", formValue);
 
       // If editing an existing resource, include its ID
       if (this.selectedResourceId) {

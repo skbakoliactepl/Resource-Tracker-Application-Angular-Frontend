@@ -12,8 +12,6 @@ import { formateDateOnly } from '../shared/utils/date-utils';
 export class ResourceService {
   constructor(private http: HttpClient, private loaderService: LoaderServiceService) { }
   private resources: Resource[] = [];
-
-
   isResourceSelected: boolean = false;
   private readonly URL: string = "http://localhost:5252/api/employee";
 
@@ -27,9 +25,9 @@ export class ResourceService {
     this.loaderService.show();
 
     // Conver dropdown object to boolean
-    if (typeof resource.isBillable === 'object' && resource.isBillable != null) {
-      resource.isBillable = (resource.isBillable as { value: boolean }).value;
-    }
+    // if (typeof resource.isBillable === 'object' && resource.isBillable != null) {
+    //   resource.isBillable = (resource.isBillable as { value: boolean }).value;
+    // }
 
     // Convert skills to array of skills
     if (typeof resource.skills === 'string') {
@@ -47,13 +45,13 @@ export class ResourceService {
     return this.http.post<Resource>(this.URL, payload).pipe(finalize(() => this.loaderService.hide()));
   }
 
-  update(id: string, resource: Resource): Observable<void> {
+  update(id: number, resource: Resource): Observable<void> {
     this.loaderService.show();
 
     // Conver dropdown object to boolean
-    if (typeof resource.isBillable === 'object' && resource.isBillable != null) {
-      resource.isBillable = (resource.isBillable as { value: boolean }).value;
-    }
+    // if (typeof resource.isBillable === 'object' && resource.isBillable != null) {
+    //   resource.isBillable = (resource.isBillable as { value: boolean }).value;
+    // }
 
     // Convert skills to array of skills
     if (typeof resource.skills === 'string') {
@@ -77,14 +75,20 @@ export class ResourceService {
     return this.http.put<void>(`${this.URL}/${id}`, payload).pipe(finalize(() => this.loaderService.hide()));
   }
 
-  delete(id: string): Observable<void> {
+  delete(id: number): Observable<void> {
     this.loaderService.show();
     return this.http.delete<void>(`${this.URL}/${id}`).pipe(finalize(() => this.loaderService.hide()));
   }
 
-  getById(id: string): Observable<ResourceResponse> {
+  deleteBulk(empIds: number[]): Observable<void> {
     this.loaderService.show();
+    return this.http.post<void>(`${this.URL}/delete-bulk`, empIds)
+      .pipe(finalize(() => this.loaderService.hide()));
+  }
 
+
+  getById(id: number): Observable<ResourceResponse> {
+    this.loaderService.show();
     return this.http.get<ResourceResponse>(`${this.URL}/${id}`).pipe(
       map((res: ResourceResponse) => {
         return {

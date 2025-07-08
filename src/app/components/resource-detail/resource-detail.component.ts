@@ -46,7 +46,7 @@ export class ResourceDetailComponent {
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
+      const id = parseInt(params.get('id')!!);
       if (id) {
         this.resourceService.getById(id).subscribe((resource) => {
           this.resource = resource;

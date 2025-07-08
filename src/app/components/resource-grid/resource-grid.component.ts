@@ -15,6 +15,7 @@ import {
   KENDO_GRID_PDF_EXPORT,
 } from "@progress/kendo-angular-grid";
 import { pdf } from '@progress/kendo-drawing';
+import { NotificationService } from '@progress/kendo-angular-notification';
 
 type ExportOption = {
   text: string;
@@ -47,7 +48,7 @@ export class ResourceGridComponent {
   pdfExport!: PDFExportComponent;
 
   resources: Resource[] = [];
-  public selectedToDelete: Resource[] = [];
+  public selectedToDelete: number[] = [];
   public showConfirmDialog: boolean = false;
   public showBulkConfirmationDialog: boolean = false;
 
@@ -74,6 +75,7 @@ export class ResourceGridComponent {
 
   constructor(
     private resourceService: ResourceService,
+    private notificationService: NotificationService,
     private router: Router
   ) { }
 
@@ -116,12 +118,67 @@ export class ResourceGridComponent {
   confirmBulkDelete() {
     console.log("selectedDetele Array", this.selectedToDelete, this.selectedToDelete.length);
 
-    this.selectedToDelete = this.resources.filter(r => this.selectedToDelete.includes(r));
     this.showBulkConfirmationDialog = true;
   };
 
   confirmBulkDeleteAction() {
-    this.showBulkConfirmationDialog = true;
+    console.log("Inside Confirm Delte Action:", this.selectedToDelete);
+    if (this.selectedToDelete.length === 0) {
+      this.cancelBulkDelete();
+      return;
+    }
+    const empIds = this.selectedToDelete;
+    console.log("EDS", empIds);
+    if (empIds.length === 1) {
+      console.log("only One To Delte", empIds);
+      this.resourceService.delete(empIds[0]).subscribe({
+        next: () => {
+          this.loadResources();
+          this.notificationService.show({
+            content: "Selected Resource deleted successfully!",
+            type: { style: "success", "icon": true },
+            hideAfter: 10000,
+            animation: { type: "slide", duration: 400 },
+          });
+          this.cancelBulkDelete();
+        },
+        error: (err) => {
+          console.error('Single delete failed:', err);
+          this.notificationService.show({
+            content: `Error while deleting resource: ${err}`,
+            type: { style: "error", "icon": true },
+            hideAfter: 10000,
+            animation: { type: "slide", duration: 400 },
+          });
+          this.cancelBulkDelete();
+        }
+      });
+    }
+    else {
+      // Bulk delete
+      this.resourceService.deleteBulk(empIds).subscribe({
+        next: () => {
+          this.loadResources();
+          this.cancelBulkDelete();
+          this.notificationService.show({
+            content: "All the selected resources deleted successfully!",
+            type: { style: "success", "icon": true },
+            hideAfter: 10000,
+            animation: { type: "slide", duration: 400 },
+          });
+        },
+        error: (err) => {
+          console.error('Bulk delete failed:', err);
+          this.notificationService.show({
+            content: `Error while deleting resources: ${err}`,
+            type: { style: "error", "icon": true },
+            hideAfter: 10000,
+            animation: { type: "slide", duration: 400 },
+          });
+          this.cancelBulkDelete();
+        }
+      });
+    }
   };
 
   cancelBulkDelete() {

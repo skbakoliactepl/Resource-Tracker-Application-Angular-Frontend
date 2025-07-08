@@ -50,11 +50,7 @@
                 {{dataItem.dateOfJoining | date: 'dd-MM-yy'}}
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="isBillable" title="Billable" [width]="100" [hidden]="true">
-            <ng-template kendoGridCellTemplate let-dataItem>
-                {{dataItem.isBillable ? "YES" : "No" }}
-            </ng-template>
-        </kendo-grid-column>
+        <kendo-grid-column field="isBillable" title="Billable" [width]="100" [hidden]="true"></kendo-grid-column>
         <kendo-grid-column field="remarks" title="Remarks" [width]="200" [hidden]="true"></kendo-grid-column>
         <kendo-grid-column title="Actions" [width]="170">
             <ng-template kendoGridCellTemplate let-dataItem>
