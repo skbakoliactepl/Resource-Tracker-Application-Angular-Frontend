@@ -10,7 +10,11 @@
                 [disabled]="selectedToDelete.length === 0">
                 <span class="material-icons" style="font-size: 16px;">delete</span>
                 {{selectedToDelete.length > 1 ? 'Delete All' : 'Delete'}}
-
+            </button>
+            <button class="detail-selected-btn btn" (click)="confirmDetail()"
+                [disabled]="!resourceIdToView || (selectedToDelete.length != 1)">
+                <span class="material-icons" style="font-size: 16px;">info</span>
+                Detail
             </button>
         </div>
         <div class="resource-table-btns-group">
@@ -34,7 +38,8 @@
     <kendo-grid kendoGridSelectBy="empId" [kendoGridBinding]="resources" [height]="500" [style.width.%]="100"
         [pageSize]="10" [pageable]="true" [sortable]="true" [groupable]="true" [reorderable]="true" [resizable]="true"
         [navigable]="['table', 'pager']" [height]="500" [columnMenu]="{ filter: true }" class="resource-list"
-        [(selectedKeys)]="selectedToDelete" [selectable]="{ mode: 'multiple', drag: true }" #grid>
+        [(selectedKeys)]="selectedToDelete" [selectable]="{ mode: 'multiple', drag: true }"
+        (rowClick)="onRowClick($event)" (cellClick)="onRowClick($event)" #grid>
         <kendo-grid-checkbox-column [width]="45" [headerClass]="{ 'text-center': true }"
             [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true">
         </kendo-grid-checkbox-column>

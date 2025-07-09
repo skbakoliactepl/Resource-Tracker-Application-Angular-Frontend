@@ -49,6 +49,7 @@ export class ResourceGridComponent {
 
   resources: Resource[] = [];
   public selectedToDelete: number[] = [];
+  public resourceIdToView?: number;
   public showConfirmDialog: boolean = false;
   public showBulkConfirmationDialog: boolean = false;
 
@@ -101,6 +102,12 @@ export class ResourceGridComponent {
     this.showConfirmDialog = true;
   }
 
+
+  onRowClick(event: any): void {
+    console.log("EVENT", event);
+    this.resourceIdToView = event.dataItem.empId;
+  }
+
   confirmDelete(): void {
     if (this.resourceToDelete) {
       this.resourceService.delete(this.resourceToDelete.empId!).subscribe({
@@ -114,6 +121,12 @@ export class ResourceGridComponent {
     }
     this.showConfirmDialog = false;
   }
+
+  confirmDetail(): void {
+    if (!(this.selectedToDelete.length === 0) || !(this.selectedToDelete.length > 1) && (this.resourceIdToView)) {
+      this.router.navigate([`/resource-detail/${this.resourceIdToView}`]);
+    }
+  };
 
   confirmBulkDelete() {
     console.log("selectedDetele Array", this.selectedToDelete, this.selectedToDelete.length);

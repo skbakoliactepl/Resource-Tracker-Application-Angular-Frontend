@@ -50,8 +50,30 @@
   pointer-events: none;
 }
 
+.detail-selected-btn:disabled {
+  cursor: not-allowed;
+  background-color: var(--light-gray-color);
+  border: none;
+  pointer-events: none;
+}
+
 .delete-selected-btn {
-  background-color: var(--danger-color);  /* Normal state - red */
+  background-color: var(--danger-color);
+  /* Normal state - red */
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.detail-selected-btn {
+  background-color: var(--secondary-color);
+  /* Normal state - red */
   color: white;
   border: none;
   padding: 4px 8px;
@@ -64,7 +86,12 @@
 }
 
 .delete-selected-btn:hover:not(:disabled) {
-  background-color: var(--dark-danger-color);  /* Darker red on hover */
+  background-color: var(--dark-danger-color);
+  /* Darker red on hover */
+}
+
+.detail-selected-btn:hover:not(:disabled) {
+  background-color: var(--dark-secondary-color);
 }
 
 .resource-list {
@@ -94,6 +121,7 @@
 .export-btn {
   margin-inline-end: 2rem;
 }
+
 .export-btn.k-button {
   display: inline-flex;
   outline: none;

@@ -10,6 +10,7 @@
   --bg-color-main: #F5F5F5;
   --white-color: #FFF;
   --secondary-color: cornflowerblue;
+  --dark-secondary-color: rgb(53, 120, 245);
   --kendo-color-primary: var(--primary-color);
   --kendo-color-primary-hover: var(--primary-color);
   --kendo-color-primary-on-surface: var(--primary-color);

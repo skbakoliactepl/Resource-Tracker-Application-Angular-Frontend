@@ -10,6 +10,7 @@ import {
 } from "@progress/kendo-angular-indicators";
 import { LoaderServiceService } from './services/loader-service.service';
 import { CommonModule } from '@angular/common';
+import { environment } from '../environments/environment';
 
 
 @Component({
@@ -23,7 +24,10 @@ export class AppComponent {
   title = 'angular-practice';
   loading$ = this.loaderService.loading$;
 
-  constructor(private loaderService: LoaderServiceService, private cdr: ChangeDetectorRef) { }
+  constructor(private loaderService: LoaderServiceService, private cdr: ChangeDetectorRef) {
+    console.log("Is Production: ", environment.production);
+    console.log("API URI: ", environment.apiBaseUrl);
+  }
 
 
   ngAfterViewInit(): void {

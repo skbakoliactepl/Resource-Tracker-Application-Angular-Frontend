@@ -5,6 +5,7 @@ import { LoaderServiceService } from './loader-service.service';
 import { ResourceResponse, Resource, CreateResourceRequest, UpdateResourceRequest } from '../models';
 import { __values } from 'tslib';
 import { formateDateOnly } from '../shared/utils/date-utils';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class ResourceService {
   constructor(private http: HttpClient, private loaderService: LoaderServiceService) { }
   private resources: Resource[] = [];
   isResourceSelected: boolean = false;
-  private readonly URL: string = "http://localhost:5252/api/employee";
+  private readonly URL: string = environment.apiBaseUrl;
 
   getAll(): Observable<Resource[]> {
     this.loaderService.show();
