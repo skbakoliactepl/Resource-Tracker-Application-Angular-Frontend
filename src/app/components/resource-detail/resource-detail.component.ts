@@ -76,7 +76,7 @@ export class ResourceDetailComponent {
   saveChanges() {
     this.resource = { ...this.editedResource };
     console.log("Resorce ", this.resource);
-    this.resourceService.update(this.resource.empId!!, this.resource).subscribe({
+    this.resourceService.update(this.resource.resourceID!!, this.resource).subscribe({
       next: () => {
         this.notificationService.show({
           content: "Resource updated successfully!",

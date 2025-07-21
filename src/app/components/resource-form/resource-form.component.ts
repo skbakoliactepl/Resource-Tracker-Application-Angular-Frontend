@@ -65,15 +65,15 @@ export class ResourceFormComponent implements OnInit {
   }
   initializeForm() {
     this.resourceForm = this.fb.group({
-      name: ['', Validators.required],
-      designation: ['', Validators.required],
-      reportingTo: ['', Validators.required],
-      isBillable: [null, Validators.required],
+      fullName: ['', Validators.required],
+      designationName: ['', Validators.required],
+      managerName: ['', Validators.required],
+      billable: [null, Validators.required],
       skills: [[], Validators.required],
-      projectAllocation: ['', Validators.required],
-      location: ['', Validators.required],
+      projects: ['', Validators.required],
+      locationName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      dateOfJoining: [new Date(), Validators.required],
+      doj: [new Date(), Validators.required],
       remarks: ['']
     });
   };
@@ -150,7 +150,7 @@ export class ResourceFormComponent implements OnInit {
 
       // If editing an existing resource, include its ID
       if (this.selectedResourceId) {
-        formValue.empId = this.selectedResourceId;
+        formValue.resourceID = this.selectedResourceId;
         this.resourceService.update(this.selectedResourceId!, formValue).subscribe({
           next: () => {
             this.resourceService.isResourceSelected = false;
@@ -179,15 +179,15 @@ export class ResourceFormComponent implements OnInit {
 
   private onReset(): void {
     this.resourceForm.reset({
-      name: '',
-      designation: '',
-      reportingTo: '',
-      isBillable: null,
+      fullName: '',
+      designationName: '',
+      managerName: '',
+      billable: null,
       skills: [],
-      projectAllocation: '',
-      location: '',
+      projects: '',
+      locationName: '',
       email: '',
-      dateOfJoining: '',
+      doj: '',
       remarks: ''
     });
   };

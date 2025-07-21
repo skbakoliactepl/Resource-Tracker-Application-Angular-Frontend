@@ -40,7 +40,7 @@ export class ResourceService {
 
     const payload: CreateResourceRequest = {
       ...resource,
-      dateOfJoining: formateDateOnly(resource.dateOfJoining)!
+      doj: formateDateOnly(resource.doj)!
     };
 
     return this.http.post<Resource>(this.URL, payload).pipe(finalize(() => this.loaderService.hide()));
@@ -67,9 +67,9 @@ export class ResourceService {
     //   ? formateDateOnly(resource.dateOfJoining) : null;
 
     const payload: UpdateResourceRequest = {
-      empId: resource.empId!!,
+      resourceID: resource.resourceID!!,
       ...resource,
-      dateOfJoining: formateDateOnly(resource.dateOfJoining)!
+      doj: formateDateOnly(resource.doj)!
     };
 
     console.log("Payload ", payload);
@@ -94,7 +94,7 @@ export class ResourceService {
       map((res: ResourceResponse) => {
         return {
           ...res,
-          dateOfJoining: new Date(res.dateOfJoining)
+          doj: new Date(res.doj)
         }
       }),
       finalize(() => {

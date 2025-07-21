@@ -35,7 +35,7 @@
         </div>
     </div>
 
-    <kendo-grid kendoGridSelectBy="empId" [kendoGridBinding]="resources" [height]="500" [style.width.%]="100"
+    <kendo-grid kendoGridSelectBy="resourceID" [kendoGridBinding]="resources" [height]="500" [style.width.%]="100"
         [pageSize]="10" [pageable]="true" [sortable]="true" [groupable]="true" [reorderable]="true" [resizable]="true"
         [navigable]="['table', 'pager']" [height]="500" [columnMenu]="{ filter: true }" class="resource-list"
         [(selectedKeys)]="selectedToDelete" [selectable]="{ mode: 'multiple', drag: true }"
@@ -43,19 +43,23 @@
         <kendo-grid-checkbox-column [width]="45" [headerClass]="{ 'text-center': true }"
             [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true">
         </kendo-grid-checkbox-column>
-        <kendo-grid-column field="name" title="Resource Name" [width]="150"></kendo-grid-column>
+        <kendo-grid-column field="fullName" title="Resource Name" [width]="150"></kendo-grid-column>
         <kendo-grid-column field="email" title="Email ID" [width]="200"></kendo-grid-column>
-        <kendo-grid-column field="designation" title="Designation" [width]="120"></kendo-grid-column>
-        <kendo-grid-column field="reportingTo" title="Reporting To" [width]="120" [hidden]="true"></kendo-grid-column>
+        <kendo-grid-column field="designationName" title="Designation" [width]="120"></kendo-grid-column>
+        <kendo-grid-column field="managerName" title="Reporting To" [width]="120" [hidden]="true"></kendo-grid-column>
         <kendo-grid-column field="skills" title="Technology Skill" [width]="150"></kendo-grid-column>
-        <kendo-grid-column field="projectAllocation" title="Project Allocation" [width]="150"></kendo-grid-column>
-        <kendo-grid-column field="location" title="Location" [width]="100"></kendo-grid-column>
-        <kendo-grid-column field="dateOfJoining" title="Joining Date" [width]="130" [hidden]="true">
+        <kendo-grid-column field="projects" title="Project Allocation" [width]="150"></kendo-grid-column>
+        <kendo-grid-column field="locationName" title="Location" [width]="100"></kendo-grid-column>
+        <kendo-grid-column field="doj" title="Joining Date" [width]="130" [hidden]="true">
             <ng-template kendoGridCellTemplate let-dataItem>
-                {{dataItem.dateOfJoining | date: 'dd-MM-yy'}}
+                {{dataItem.doj | date: 'dd-MM-yy'}}
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="isBillable" title="Billable" [width]="100" [hidden]="true"></kendo-grid-column>
+        <kendo-grid-column field="billable" title="Billable" [width]="100" [hidden]="true">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ dataItem.billable ? 'Yes' : 'No' }}
+            </ng-template>
+        </kendo-grid-column>
         <kendo-grid-column field="remarks" title="Remarks" [width]="200" [hidden]="true"></kendo-grid-column>
         <kendo-grid-column title="Actions" [width]="170">
             <ng-template kendoGridCellTemplate let-dataItem>
@@ -79,7 +83,7 @@
         <kendo-dialog-titlebar class="confirmation-dialog-header">
             Confirm Delete
         </kendo-dialog-titlebar>
-        <p>Are you sure you want to delete <strong>{{ resourceToDelete?.name }}</strong>?</p>
+        <p>Are you sure you want to delete <strong>{{ resourceToDelete?.fullName }}</strong>?</p>
         <p>This action cannot be undone.</p>
         <kendo-dialog-actions>
             <button kendoButton themeColor="error" (click)="confirmDelete()"

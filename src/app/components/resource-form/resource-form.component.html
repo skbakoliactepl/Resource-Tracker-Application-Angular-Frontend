@@ -3,8 +3,8 @@
     <!-- Resource Name -->
     <div class="form-group">
       <label for="resourceName">Resource Name <span class="required-field">*</span></label>
-      <input id="resourceName" type="text" formControlName="name" placeholder="Enter resource name!" />
-      <div class="error-message" *ngIf="resourceForm.get('name')?.touched && resourceForm.get('name')?.invalid">
+      <input id="resourceName" type="text" formControlName="fullName" placeholder="Enter resource name!" />
+      <div class="error-message" *ngIf="resourceForm.get('fullName')?.touched && resourceForm.get('fullName')?.invalid">
         Resource Name is required.
       </div>
     </div>
@@ -13,9 +13,9 @@
     <!-- Designation -->
     <div class="form-group">
       <label for="designation">Designation <span class="required-field">*</span></label>
-      <input id="designation" type="text" formControlName="designation" placeholder="Enter designation!" />
+      <input id="designation" type="text" formControlName="designationName" placeholder="Enter designation!" />
       <div class="error-message"
-        *ngIf="resourceForm.get('designation')?.touched && resourceForm.get('designation')?.invalid">
+        *ngIf="resourceForm.get('designationName')?.touched && resourceForm.get('designationName')?.invalid">
         Designation is required.
       </div>
     </div>
@@ -23,9 +23,9 @@
     <!-- Reporting To -->
     <div class="form-group">
       <label for="reportingTo">Reporting To <span class="required-field">*</span></label>
-      <input id="reportingTo" type="text" formControlName="reportingTo" placeholder="Enter reporting manager name!">
+      <input id="reportingTo" type="text" formControlName="managerName" placeholder="Enter reporting manager name!">
       <div class="error-message"
-        *ngIf="resourceForm.get('reportingTo')?.touched && resourceForm.get('reportingTo')?.invalid">
+        *ngIf="resourceForm.get('managerName')?.touched && resourceForm.get('managerName')?.invalid">
         Reporting To is required.
       </div>
     </div>
@@ -33,11 +33,11 @@
     <!-- Is Billable -->
     <div class="form-group">
       <label for="isBillable">Is Billable <span class="required-field">*</span></label>
-      <kendo-dropdownlist id="isBillable" [data]="yesNoOptions" formControlName="isBillable"
+      <kendo-dropdownlist id="isBillable" [data]="yesNoOptions" formControlName="billable"
         [defaultItem]="'Select an option'">
       </kendo-dropdownlist>
       <div class=" error-message"
-        *ngIf="resourceForm.get('isBillable')?.touched && resourceForm.get('isBillable')?.invalid">
+        *ngIf="resourceForm.get('billable')?.touched && resourceForm.get('billable')?.invalid">
         Please select Yes or No.
       </div>
     </div>
@@ -59,10 +59,10 @@
     <!-- Project Allocation -->
     <div class="form-group">
       <label for="projectAllocation">Project Allocation <span class="required-field">*</span></label>
-      <input id="projectAllocation" type="text" formControlName="projectAllocation"
+      <input id="projectAllocation" type="text" formControlName="projects"
         placeholder="Enter allocated project." />
       <div class="error-message"
-        *ngIf="resourceForm.get('projectAllocation')?.touched && resourceForm.get('projectAllocation')?.invalid">
+        *ngIf="resourceForm.get('projects')?.touched && resourceForm.get('projects')?.invalid">
         Project Allocation is required.
       </div>
     </div>
@@ -70,8 +70,8 @@
     <!-- Location -->
     <div class="form-group">
       <label for="location">Location <span class="required-field">*</span></label>
-      <input id="location" type="text" formControlName="location" placeholder="Enter resource location!" />
-      <div class="error-message" *ngIf="resourceForm.get('location')?.touched && resourceForm.get('location')?.invalid">
+      <input id="location" type="text" formControlName="locationName" placeholder="Enter resource location!" />
+      <div class="error-message" *ngIf="resourceForm.get('locationName')?.touched && resourceForm.get('locationName')?.invalid">
         Location is required.
       </div>
     </div>
@@ -89,10 +89,10 @@
     <!-- dateOfJoining -->
     <div class="form-group">
       <label for="joiningDate">Joining Date <span class="required-field">*</span></label>
-      <kendo-datepicker formControlName="dateOfJoining" [placeholder]="'Select date...'"></kendo-datepicker>
+      <kendo-datepicker formControlName="doj" [placeholder]="'Select date...'"></kendo-datepicker>
       <!-- <input id="joiningDate" type="date" formControlName="dateOfJoining" /> -->
       <div class="error-message"
-        *ngIf="resourceForm.get('dateOfJoining')?.touched && resourceForm.get('dateOfJoining')?.invalid">
+        *ngIf="resourceForm.get('doj')?.touched && resourceForm.get('doj')?.invalid">
         Joining Date is required.
       </div>
     </div>

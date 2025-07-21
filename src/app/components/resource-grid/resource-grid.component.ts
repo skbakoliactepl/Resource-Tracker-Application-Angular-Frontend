@@ -94,7 +94,7 @@ export class ResourceGridComponent {
 
   editResource(resource: Resource) {
     // Add Edit Resource Logic
-    this.resourceService.update(resource.empId!, resource);
+    this.resourceService.update(resource.resourceID!, resource);
   }
 
   openConfirmDialog(resource: Resource): void {
@@ -105,12 +105,12 @@ export class ResourceGridComponent {
 
   onRowClick(event: any): void {
     console.log("EVENT", event);
-    this.resourceIdToView = event.dataItem.empId;
+    this.resourceIdToView = event.dataItem.resourceID;
   }
 
   confirmDelete(): void {
     if (this.resourceToDelete) {
-      this.resourceService.delete(this.resourceToDelete.empId!).subscribe({
+      this.resourceService.delete(this.resourceToDelete.resourceID!).subscribe({
         next: () => {
           this.loadResources();
         },
@@ -207,12 +207,12 @@ export class ResourceGridComponent {
   triggerEdit(resource: Resource): void {
     console.log("Triggered Edit button");
     this.resourceService.isResourceSelected = true;
-    this.router.navigate([`/edit-resource/${resource.empId}`]);
+    this.router.navigate([`/edit-resource/${resource.resourceID}`]);
   }
 
   triggerDetail(resource: Resource) {
-    console.log("Detail button Triggered!", resource.empId);
-    this.router.navigate([`/resource-detail/${resource.empId}`]);
+    console.log("Detail button Triggered!", resource.resourceID);
+    this.router.navigate([`/resource-detail/${resource.resourceID}`]);
   };
 
 
