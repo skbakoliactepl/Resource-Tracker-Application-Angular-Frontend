@@ -123,4 +123,8 @@ export class ResourceService {
       finalize(() => this.loaderService.hide())
     );
   }
+
+  bulkUpdate(payload: any[]): Observable<any> {
+    return this.http.put(`${this.URL}/bulk-update`, payload);
+  }
 }

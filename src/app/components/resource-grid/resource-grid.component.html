@@ -16,6 +16,11 @@
                 <span class="material-icons" style="font-size: 16px;">info</span>
                 Detail
             </button>
+            <button class="edit-selected-btn btn" [disabled]="selectedToDelete.length < 1"
+                (click)="openBulkEditDialog()">
+                <span class="material-icons" style="font-size: 16px;">edit</span>
+                Edit Selected
+            </button>
         </div>
         <div class="resource-table-btns-group">
             <kendo-dropdownbutton [data]="exportOptions" [fillMode]="'none'" ngClass="export-btn-group">
@@ -107,4 +112,41 @@
         </kendo-dialog-actions>
     </kendo-dialog>
     }
+
+    @if (showBulkEditDialog && selectedToDelete.length != 0){
+    <kendo-dialog (close)="cancelBulkEdit()" class="bulk-edit-dialog">
+        <kendo-dialog-titlebar>Bulk Edit Resources</kendo-dialog-titlebar>
+
+        <form [formGroup]="bulkEditForm">
+            <div class="bulk-edit-dialog-body">
+                <kendo-dropdownlist [data]="designations" [(ngModel)]="bulkEditModel.designationID"
+                    [textField]="'designationName'" [valuePrimitive]="true" [valueField]="'designationID'"
+                    formControlName="designationID" [defaultItem]=" { designationName: 'Select Designation' }"
+                    [filterable]="true" class="form-control">
+                </kendo-dropdownlist>
+                <kendo-dropdownlist [data]="locations" [(ngModel)]="bulkEditModel.locationID"
+                    [textField]="'locationName'" [valueField]="'locationID'"
+                    [defaultItem]="{ locationName: 'Select Location' }" [filterable]="true" class="form-control"
+                    [valuePrimitive]="true" formControlName="locationID">
+                </kendo-dropdownlist>
+                <kendo-dropdownlist [data]="projects" [(ngModel)]="bulkEditModel.projectID" [textField]="'projectName'"
+                    [valueField]="'projectID'" [defaultItem]="{ projectName: 'Select Project' }" [valuePrimitive]="true"
+                    [filterable]="true" class="form-control" formControlName="projectID">
+                </kendo-dropdownlist>
+                <kendo-dropdownlist [data]="yesNoOptions" formControlName="billable"
+                    [defaultItem]="{ text: 'Select billable status', value: null }" [textField]="'text'"
+                    [valuePrimitive]="true" [valueField]="'value'" [valuePrimitive]="true">
+                </kendo-dropdownlist>
+
+                <textarea class="form-control mt-3 remarks-textarea" placeholder="Enter remarks" formControlName="remarks"
+                    rows="3"></textarea>
+            </div>
+        </form>
+        <kendo-dialog-actions>
+            <button kendoButton (click)="submitBulkEdit()" themeColor="primary">Update</button>
+            <button kendoButton (click)="cancelBulkEdit()">Cancel</button>
+        </kendo-dialog-actions>
+    </kendo-dialog>
+    }
+
 </section>

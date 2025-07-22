@@ -28,6 +28,4 @@ export class DesignationService {
             finalize(() => this.loaderService.hide())
         );
     }
-
-
 }

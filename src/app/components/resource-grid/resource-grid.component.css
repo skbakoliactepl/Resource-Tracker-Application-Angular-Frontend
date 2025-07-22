@@ -57,6 +57,13 @@
   pointer-events: none;
 }
 
+.edit-selected-btn:disabled {
+  cursor: not-allowed;
+  background-color: var(--light-gray-color);
+  border: none;
+  pointer-events: none;
+}
+
 .delete-selected-btn {
   background-color: var(--danger-color);
   /* Normal state - red */
@@ -73,6 +80,20 @@
 
 .detail-selected-btn {
   background-color: var(--secondary-color);
+  /* Normal state - red */
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.edit-selected-btn {
+  background-color: var(--primary-color);
   /* Normal state - red */
   color: white;
   border: none;
@@ -155,6 +176,21 @@
   background-color: var(--danger-color);
   border-color: var(--danger-color);
   color: white;
+}
+
+.remarks-textarea {
+  width: 100%;
+  padding: 4px;
+}
+
+
+/* Dialog Style */
+.bulk-edit-dialog-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
 }
 
 
