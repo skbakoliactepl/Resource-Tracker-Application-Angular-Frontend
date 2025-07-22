@@ -44,7 +44,10 @@ import { DesignationService } from '../../services/designations/designation.serv
 export class ResourceFormComponent implements OnInit {
   resourceForm!: FormGroup;
   selectedResourceId?: number;
-  yesNoOptions = [true, false];
+  yesNoOptions = [
+    { text: 'Yes', value: true },
+    { text: 'No', value: false }
+  ];
   dialogAction: 'save' | 'reset' | null = null;
   showDialog: boolean = false;
   managers: ActiveManagerViewModel[] = [];
@@ -122,11 +125,6 @@ export class ResourceFormComponent implements OnInit {
       const id = parseInt(params.get('id')!!);
       if (id) {
         this.selectedResourceId = id;
-        // this.resourceService.getById(id).subscribe((resource) => {
-        //   this.resourceForm.patchValue({
-        //     ...resource,
-        //   });
-        // });
         this.resourceService.getFullDetailsById(id).subscribe((resource) => {
           this.resourceForm.patchValue({
             fullName: resource.fullName,

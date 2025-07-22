@@ -59,7 +59,8 @@
     <div class="form-group">
       <label for="isBillable">Is Billable <span class="required-field">*</span></label>
       <kendo-dropdownlist id="isBillable" [data]="yesNoOptions" formControlName="billable"
-        [defaultItem]="'Select an option'">
+        [defaultItem]="{ text: 'Select an option', value: null }" [textField]="'text'" [valueField]="'value'"
+        [valuePrimitive]="true">
       </kendo-dropdownlist>
       <div class=" error-message"
         *ngIf="resourceForm.get('billable')?.touched && resourceForm.get('billable')?.invalid">
