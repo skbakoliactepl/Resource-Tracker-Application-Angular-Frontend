@@ -18,7 +18,7 @@ export class ResourceService {
 
   getAll(): Observable<Resource[]> {
     this.loaderService.show();
-    return this.http.get<Resource[]>(this.URL+"/active").pipe(finalize(() => this.loaderService.hide()));
+    return this.http.get<Resource[]>(this.URL + "/active").pipe(finalize(() => this.loaderService.hide()));
   }
 
   add(resource: CreateResourceRequest): Observable<CreateResourceRequest> {
@@ -91,12 +91,11 @@ export class ResourceService {
     return this.http.delete<void>(`${this.URL}/${id}`).pipe(finalize(() => this.loaderService.hide()));
   }
 
-  deleteBulk(empIds: number[]): Observable<void> {
+  deleteBulk(resourcIds: number[]): Observable<void> {
     this.loaderService.show();
-    return this.http.post<void>(`${this.URL}/delete-bulk`, empIds)
+    return this.http.post<void>(`${this.URL}/delete-bulk`, resourcIds)
       .pipe(finalize(() => this.loaderService.hide()));
   }
-
 
   getById(id: number): Observable<ResourceResponse> {
     this.loaderService.show();
