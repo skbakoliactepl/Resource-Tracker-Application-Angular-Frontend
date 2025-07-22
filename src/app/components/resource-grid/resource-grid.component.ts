@@ -16,6 +16,7 @@ import {
 } from "@progress/kendo-angular-grid";
 import { pdf } from '@progress/kendo-drawing';
 import { NotificationService } from '@progress/kendo-angular-notification';
+import { UpdateResourceRequest } from '../../models';
 
 type ExportOption = {
   text: string;
@@ -92,7 +93,7 @@ export class ResourceGridComponent {
     });
   }
 
-  editResource(resource: Resource) {
+  editResource(resource: UpdateResourceRequest) {
     // Add Edit Resource Logic
     this.resourceService.update(resource.resourceID!, resource);
   }

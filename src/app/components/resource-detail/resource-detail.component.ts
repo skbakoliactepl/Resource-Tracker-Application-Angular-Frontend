@@ -11,6 +11,7 @@ import { ButtonsModule } from '@progress/kendo-angular-buttons';
 import { InputsModule } from '@progress/kendo-angular-inputs'; // for TextArea
 import { DialogComponent, KENDO_DIALOGS } from '@progress/kendo-angular-dialog';
 import { NotificationService } from '@progress/kendo-angular-notification';
+import { UpdateResourceRequest } from '../../models';
 
 
 @Component({
@@ -76,7 +77,8 @@ export class ResourceDetailComponent {
   saveChanges() {
     this.resource = { ...this.editedResource };
     console.log("Resorce ", this.resource);
-    this.resourceService.update(this.resource.resourceID!!, this.resource).subscribe({
+    const request = {} as UpdateResourceRequest;
+    this.resourceService.update(this.resource.resourceID!!, request).subscribe({
       next: () => {
         this.notificationService.show({
           content: "Resource updated successfully!",

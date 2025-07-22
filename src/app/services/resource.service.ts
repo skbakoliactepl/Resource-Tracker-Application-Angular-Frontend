@@ -18,11 +18,11 @@ export class ResourceService {
 
   getAll(): Observable<Resource[]> {
     this.loaderService.show();
-    return this.http.get<Resource[]>(this.URL).pipe(finalize(() => this.loaderService.hide()));
+    return this.http.get<Resource[]>(this.URL+"/active").pipe(finalize(() => this.loaderService.hide()));
   }
 
-  add(resource: Resource): Observable<Resource> {
-    console.log("Add Employee Request initiated!");
+  add(resource: CreateResourceRequest): Observable<CreateResourceRequest> {
+    console.log("Add Employee Request initiated!", resource);
     this.loaderService.show();
 
     // Conver dropdown object to boolean
@@ -31,22 +31,29 @@ export class ResourceService {
     // }
 
     // Convert skills to array of skills
-    if (typeof resource.skills === 'string') {
-      resource.skills = (resource.skills as string)
-        .split(',')
-        .map(skill => skill.trim())
-        .filter(skill => !!skill);
-    }
+    // if (typeof resource.skills === 'string') {
+    //   resource.skills = (resource.skills as string)
+    //     .split(',')
+    //     .map(skill => skill.trim())
+    //     .filter(skill => !!skill);
+    // }
 
     const payload: CreateResourceRequest = {
-      ...resource,
-      doj: formateDateOnly(resource.doj)!
+      fullName: resource.fullName,
+      email: resource.email,
+      doj: formateDateOnly(new Date(resource.doj))!,
+      billable: resource.billable,
+      remarks: resource.remarks || '',
+      designationID: resource.designationID,
+      locationID: resource.locationID
     };
+    console.log("Payload", payload);
 
-    return this.http.post<Resource>(this.URL, payload).pipe(finalize(() => this.loaderService.hide()));
+
+    return this.http.post<CreateResourceRequest>(this.URL, resource).pipe(finalize(() => this.loaderService.hide()));
   }
 
-  update(id: number, resource: Resource): Observable<void> {
+  update(id: number, resource: UpdateResourceRequest): Observable<void> {
     this.loaderService.show();
 
     // Conver dropdown object to boolean
@@ -55,21 +62,24 @@ export class ResourceService {
     // }
 
     // Convert skills to array of skills
-    if (typeof resource.skills === 'string') {
-      resource.skills = (resource.skills as string)
-        .split(',')
-        .map(skill => skill.trim())
-        .filter(skill => !!skill);
-    }
+    // if (typeof resource.skills === 'string') {
+    //   resource.skills = (resource.skills as string)
+    //     .split(',')
+    //     .map(skill => skill.trim())
+    //     .filter(skill => !!skill);
+    // }
 
     // Convert the dateOfJoining to SQL string format (yyyy-mm-dd)
     // const formattedDate = resource.dateOfJoining instanceof Date
     //   ? formateDateOnly(resource.dateOfJoining) : null;
 
+    // const payload: UpdateResourceRequest = {
+    //   resourceID: resource.resourceID!!,
+    //   ...resource,
+    //   doj: formateDateOnly(resource.doj)!
+    // };
     const payload: UpdateResourceRequest = {
-      resourceID: resource.resourceID!!,
-      ...resource,
-      doj: formateDateOnly(resource.doj)!
+      ...resource
     };
 
     console.log("Payload ", payload);
