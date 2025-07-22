@@ -6,6 +6,7 @@ import { ResourceResponse, Resource, CreateResourceRequest, UpdateResourceReques
 import { __values } from 'tslib';
 import { formateDateOnly } from '../shared/utils/date-utils';
 import { environment } from '../../environments/environment';
+import { FullResourceResponse } from '../models/resources/resource-full-detail-model';
 
 @Injectable({
   providedIn: 'root'
@@ -109,6 +110,17 @@ export class ResourceService {
       finalize(() => {
         this.loaderService.hide()
       })
+    );
+  }
+
+  getFullDetailsById(id: number): Observable<FullResourceResponse> {
+    this.loaderService.show();
+    return this.http.get<{ data: FullResourceResponse }>(`${this.URL}/full/${id}`).pipe(
+      map((res) => ({
+        ...res.data,
+        doj: new Date(res.data.doj)
+      })),
+      finalize(() => this.loaderService.hide())
     );
   }
 }

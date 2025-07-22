@@ -122,9 +122,23 @@ export class ResourceFormComponent implements OnInit {
       const id = parseInt(params.get('id')!!);
       if (id) {
         this.selectedResourceId = id;
-        this.resourceService.getById(id).subscribe((resource) => {
+        // this.resourceService.getById(id).subscribe((resource) => {
+        //   this.resourceForm.patchValue({
+        //     ...resource,
+        //   });
+        // });
+        this.resourceService.getFullDetailsById(id).subscribe((resource) => {
           this.resourceForm.patchValue({
-            ...resource,
+            fullName: resource.fullName,
+            email: resource.email,
+            doj: resource.doj,
+            billable: resource.billable,
+            remarks: resource.remarks,
+            designationID: resource.designation.designationID,
+            locationID: resource.location.locationID,
+            managerID: resource.manager.managerID,
+            skills: resource.skills.map(skill => skill.skillID),
+            projects: resource.projects.map(project => project.projectID)
           });
         });
       }
