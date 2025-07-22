@@ -1,3 +1,3 @@
-export * from './resource.model';
-export * from './resource-request.model';
-export * from './resource-response.model';
+export * from './resources/resource.model';
+export * from './resources/resource-request.model';
+export * from './resources/resource-response.model';

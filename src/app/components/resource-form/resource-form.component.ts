@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Resource } from '../../models/resource.model';
+import { Resource } from '../../models/resources/resource.model';
 import { ResourceService } from '../../services/resource.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationModule, NotificationService } from '@progress/kendo-angular-notification';

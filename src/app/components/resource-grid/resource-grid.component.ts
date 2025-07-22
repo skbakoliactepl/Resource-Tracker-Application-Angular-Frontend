@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { GridComponent, GridModule } from '@progress/kendo-angular-grid';
-import { Resource } from '../../models/resource.model';
+import { Resource } from '../../models/resources/resource.model';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
 import { ResourceService } from '../../services/resource.service';
@@ -206,7 +206,7 @@ export class ResourceGridComponent {
   }
 
   triggerEdit(resource: Resource): void {
-    console.log("Triggered Edit button");
+    console.log("Triggered Edit button", resource);
     this.resourceService.isResourceSelected = true;
     this.router.navigate([`/edit-resource/${resource.resourceID}`]);
   }
