@@ -26,19 +26,6 @@ export class ResourceService {
     console.log("Add Employee Request initiated!", resource);
     this.loaderService.show();
 
-    // Conver dropdown object to boolean
-    // if (typeof resource.isBillable === 'object' && resource.isBillable != null) {
-    //   resource.isBillable = (resource.isBillable as { value: boolean }).value;
-    // }
-
-    // Convert skills to array of skills
-    // if (typeof resource.skills === 'string') {
-    //   resource.skills = (resource.skills as string)
-    //     .split(',')
-    //     .map(skill => skill.trim())
-    //     .filter(skill => !!skill);
-    // }
-
     const payload: CreateResourceRequest = {
       fullName: resource.fullName,
       email: resource.email,
@@ -50,25 +37,11 @@ export class ResourceService {
     };
     console.log("Payload", payload);
 
-
     return this.http.post<CreateResourceRequest>(this.URL, resource).pipe(finalize(() => this.loaderService.hide()));
   }
 
   update(id: number, resource: UpdateResourceRequest): Observable<void> {
     this.loaderService.show();
-
-    // Conver dropdown object to boolean
-    // if (typeof resource.isBillable === 'object' && resource.isBillable != null) {
-    //   resource.isBillable = (resource.isBillable as { value: boolean }).value;
-    // }
-
-    // Convert skills to array of skills
-    // if (typeof resource.skills === 'string') {
-    //   resource.skills = (resource.skills as string)
-    //     .split(',')
-    //     .map(skill => skill.trim())
-    //     .filter(skill => !!skill);
-    // }
 
     // Convert the dateOfJoining to SQL string format (yyyy-mm-dd)
     // const formattedDate = resource.dateOfJoining instanceof Date
