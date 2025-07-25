@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Resource } from '../../models/resource.model';
+import { Resource } from '../../models/resources/resource.model';
 import { ResourceService } from '../../services/resource.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationModule, NotificationService } from '@progress/kendo-angular-notification';
@@ -10,8 +10,18 @@ import { KENDO_DATEINPUTS } from "@progress/kendo-angular-dateinputs";
 import { KENDO_INPUTS } from "@progress/kendo-angular-inputs";
 import { KENDO_LABEL } from "@progress/kendo-angular-label";
 import { DropDownsModule, MultiSelectModule } from '@progress/kendo-angular-dropdowns';
-import { CreateResourceRequest } from '../../models';
+import { CreateResourceRequest, UpdateResourceRequest } from '../../models';
 import { KENDO_DIALOGS } from "@progress/kendo-angular-dialog";
+import { ManagerService } from '../../services/managers/manager.service';
+import { SkillService } from '../../services/skills/skill.service';
+import { ProjectService } from '../../services/projects/project.service';
+import { LocationService } from '../../services/locations/location.service';
+import { ActiveManagerViewModel } from '../../models/managers/active-manager.model';
+import { ActiveSkillViewModel } from '../../models/skills/active-skill.model';
+import { ActiveProjectViewModel } from '../../models/projects/active-project.model';
+import { ActiveLocationViewModel } from '../../models/locations/active-location.model';
+import { ActiveDesignationViewModel } from '../../models/designations/active-designation.model';
+import { DesignationService } from '../../services/designations/designation.service';
 
 @Component({
   selector: 'app-resource-form',
@@ -34,53 +44,127 @@ import { KENDO_DIALOGS } from "@progress/kendo-angular-dialog";
 export class ResourceFormComponent implements OnInit {
   resourceForm!: FormGroup;
   selectedResourceId?: number;
-  yesNoOptions = ['Yes', 'No'];
+  yesNoOptions = [
+    { text: 'Yes', value: true },
+    { text: 'No', value: false }
+  ];
   dialogAction: 'save' | 'reset' | null = null;
   showDialog: boolean = false;
+  managers: ActiveManagerViewModel[] = [];
+  skillsList: ActiveSkillViewModel[] = [];
+  projects: ActiveProjectViewModel[] = [];
+  locations: ActiveLocationViewModel[] = [];
+  designations: ActiveDesignationViewModel[] = [];
 
   constructor(
     private fb: FormBuilder,
     protected resourceService: ResourceService,
     private router: Router,
     private notificationService: NotificationService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private managerService: ManagerService,
+    private skillService: SkillService,
+    private projectService: ProjectService,
+    private locationService: LocationService,
+    private designationService: DesignationService
   ) { }
 
   ngOnInit(): void {
     this.initializeForm();
+    this.managerService.getActiveManagers().subscribe({
+      next: (response) => {
+        console.log("Manager", response.data);
+        this.managers = response.data;
+      },
+      error: (err) => {
+        console.error('Error fetching managers', err);
+      }
+    });
+
+    this.skillService.getActiveSkills().subscribe({
+      next: (response) => {
+        console.log("Skills", response.data);
+        this.skillsList = response.data;
+      },
+      error: (err) => {
+        console.error('Error fetching skills', err);
+      }
+    });
+
+    this.projectService.getAllProjects().subscribe({
+      next: (response) => {
+        console.log("Projects", response.data);
+        this.projects = response.data;
+      },
+      error: (err) => {
+        console.error('Error fetching projects', err);
+      }
+    });
+
+    this.locationService.getActiveLocations().subscribe({
+      next: (response) => {
+        console.log("Locations", response.data);
+        this.locations = response.data;
+      },
+      error: (err) => {
+        console.error('Error fetching locations', err);
+      }
+    });
+
+    this.designationService.getActiveDesignations().subscribe({
+      next: (response) => {
+        console.log("Designations", response.data);
+        this.designations = response.data;
+      },
+      error: (err) => {
+        console.error('Error fetching designations', err);
+      }
+    });
+
     this.route.paramMap.subscribe(params => {
       const id = parseInt(params.get('id')!!);
       if (id) {
         this.selectedResourceId = id;
-        this.resourceService.getById(id).subscribe((resource) => {
+        this.resourceService.getFullDetailsById(id).subscribe((resource) => {
           this.resourceForm.patchValue({
-            ...resource,
+            fullName: resource.fullName,
+            email: resource.email,
+            doj: resource.doj,
+            billable: resource.billable,
+            remarks: resource.remarks,
+            designationID: resource.designation.designationID,
+            locationID: resource.location.locationID,
+            managerID: resource.manager.managerID,
+            skills: resource.skills.map(skill => skill.skillID),
+            projects: resource.projects.map(project => project.projectID)
           });
         });
       }
     });
   }
+
   close() {
     debugger;
   }
+
   initializeForm() {
     this.resourceForm = this.fb.group({
-      name: ['', Validators.required],
-      designation: ['', Validators.required],
-      reportingTo: ['', Validators.required],
-      isBillable: [null, Validators.required],
+      fullName: ['', Validators.required],
+      designationID: [null, Validators.required],
+      managerID: [null, Validators.required],
+      billable: [null, Validators.required],
       skills: [[], Validators.required],
-      projectAllocation: ['', Validators.required],
-      location: ['', Validators.required],
+      projects: [[], Validators.required],
+      locationID: [null, Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      dateOfJoining: [new Date(), Validators.required],
+      doj: [new Date(), Validators.required],
       remarks: ['']
     });
   };
 
   onSubmit(): void {
     if (this.resourceForm.valid) {
-      const formValue = this.resourceForm.value as Resource;
+      const formValue = this.resourceForm.value as CreateResourceRequest;
       console.log("FORMValue", formValue);
 
       this.resourceService.add(formValue).subscribe({
@@ -146,11 +230,11 @@ export class ResourceFormComponent implements OnInit {
 
   private onSave(): void {
     if (this.resourceForm.valid) {
-      const formValue = this.resourceForm.value as Resource;
+      const formValue = this.resourceForm.value as UpdateResourceRequest;
 
       // If editing an existing resource, include its ID
       if (this.selectedResourceId) {
-        formValue.empId = this.selectedResourceId;
+        formValue.resourceID = this.selectedResourceId;
         this.resourceService.update(this.selectedResourceId!, formValue).subscribe({
           next: () => {
             this.resourceService.isResourceSelected = false;
@@ -179,15 +263,15 @@ export class ResourceFormComponent implements OnInit {
 
   private onReset(): void {
     this.resourceForm.reset({
-      name: '',
-      designation: '',
-      reportingTo: '',
-      isBillable: null,
+      fullName: '',
+      designationName: '',
+      managerName: '',
+      billable: null,
       skills: [],
-      projectAllocation: '',
-      location: '',
+      projects: '',
+      locationName: '',
       email: '',
-      dateOfJoining: '',
+      doj: '',
       remarks: ''
     });
   };

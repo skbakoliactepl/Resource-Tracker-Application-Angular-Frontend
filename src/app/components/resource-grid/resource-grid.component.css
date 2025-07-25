@@ -57,6 +57,13 @@
   pointer-events: none;
 }
 
+.edit-selected-btn:disabled {
+  cursor: not-allowed;
+  background-color: var(--light-gray-color);
+  border: none;
+  pointer-events: none;
+}
+
 .delete-selected-btn {
   background-color: var(--danger-color);
   /* Normal state - red */
@@ -73,6 +80,20 @@
 
 .detail-selected-btn {
   background-color: var(--secondary-color);
+  /* Normal state - red */
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.edit-selected-btn {
+  background-color: var(--primary-color);
   /* Normal state - red */
   color: white;
   border: none;
@@ -155,6 +176,64 @@
   background-color: var(--danger-color);
   border-color: var(--danger-color);
   color: white;
+}
+
+.remarks-textarea {
+  width: 100%;
+  padding: 4px;
+}
+
+/* Import Dialog */
+::ng-deep .import-dialog .k-dialog {
+  width: 600px;
+}
+
+.import-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 10px;
+}
+
+.file-label {
+  margin-bottom: 4px;
+}
+
+.file-preview {
+  font-size: 14px;
+  color: #333;
+}
+
+.loader-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.upload-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: green;
+  margin-top: 16px;
+  font-weight: 500;
+}
+
+.upload-btn {
+  align-self: flex-start;
+}
+
+
+
+
+/* Dialog Style */
+.bulk-edit-dialog-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
 }
 
 

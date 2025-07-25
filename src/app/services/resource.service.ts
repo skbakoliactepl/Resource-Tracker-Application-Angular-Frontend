@@ -6,6 +6,7 @@ import { ResourceResponse, Resource, CreateResourceRequest, UpdateResourceReques
 import { __values } from 'tslib';
 import { formateDateOnly } from '../shared/utils/date-utils';
 import { environment } from '../../environments/environment';
+import { FullResourceResponse } from '../models/resources/resource-full-detail-model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,58 +19,41 @@ export class ResourceService {
 
   getAll(): Observable<Resource[]> {
     this.loaderService.show();
-    return this.http.get<Resource[]>(this.URL).pipe(finalize(() => this.loaderService.hide()));
+    return this.http.get<Resource[]>(this.URL + "/active").pipe(finalize(() => this.loaderService.hide()));
   }
 
-  add(resource: Resource): Observable<Resource> {
-    console.log("Add Employee Request initiated!");
+  add(resource: CreateResourceRequest): Observable<CreateResourceRequest> {
+    console.log("Add Employee Request initiated!", resource);
     this.loaderService.show();
-
-    // Conver dropdown object to boolean
-    // if (typeof resource.isBillable === 'object' && resource.isBillable != null) {
-    //   resource.isBillable = (resource.isBillable as { value: boolean }).value;
-    // }
-
-    // Convert skills to array of skills
-    if (typeof resource.skills === 'string') {
-      resource.skills = (resource.skills as string)
-        .split(',')
-        .map(skill => skill.trim())
-        .filter(skill => !!skill);
-    }
 
     const payload: CreateResourceRequest = {
-      ...resource,
-      dateOfJoining: formateDateOnly(resource.dateOfJoining)!
+      fullName: resource.fullName,
+      email: resource.email,
+      doj: formateDateOnly(new Date(resource.doj))!,
+      billable: resource.billable,
+      remarks: resource.remarks || '',
+      designationID: resource.designationID,
+      locationID: resource.locationID
     };
+    console.log("Payload", payload);
 
-    return this.http.post<Resource>(this.URL, payload).pipe(finalize(() => this.loaderService.hide()));
+    return this.http.post<CreateResourceRequest>(this.URL, resource).pipe(finalize(() => this.loaderService.hide()));
   }
 
-  update(id: number, resource: Resource): Observable<void> {
+  update(id: number, resource: UpdateResourceRequest): Observable<void> {
     this.loaderService.show();
-
-    // Conver dropdown object to boolean
-    // if (typeof resource.isBillable === 'object' && resource.isBillable != null) {
-    //   resource.isBillable = (resource.isBillable as { value: boolean }).value;
-    // }
-
-    // Convert skills to array of skills
-    if (typeof resource.skills === 'string') {
-      resource.skills = (resource.skills as string)
-        .split(',')
-        .map(skill => skill.trim())
-        .filter(skill => !!skill);
-    }
 
     // Convert the dateOfJoining to SQL string format (yyyy-mm-dd)
     // const formattedDate = resource.dateOfJoining instanceof Date
     //   ? formateDateOnly(resource.dateOfJoining) : null;
 
+    // const payload: UpdateResourceRequest = {
+    //   resourceID: resource.resourceID!!,
+    //   ...resource,
+    //   doj: formateDateOnly(resource.doj)!
+    // };
     const payload: UpdateResourceRequest = {
-      empId: resource.empId!!,
-      ...resource,
-      dateOfJoining: formateDateOnly(resource.dateOfJoining)!
+      ...resource
     };
 
     console.log("Payload ", payload);
@@ -81,12 +65,11 @@ export class ResourceService {
     return this.http.delete<void>(`${this.URL}/${id}`).pipe(finalize(() => this.loaderService.hide()));
   }
 
-  deleteBulk(empIds: number[]): Observable<void> {
+  deleteBulk(resourcIds: number[]): Observable<void> {
     this.loaderService.show();
-    return this.http.post<void>(`${this.URL}/delete-bulk`, empIds)
+    return this.http.post<void>(`${this.URL}/delete-bulk`, resourcIds)
       .pipe(finalize(() => this.loaderService.hide()));
   }
-
 
   getById(id: number): Observable<ResourceResponse> {
     this.loaderService.show();
@@ -94,12 +77,27 @@ export class ResourceService {
       map((res: ResourceResponse) => {
         return {
           ...res,
-          dateOfJoining: new Date(res.dateOfJoining)
+          doj: new Date(res.doj)
         }
       }),
       finalize(() => {
         this.loaderService.hide()
       })
     );
+  }
+
+  getFullDetailsById(id: number): Observable<FullResourceResponse> {
+    this.loaderService.show();
+    return this.http.get<{ data: FullResourceResponse }>(`${this.URL}/full/${id}`).pipe(
+      map((res) => ({
+        ...res.data,
+        doj: new Date(res.data.doj)
+      })),
+      finalize(() => this.loaderService.hide())
+    );
+  }
+
+  bulkUpdate(payload: any[]): Observable<any> {
+    return this.http.put(`${this.URL}/bulk-update`, payload);
   }
 }

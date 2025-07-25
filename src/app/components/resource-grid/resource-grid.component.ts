@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { GridComponent, GridModule } from '@progress/kendo-angular-grid';
-import { Resource } from '../../models/resource.model';
+import { Resource } from '../../models/resources/resource.model';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
 import { ResourceService } from '../../services/resource.service';
@@ -16,6 +16,21 @@ import {
 } from "@progress/kendo-angular-grid";
 import { pdf } from '@progress/kendo-drawing';
 import { NotificationService } from '@progress/kendo-angular-notification';
+import { UpdateResourceRequest } from '../../models'; import { DropDownsModule, MultiSelectModule } from '@progress/kendo-angular-dropdowns';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActiveManagerViewModel } from '../../models/managers/active-manager.model';
+import { ActiveSkillViewModel } from '../../models/skills/active-skill.model';
+import { ActiveProjectViewModel } from '../../models/projects/active-project.model';
+import { ActiveLocationViewModel } from '../../models/locations/active-location.model';
+import { ActiveDesignationViewModel } from '../../models/designations/active-designation.model';
+import { ManagerService } from '../../services/managers/manager.service';
+import { SkillService } from '../../services/skills/skill.service';
+import { ProjectService } from '../../services/projects/project.service';
+import { LocationService } from '../../services/locations/location.service';
+import { DesignationService } from '../../services/designations/designation.service';
+import { ImportService } from '../../services/import/import.service.ts.service';
+import { HttpEventType } from '@angular/common/http';
+import { ProgressBarModule } from '@progress/kendo-angular-progressbar';
 
 type ExportOption = {
   text: string;
@@ -28,7 +43,20 @@ type ExportOption = {
   templateUrl: './resource-grid.component.html',
   styleUrls: ['./resource-grid.component.css'],
   standalone: true,
-  imports: [CommonModule, GridModule, MatIconModule, RouterModule, DialogModule, KENDO_BUTTONS, KENDO_ICONS, KENDO_GRID_PDF_EXPORT],
+  imports: [
+    CommonModule,
+    GridModule,
+    MatIconModule,
+    RouterModule,
+    DialogModule,
+    KENDO_BUTTONS,
+    KENDO_ICONS,
+    KENDO_GRID_PDF_EXPORT,
+    DropDownsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ProgressBarModule
+  ],
   styles: [`
       .export-btn-group {
         border-radius: var(--button-radius);
@@ -47,14 +75,38 @@ export class ResourceGridComponent {
   @ViewChild(GridComponent) grid!: GridComponent;
   pdfExport!: PDFExportComponent;
 
+  bulkEditForm!: FormGroup;
   resources: Resource[] = [];
   public selectedToDelete: number[] = [];
   public resourceIdToView?: number;
   public showConfirmDialog: boolean = false;
+  public showBulkEditDialog = false;
   public showBulkConfirmationDialog: boolean = false;
+  managers: ActiveManagerViewModel[] = [];
+  projects: ActiveProjectViewModel[] = [];
+  locations: ActiveLocationViewModel[] = [];
+  designations: ActiveDesignationViewModel[] = [];
+
+  // Import Variables
+  showImportDialog = false;
+  selectedFile: File | null = null;
+  isUploading = false;
+  uploadProgress = 0;
+  uploadSuccess = false;
 
   selectedResource?: Resource;
   resourceToDelete?: Resource;
+  yesNoOptions = [
+    { text: 'Yes', value: true },
+    { text: 'No', value: false }
+  ];
+  bulkEditModel = {
+    billable: null,
+    designationID: null,
+    locationID: null,
+    projectID: null,
+    remarks: ''
+  };
   public exportOptions: ExportOption[] = [
     {
       text: "PDF",
@@ -77,12 +129,65 @@ export class ResourceGridComponent {
   constructor(
     private resourceService: ResourceService,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private managerService: ManagerService,
+    private skillService: SkillService,
+    private projectService: ProjectService,
+    private locationService: LocationService,
+    private designationService: DesignationService,
+    private fb: FormBuilder,
+    private importService: ImportService
   ) { }
 
 
   ngOnInit() {
+    this.bulkEditForm = this.fb.group({
+      designationID: [null],
+      locationID: [null],
+      projectID: [null],
+      billable: [null],
+      remarks: ""
+    });
     this.loadResources();
+    this.managerService.getActiveManagers().subscribe({
+      next: (response) => {
+        console.log("Manager", response.data);
+        this.managers = response.data;
+      },
+      error: (err) => {
+        console.error('Error fetching managers', err);
+      }
+    });
+
+    this.projectService.getAllProjects().subscribe({
+      next: (response) => {
+        console.log("Projects", response.data);
+        this.projects = response.data;
+      },
+      error: (err) => {
+        console.error('Error fetching projects', err);
+      }
+    });
+
+    this.locationService.getActiveLocations().subscribe({
+      next: (response) => {
+        console.log("Locations", response.data);
+        this.locations = response.data;
+      },
+      error: (err) => {
+        console.error('Error fetching locations', err);
+      }
+    });
+
+    this.designationService.getActiveDesignations().subscribe({
+      next: (response) => {
+        console.log("Designations", response.data);
+        this.designations = response.data;
+      },
+      error: (err) => {
+        console.error('Error fetching designations', err);
+      }
+    });
   }
 
   loadResources() {
@@ -92,9 +197,9 @@ export class ResourceGridComponent {
     });
   }
 
-  editResource(resource: Resource) {
+  editResource(resource: UpdateResourceRequest) {
     // Add Edit Resource Logic
-    this.resourceService.update(resource.empId!, resource);
+    this.resourceService.update(resource.resourceID!, resource);
   }
 
   openConfirmDialog(resource: Resource): void {
@@ -102,15 +207,63 @@ export class ResourceGridComponent {
     this.showConfirmDialog = true;
   }
 
+  openBulkEditDialog() {
+    this.showBulkEditDialog = true;
+  }
+  cancelBulkEdit() {
+    this.bulkEditForm.reset();
+    this.showBulkEditDialog = false;
+  }
+  submitBulkEdit() {
+    if (this.bulkEditForm.valid) {
+      const formValues = this.bulkEditForm.value;
+      console.log("FormValues", formValues);
+
+      const updates = this.selectedToDelete.map(id => ({
+        resourceID: id,
+        billable: formValues.billable,
+        projectID: formValues.projectID,
+        designationID: formValues.designationID,
+        locationID: formValues.locationID,
+        remarks: formValues.remarks
+      }));
+      console.log("Bulk update payload", updates);
+
+      this.resourceService.bulkUpdate(updates).subscribe({
+        next: (res) => {
+          console.log("BULK EDIT RES", res);
+          this.showBulkEditDialog = false;
+          this.loadResources();
+          this.notificationService.show({
+            content: `Resource${this.selectedToDelete.length <= 1 ? '' : 's'} updated successfully!`,
+            type: { style: "success", "icon": true },
+            hideAfter: 10000,
+            animation: { type: "slide", duration: 400 },
+          });
+          this.bulkEditForm.reset();
+        },
+        error: err => {
+          console.error('Bulk update failed', err);
+          this.notificationService.show({
+            content: `Error while updating resource${this.selectedToDelete.length <= 1 ? '' : 's'} successfully!`,
+            type: { style: "error", "icon": true },
+            hideAfter: 10000,
+            animation: { type: "slide", duration: 400 },
+          });
+          this.bulkEditForm.reset();
+        }
+      });
+    }
+  }
 
   onRowClick(event: any): void {
     console.log("EVENT", event);
-    this.resourceIdToView = event.dataItem.empId;
+    this.resourceIdToView = event.dataItem.resourceID;
   }
 
   confirmDelete(): void {
     if (this.resourceToDelete) {
-      this.resourceService.delete(this.resourceToDelete.empId!).subscribe({
+      this.resourceService.delete(this.resourceToDelete.resourceID!).subscribe({
         next: () => {
           this.loadResources();
         },
@@ -205,14 +358,14 @@ export class ResourceGridComponent {
   }
 
   triggerEdit(resource: Resource): void {
-    console.log("Triggered Edit button");
+    console.log("Triggered Edit button", resource);
     this.resourceService.isResourceSelected = true;
-    this.router.navigate([`/edit-resource/${resource.empId}`]);
+    this.router.navigate([`/edit-resource/${resource.resourceID}`]);
   }
 
   triggerDetail(resource: Resource) {
-    console.log("Detail button Triggered!", resource.empId);
-    this.router.navigate([`/resource-detail/${resource.empId}`]);
+    console.log("Detail button Triggered!", resource.resourceID);
+    this.router.navigate([`/resource-detail/${resource.resourceID}`]);
   };
 
 
@@ -221,6 +374,47 @@ export class ResourceGridComponent {
     return pdfName;
   };
 
+  // Import Dialog Methods
+  openImportDialog() {
+    this.showImportDialog = true;
+    this.selectedFile = null;
+    this.uploadProgress = 0;
+    this.isUploading = false;
+    this.uploadSuccess = false;
+  }
+
+  closeImportDialog() {
+    this.showImportDialog = false;
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input?.files?.length) {
+      this.selectedFile = input.files[0];
+    }
+  }
+
+  uploadFile() {
+    if (!this.selectedFile) return;
+
+    this.isUploading = true;
+    this.uploadProgress = 0;
+
+    this.importService.uploadResourceFile(this.selectedFile).subscribe({
+      next: event => {
+        if (event.type === HttpEventType.UploadProgress && event.total) {
+          this.uploadProgress = Math.round((event.loaded / event.total) * 100);
+        } else if (event.type === HttpEventType.Response) {
+          this.uploadSuccess = true;
+          this.isUploading = false;
+        }
+      },
+      error: err => {
+        console.error('Upload error', err);
+        this.isUploading = false;
+      }
+    });
+  }
 
   exportToCSV(): void {
     const csvData = this.convertToCSV(this.resources);

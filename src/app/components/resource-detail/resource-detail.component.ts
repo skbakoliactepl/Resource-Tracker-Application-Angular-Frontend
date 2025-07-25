@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Resource } from '../../models/resource.model';
+import { Resource } from '../../models/resources/resource.model';
 import { ResourceService } from '../../services/resource.service';
 import { FormsModule } from '@angular/forms';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
@@ -11,6 +11,8 @@ import { ButtonsModule } from '@progress/kendo-angular-buttons';
 import { InputsModule } from '@progress/kendo-angular-inputs'; // for TextArea
 import { DialogComponent, KENDO_DIALOGS } from '@progress/kendo-angular-dialog';
 import { NotificationService } from '@progress/kendo-angular-notification';
+import { UpdateResourceRequest } from '../../models';
+import { ResourceViewModel } from '../../models/resources/resource-view.model';
 
 
 @Component({
@@ -31,10 +33,10 @@ import { NotificationService } from '@progress/kendo-angular-notification';
   styleUrl: './resource-detail.component.css'
 })
 export class ResourceDetailComponent {
-  resource?: Resource;
+  resource?: ResourceViewModel;
   editMode: boolean = false;
-  originalResource: Resource = {} as Resource;
-  editedResource: Resource = {} as Resource;
+  originalResource: ResourceViewModel = {} as ResourceViewModel;
+  editedResource: ResourceViewModel = {} as ResourceViewModel;
   showConfirmationDialog: boolean = false;
   dialogAction: 'save' | 'reset' | 'toggle-off' | null = null;
 
@@ -76,7 +78,8 @@ export class ResourceDetailComponent {
   saveChanges() {
     this.resource = { ...this.editedResource };
     console.log("Resorce ", this.resource);
-    this.resourceService.update(this.resource.empId!!, this.resource).subscribe({
+    const request = {} as UpdateResourceRequest;
+    this.resourceService.update(this.resource.resourceID!!, request).subscribe({
       next: () => {
         this.notificationService.show({
           content: "Resource updated successfully!",
@@ -99,8 +102,8 @@ export class ResourceDetailComponent {
   }
 
   resetEditedResource() {
-    this.editedResource = this.resource ? { ...this.resource } : {} as Resource;
-    this.originalResource = this.resource ? { ...this.resource } : {} as Resource;
+    this.editedResource = this.resource ? { ...this.resource } : {} as ResourceViewModel;
+    this.originalResource = this.resource ? { ...this.resource } : {} as ResourceViewModel;
   }
 
   isModified(): boolean {

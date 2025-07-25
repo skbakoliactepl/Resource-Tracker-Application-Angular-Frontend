@@ -16,8 +16,18 @@
                 <span class="material-icons" style="font-size: 16px;">info</span>
                 Detail
             </button>
+            <button class="edit-selected-btn btn" [disabled]="selectedToDelete.length < 1"
+                (click)="openBulkEditDialog()">
+                <span class="material-icons" style="font-size: 16px;">edit</span>
+                Edit Selected
+            </button>
         </div>
         <div class="resource-table-btns-group">
+            <button class="btn import-btn" (click)="openImportDialog()">
+                <span class="material-icons" style="font-size: 16px;">upload_file</span>
+                Import
+            </button>
+
             <kendo-dropdownbutton [data]="exportOptions" [fillMode]="'none'" ngClass="export-btn-group">
                 <span class="material-icons" style="font-size: 16px;">file_download</span>
                 Export
@@ -35,7 +45,7 @@
         </div>
     </div>
 
-    <kendo-grid kendoGridSelectBy="empId" [kendoGridBinding]="resources" [height]="500" [style.width.%]="100"
+    <kendo-grid kendoGridSelectBy="resourceID" [kendoGridBinding]="resources" [height]="500" [style.width.%]="100"
         [pageSize]="10" [pageable]="true" [sortable]="true" [groupable]="true" [reorderable]="true" [resizable]="true"
         [navigable]="['table', 'pager']" [height]="500" [columnMenu]="{ filter: true }" class="resource-list"
         [(selectedKeys)]="selectedToDelete" [selectable]="{ mode: 'multiple', drag: true }"
@@ -43,19 +53,23 @@
         <kendo-grid-checkbox-column [width]="45" [headerClass]="{ 'text-center': true }"
             [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true">
         </kendo-grid-checkbox-column>
-        <kendo-grid-column field="name" title="Resource Name" [width]="150"></kendo-grid-column>
+        <kendo-grid-column field="fullName" title="Resource Name" [width]="150"></kendo-grid-column>
         <kendo-grid-column field="email" title="Email ID" [width]="200"></kendo-grid-column>
-        <kendo-grid-column field="designation" title="Designation" [width]="120"></kendo-grid-column>
-        <kendo-grid-column field="reportingTo" title="Reporting To" [width]="120" [hidden]="true"></kendo-grid-column>
+        <kendo-grid-column field="designationName" title="Designation" [width]="120"></kendo-grid-column>
+        <kendo-grid-column field="managerName" title="Reporting To" [width]="120" [hidden]="true"></kendo-grid-column>
         <kendo-grid-column field="skills" title="Technology Skill" [width]="150"></kendo-grid-column>
-        <kendo-grid-column field="projectAllocation" title="Project Allocation" [width]="150"></kendo-grid-column>
-        <kendo-grid-column field="location" title="Location" [width]="100"></kendo-grid-column>
-        <kendo-grid-column field="dateOfJoining" title="Joining Date" [width]="130" [hidden]="true">
+        <kendo-grid-column field="projects" title="Project Allocation" [width]="150"></kendo-grid-column>
+        <kendo-grid-column field="locationName" title="Location" [width]="100"></kendo-grid-column>
+        <kendo-grid-column field="doj" title="Joining Date" [width]="130" [hidden]="true">
             <ng-template kendoGridCellTemplate let-dataItem>
-                {{dataItem.dateOfJoining | date: 'dd-MM-yy'}}
+                {{dataItem.doj | date: 'dd-MM-yy'}}
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="isBillable" title="Billable" [width]="100" [hidden]="true"></kendo-grid-column>
+        <kendo-grid-column field="billable" title="Billable" [width]="100" [hidden]="true">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ dataItem.billable ? 'Yes' : 'No' }}
+            </ng-template>
+        </kendo-grid-column>
         <kendo-grid-column field="remarks" title="Remarks" [width]="200" [hidden]="true"></kendo-grid-column>
         <kendo-grid-column title="Actions" [width]="170">
             <ng-template kendoGridCellTemplate let-dataItem>
@@ -73,13 +87,46 @@
 
     </kendo-grid>
 
+    <!-- Import Dialog -->
+    <kendo-dialog *ngIf="showImportDialog" (close)="closeImportDialog()" class="import-dialog">
+        <kendo-dialog-titlebar>
+            Import Resources from File
+        </kendo-dialog-titlebar>
+
+        <div class="import-dialog-body">
+            <label class="file-label">
+                <strong>Select a .csv or .xlsx file:</strong>
+            </label>
+            <input type="file" accept=".csv, .xlsx" (change)="onFileSelected($event)" />
+
+            <div *ngIf="selectedFile" class="file-preview">
+                <p><strong>Selected File:</strong> {{ selectedFile.name }}</p>
+            </div>
+
+            <button [disabled]="!selectedFile || isUploading" (click)="uploadFile()" class="btn upload-btn">
+                Upload
+            </button>
+
+            <div *ngIf="isUploading" class="loader-section">
+                <kendo-progressbar [value]="uploadProgress" [animation]="true"></kendo-progressbar>
+                <p>Uploading... Please wait</p>
+            </div>
+
+            <div *ngIf="uploadSuccess" class="upload-success">
+                <span class="material-icons">check_circle</span>
+                Import successful!
+            </div>
+        </div>
+    </kendo-dialog>
+
+
     <!-- Confirmation Dialog -->
     @if(showConfirmDialog){
     <kendo-dialog (close)="cancelDelete()" class="confirmation-dialog">
         <kendo-dialog-titlebar class="confirmation-dialog-header">
             Confirm Delete
         </kendo-dialog-titlebar>
-        <p>Are you sure you want to delete <strong>{{ resourceToDelete?.name }}</strong>?</p>
+        <p>Are you sure you want to delete <strong>{{ resourceToDelete?.fullName }}</strong>?</p>
         <p>This action cannot be undone.</p>
         <kendo-dialog-actions>
             <button kendoButton themeColor="error" (click)="confirmDelete()"
@@ -103,4 +150,41 @@
         </kendo-dialog-actions>
     </kendo-dialog>
     }
+
+    @if (showBulkEditDialog && selectedToDelete.length != 0){
+    <kendo-dialog (close)="cancelBulkEdit()" class="bulk-edit-dialog">
+        <kendo-dialog-titlebar>Bulk Edit Resources</kendo-dialog-titlebar>
+
+        <form [formGroup]="bulkEditForm">
+            <div class="bulk-edit-dialog-body">
+                <kendo-dropdownlist [data]="designations" [(ngModel)]="bulkEditModel.designationID"
+                    [textField]="'designationName'" [valuePrimitive]="true" [valueField]="'designationID'"
+                    formControlName="designationID" [defaultItem]=" { designationName: 'Select Designation' }"
+                    [filterable]="true" class="form-control">
+                </kendo-dropdownlist>
+                <kendo-dropdownlist [data]="locations" [(ngModel)]="bulkEditModel.locationID"
+                    [textField]="'locationName'" [valueField]="'locationID'"
+                    [defaultItem]="{ locationName: 'Select Location' }" [filterable]="true" class="form-control"
+                    [valuePrimitive]="true" formControlName="locationID">
+                </kendo-dropdownlist>
+                <kendo-dropdownlist [data]="projects" [(ngModel)]="bulkEditModel.projectID" [textField]="'projectName'"
+                    [valueField]="'projectID'" [defaultItem]="{ projectName: 'Select Project' }" [valuePrimitive]="true"
+                    [filterable]="true" class="form-control" formControlName="projectID">
+                </kendo-dropdownlist>
+                <kendo-dropdownlist [data]="yesNoOptions" formControlName="billable"
+                    [defaultItem]="{ text: 'Select billable status', value: null }" [textField]="'text'"
+                    [valuePrimitive]="true" [valueField]="'value'" [valuePrimitive]="true">
+                </kendo-dropdownlist>
+
+                <textarea class="form-control mt-3 remarks-textarea" placeholder="Enter remarks"
+                    formControlName="remarks" rows="3"></textarea>
+            </div>
+        </form>
+        <kendo-dialog-actions>
+            <button kendoButton (click)="submitBulkEdit()" themeColor="primary">Update</button>
+            <button kendoButton (click)="cancelBulkEdit()">Cancel</button>
+        </kendo-dialog-actions>
+    </kendo-dialog>
+    }
+
 </section>

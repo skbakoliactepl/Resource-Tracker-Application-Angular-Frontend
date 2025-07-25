@@ -25,13 +25,13 @@
 
   <div class="resource-card">
     <div class="detail-row">
-      <span class="label">EmpId</span>
-      <span class="value">{{ resource?.empId }}</span>
+      <span class="label">ResourceID</span>
+      <span class="value">{{ resource?.resourceID }}</span>
     </div>
     <div class="detail-row">
       <span class="label">Name</span>
-      <span class="value" *ngIf="!editMode">{{ resource?.name }}</span>
-      <kendo-textbox class="kendo-edit-mode-input" *ngIf="editMode" [(ngModel)]="editedResource.name"></kendo-textbox>
+      <span class="value" *ngIf="!editMode">{{ resource?.fullName }}</span>
+      <kendo-textbox class="kendo-edit-mode-input" *ngIf="editMode" [(ngModel)]="editedResource.fullName"></kendo-textbox>
     </div>
     <div class="detail-row">
       <span class="label">Email</span>
@@ -41,14 +41,14 @@
     </div>
     <div class="detail-row">
       <span class="label">Designation</span>
-      <span class="value" *ngIf="!editMode">{{ resource?.designation }}</span>
-      <kendo-textbox *ngIf="editMode" [(ngModel)]="editedResource.designation"
+      <span class="value" *ngIf="!editMode">{{ resource?.designationName }}</span>
+      <kendo-textbox *ngIf="editMode" [(ngModel)]="editedResource.designationName"
         class="kendo-edit-mode-input"></kendo-textbox>
     </div>
     <div class="detail-row">
       <span class="label">Reporting To</span>
-      <span class="value" *ngIf="!editMode">{{ resource?.reportingTo }}</span>
-      <kendo-textbox *ngIf="editMode" [(ngModel)]="editedResource.reportingTo"
+      <span class="value" *ngIf="!editMode">{{ resource?.managerName }}</span>
+      <kendo-textbox *ngIf="editMode" [(ngModel)]="editedResource.managerName"
         class="kendo-edit-mode-input"></kendo-textbox>
     </div>
     <div class="detail-row">
@@ -60,27 +60,27 @@
     </div>
     <div class="detail-row">
       <span class="label">Project Allocation</span>
-      <span class="value" *ngIf="!editMode">{{ resource?.projectAllocation }}</span>
-      <kendo-textbox *ngIf="editMode" [(ngModel)]="editedResource.projectAllocation"
+      <span class="value" *ngIf="!editMode">{{ resource?.projects }}</span>
+      <kendo-textbox *ngIf="editMode" [(ngModel)]="editedResource.projects"
         class="kendo-edit-mode-input"></kendo-textbox>
     </div>
     <div class="detail-row">
       <span class="label">Location</span>
-      <span class="value" *ngIf="!editMode">{{ resource?.location }}</span>
+      <span class="value" *ngIf="!editMode">{{ resource?.locationName }}</span>
       <kendo-dropdownlist *ngIf="editMode" [data]="['Bangalore', 'Hyderabad', 'Pune', 'Remote']"
-        [(ngModel)]="editedResource.location" [defaultItem]="'Select location'"
+        [(ngModel)]="editedResource.locationName" [defaultItem]="'Select location'"
         class="kendo-edit-mode-input"></kendo-dropdownlist>
     </div>
     <div class="detail-row">
       <span class="label">Joining Date</span>
-      <span class="value" *ngIf="!editMode">{{ resource?.dateOfJoining | date: 'dd-MM-yyyy' }}</span>
-      <kendo-datepicker *ngIf="editMode" [(ngModel)]="editedResource.dateOfJoining"
+      <span class="value" *ngIf="!editMode">{{ resource?.doj | date: 'dd-MM-yyyy' }}</span>
+      <kendo-datepicker *ngIf="editMode" [(ngModel)]="editedResource.doj"
         class="kendo-edit-mode-input"></kendo-datepicker>
     </div>
     <div class="detail-row">
       <span class="label">Billable</span>
-      <span class="value" *ngIf="!editMode">{{ resource?.isBillable ? 'Yes' : 'No' }}</span>
-      <kendo-dropdownlist *ngIf="editMode" [data]="['Yes','No']" [(ngModel)]="editedResource.isBillable"
+      <span class="value" *ngIf="!editMode">{{ resource?.billable ? 'Yes' : 'No' }}</span>
+      <kendo-dropdownlist *ngIf="editMode" [data]="['Yes','No']" [(ngModel)]="editedResource.billable"
         [valuePrimitive]="true" class="kendo-edit-mode-input"></kendo-dropdownlist>
     </div>
     <div class="detail-row">

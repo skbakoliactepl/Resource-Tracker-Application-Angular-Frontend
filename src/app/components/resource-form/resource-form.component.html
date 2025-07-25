@@ -3,41 +3,67 @@
     <!-- Resource Name -->
     <div class="form-group">
       <label for="resourceName">Resource Name <span class="required-field">*</span></label>
-      <input id="resourceName" type="text" formControlName="name" placeholder="Enter resource name!" />
-      <div class="error-message" *ngIf="resourceForm.get('name')?.touched && resourceForm.get('name')?.invalid">
+      <input id="resourceName" type="text" formControlName="fullName" placeholder="Enter resource name!" />
+      <div class="error-message" *ngIf="resourceForm.get('fullName')?.touched && resourceForm.get('fullName')?.invalid">
         Resource Name is required.
       </div>
     </div>
 
 
     <!-- Designation -->
-    <div class="form-group">
+    <!-- <div class="form-group">
       <label for="designation">Designation <span class="required-field">*</span></label>
-      <input id="designation" type="text" formControlName="designation" placeholder="Enter designation!" />
+      <input id="designation" type="text" formControlName="designationName" placeholder="Enter designation!" />
       <div class="error-message"
-        *ngIf="resourceForm.get('designation')?.touched && resourceForm.get('designation')?.invalid">
+        *ngIf="resourceForm.get('designationName')?.touched && resourceForm.get('designationName')?.invalid">
         Designation is required.
       </div>
-    </div>
-
-    <!-- Reporting To -->
+    </div> -->
     <div class="form-group">
-      <label for="reportingTo">Reporting To <span class="required-field">*</span></label>
-      <input id="reportingTo" type="text" formControlName="reportingTo" placeholder="Enter reporting manager name!">
+      <label for="designation">Designation <span class="required-field">*</span></label>
+      <kendo-dropdownlist id="designation" [data]="designations" textField="designationName" valueField="designationID"
+        formControlName="designationID" [valuePrimitive]="true"
+        [defaultItem]="{  designationID: null, designationName: 'Select Designation'}">
+      </kendo-dropdownlist>
       <div class="error-message"
-        *ngIf="resourceForm.get('reportingTo')?.touched && resourceForm.get('reportingTo')?.invalid">
+        *ngIf="resourceForm.get('designationID')?.touched && resourceForm.get('designationID')?.invalid">
         Reporting To is required.
       </div>
     </div>
 
+
+    <!-- Reporting To -->
+    <!-- <div class="form-group">
+      <label for="reportingTo">Reporting To <span class="required-field">*</span></label>
+      <input id="reportingTo" type="text" formControlName="managerName" placeholder="Enter reporting manager name!">
+      <div class="error-message"
+        *ngIf="resourceForm.get('managerName')?.touched && resourceForm.get('managerName')?.invalid">
+        Reporting To is required.
+      </div>
+    </div> -->
+    <!-- Reporting To (Dropdown) -->
+    <div class="form-group">
+      <label for="reportingTo">Reporting To <span class="required-field">*</span></label>
+      <kendo-dropdownlist id="reportingTo" [data]="managers" textField="managerName" valueField="managerID"
+        [valuePrimitive]="true" formControlName="managerID"
+        [defaultItem]="{  managerID: null, managerName: 'Select Manager'}">
+      </kendo-dropdownlist>
+      <div class="error-message"
+        *ngIf="resourceForm.get('managerID')?.touched && resourceForm.get('managerID')?.invalid">
+        Reporting To is required.
+      </div>
+    </div>
+
+
     <!-- Is Billable -->
     <div class="form-group">
       <label for="isBillable">Is Billable <span class="required-field">*</span></label>
-      <kendo-dropdownlist id="isBillable" [data]="yesNoOptions" formControlName="isBillable"
-        [defaultItem]="'Select an option'">
+      <kendo-dropdownlist id="isBillable" [data]="yesNoOptions" formControlName="billable"
+        [defaultItem]="{ text: 'Select an option', value: null }" [textField]="'text'" [valueField]="'value'"
+        [valuePrimitive]="true">
       </kendo-dropdownlist>
       <div class=" error-message"
-        *ngIf="resourceForm.get('isBillable')?.touched && resourceForm.get('isBillable')?.invalid">
+        *ngIf="resourceForm.get('billable')?.touched && resourceForm.get('billable')?.invalid">
         Please select Yes or No.
       </div>
     </div>
@@ -46,8 +72,8 @@
     <div class="form-group technical-skills-group">
       <label for="technologySkill">Technology Skill <span class="required-field">*</span></label>
       <!-- <input id="technologySkill" type="text" formControlName="skills" placeholder="Enter your technical skills!" /> -->
-      <kendo-multiselect [data]="['Angular', 'React', 'Node.js', 'SQL', 'Azure', 'Python']"
-        [placeholder]="'Enter your technical skills'" id="technologySkill" formControlName="skills"
+      <kendo-multiselect [data]="skillsList" [placeholder]="'Enter your technical skills'" id="technologySkill"
+        textField="skillName" valueField="skillID" [valuePrimitive]="true" formControlName="skills"
         class="kendo-multi-select-input"></kendo-multiselect>
       <div class="error-message" *ngIf="resourceForm.get('skills')?.touched && resourceForm.get('skills')?.invalid">
         Technology Skill is required.
@@ -57,24 +83,57 @@
 
 
     <!-- Project Allocation -->
+    <!-- <div class="form-group">
+      <label for="projectAllocation">Project Allocation <span class="required-field">*</span></label>
+      <input id="projectAllocation" type="text" formControlName="projects" placeholder="Enter allocated project." />
+      <div class="error-message" *ngIf="resourceForm.get('projects')?.touched && resourceForm.get('projects')?.invalid">
+        Project Allocation is required.
+      </div>
+    </div> -->
+    <!-- <div class="form-group">
+      <label for="projectAllocation">Project Allocation <span class="required-field">*</span></label>
+      <kendo-dropdownlist id="projectAllocation" [data]="projects" textField="projectName" valueField="projectID"
+        formControlName="projectID" [valuePrimitive]="true" [defaultItem]="{ projectID: null, projectName: 'Select Project' }"
+        [style.width.%]="100">
+      </kendo-dropdownlist>
+      <div class="error-message"
+        *ngIf="resourceForm.get('projectID')?.touched && resourceForm.get('projectID')?.invalid">
+        Project Allocation is required.
+      </div>
+    </div> -->
     <div class="form-group">
       <label for="projectAllocation">Project Allocation <span class="required-field">*</span></label>
-      <input id="projectAllocation" type="text" formControlName="projectAllocation"
-        placeholder="Enter allocated project." />
-      <div class="error-message"
-        *ngIf="resourceForm.get('projectAllocation')?.touched && resourceForm.get('projectAllocation')?.invalid">
+      <kendo-multiselect id="projectAllocation" [data]="projects" textField="projectName" valueField="projectID"
+        [valuePrimitive]="true" formControlName="projects" [placeholder]="'Select project(s)'"
+        class="kendo-multi-select-input" [style.width.%]="100">
+      </kendo-multiselect>
+      <div class="error-message" *ngIf="resourceForm.get('projects')?.touched && resourceForm.get('projects')?.invalid">
         Project Allocation is required.
       </div>
     </div>
 
+
     <!-- Location -->
+    <!-- <div class="form-group">
+      <label for="location">Location <span class="required-field">*</span></label>
+      <input id="location" type="text" formControlName="locationName" placeholder="Enter resource location!" />
+      <div class="error-message"
+        *ngIf="resourceForm.get('locationName')?.touched && resourceForm.get('locationName')?.invalid">
+        Location is required.
+      </div>
+    </div> -->
     <div class="form-group">
       <label for="location">Location <span class="required-field">*</span></label>
-      <input id="location" type="text" formControlName="location" placeholder="Enter resource location!" />
-      <div class="error-message" *ngIf="resourceForm.get('location')?.touched && resourceForm.get('location')?.invalid">
+      <kendo-dropdownlist id="location" [data]="locations" textField="locationName" valueField="locationID"
+        formControlName="locationID" [valuePrimitive]="true"
+        [defaultItem]="{ locationID: null, locationName: 'Select Location' }" [style.width.%]="100">
+      </kendo-dropdownlist>
+      <div class="error-message"
+        *ngIf="resourceForm.get('locationID')?.touched && resourceForm.get('locationID')?.invalid">
         Location is required.
       </div>
     </div>
+
 
     <!-- Email ID -->
     <div class="form-group">
@@ -89,10 +148,9 @@
     <!-- dateOfJoining -->
     <div class="form-group">
       <label for="joiningDate">Joining Date <span class="required-field">*</span></label>
-      <kendo-datepicker formControlName="dateOfJoining" [placeholder]="'Select date...'"></kendo-datepicker>
+      <kendo-datepicker formControlName="doj" [placeholder]="'Select date...'"></kendo-datepicker>
       <!-- <input id="joiningDate" type="date" formControlName="dateOfJoining" /> -->
-      <div class="error-message"
-        *ngIf="resourceForm.get('dateOfJoining')?.touched && resourceForm.get('dateOfJoining')?.invalid">
+      <div class="error-message" *ngIf="resourceForm.get('doj')?.touched && resourceForm.get('doj')?.invalid">
         Joining Date is required.
       </div>
     </div>
