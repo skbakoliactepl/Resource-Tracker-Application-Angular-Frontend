@@ -23,6 +23,11 @@
             </button>
         </div>
         <div class="resource-table-btns-group">
+            <button class="btn import-btn" (click)="openImportDialog()">
+                <span class="material-icons" style="font-size: 16px;">upload_file</span>
+                Import
+            </button>
+
             <kendo-dropdownbutton [data]="exportOptions" [fillMode]="'none'" ngClass="export-btn-group">
                 <span class="material-icons" style="font-size: 16px;">file_download</span>
                 Export
@@ -82,6 +87,39 @@
 
     </kendo-grid>
 
+    <!-- Import Dialog -->
+    <kendo-dialog *ngIf="showImportDialog" (close)="closeImportDialog()" class="import-dialog">
+        <kendo-dialog-titlebar>
+            Import Resources from File
+        </kendo-dialog-titlebar>
+
+        <div class="import-dialog-body">
+            <label class="file-label">
+                <strong>Select a .csv or .xlsx file:</strong>
+            </label>
+            <input type="file" accept=".csv, .xlsx" (change)="onFileSelected($event)" />
+
+            <div *ngIf="selectedFile" class="file-preview">
+                <p><strong>Selected File:</strong> {{ selectedFile.name }}</p>
+            </div>
+
+            <button [disabled]="!selectedFile || isUploading" (click)="uploadFile()" class="btn upload-btn">
+                Upload
+            </button>
+
+            <div *ngIf="isUploading" class="loader-section">
+                <kendo-progressbar [value]="uploadProgress" [animation]="true"></kendo-progressbar>
+                <p>Uploading... Please wait</p>
+            </div>
+
+            <div *ngIf="uploadSuccess" class="upload-success">
+                <span class="material-icons">check_circle</span>
+                Import successful!
+            </div>
+        </div>
+    </kendo-dialog>
+
+
     <!-- Confirmation Dialog -->
     @if(showConfirmDialog){
     <kendo-dialog (close)="cancelDelete()" class="confirmation-dialog">
@@ -138,8 +176,8 @@
                     [valuePrimitive]="true" [valueField]="'value'" [valuePrimitive]="true">
                 </kendo-dropdownlist>
 
-                <textarea class="form-control mt-3 remarks-textarea" placeholder="Enter remarks" formControlName="remarks"
-                    rows="3"></textarea>
+                <textarea class="form-control mt-3 remarks-textarea" placeholder="Enter remarks"
+                    formControlName="remarks" rows="3"></textarea>
             </div>
         </form>
         <kendo-dialog-actions>

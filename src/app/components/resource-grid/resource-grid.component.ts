@@ -28,6 +28,9 @@ import { SkillService } from '../../services/skills/skill.service';
 import { ProjectService } from '../../services/projects/project.service';
 import { LocationService } from '../../services/locations/location.service';
 import { DesignationService } from '../../services/designations/designation.service';
+import { ImportService } from '../../services/import/import.service.ts.service';
+import { HttpEventType } from '@angular/common/http';
+import { ProgressBarModule } from '@progress/kendo-angular-progressbar';
 
 type ExportOption = {
   text: string;
@@ -51,7 +54,8 @@ type ExportOption = {
     KENDO_GRID_PDF_EXPORT,
     DropDownsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ProgressBarModule
   ],
   styles: [`
       .export-btn-group {
@@ -82,6 +86,13 @@ export class ResourceGridComponent {
   projects: ActiveProjectViewModel[] = [];
   locations: ActiveLocationViewModel[] = [];
   designations: ActiveDesignationViewModel[] = [];
+
+  // Import Variables
+  showImportDialog = false;
+  selectedFile: File | null = null;
+  isUploading = false;
+  uploadProgress = 0;
+  uploadSuccess = false;
 
   selectedResource?: Resource;
   resourceToDelete?: Resource;
@@ -124,7 +135,8 @@ export class ResourceGridComponent {
     private projectService: ProjectService,
     private locationService: LocationService,
     private designationService: DesignationService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private importService: ImportService
   ) { }
 
 
@@ -362,6 +374,47 @@ export class ResourceGridComponent {
     return pdfName;
   };
 
+  // Import Dialog Methods
+  openImportDialog() {
+    this.showImportDialog = true;
+    this.selectedFile = null;
+    this.uploadProgress = 0;
+    this.isUploading = false;
+    this.uploadSuccess = false;
+  }
+
+  closeImportDialog() {
+    this.showImportDialog = false;
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input?.files?.length) {
+      this.selectedFile = input.files[0];
+    }
+  }
+
+  uploadFile() {
+    if (!this.selectedFile) return;
+
+    this.isUploading = true;
+    this.uploadProgress = 0;
+
+    this.importService.uploadResourceFile(this.selectedFile).subscribe({
+      next: event => {
+        if (event.type === HttpEventType.UploadProgress && event.total) {
+          this.uploadProgress = Math.round((event.loaded / event.total) * 100);
+        } else if (event.type === HttpEventType.Response) {
+          this.uploadSuccess = true;
+          this.isUploading = false;
+        }
+      },
+      error: err => {
+        console.error('Upload error', err);
+        this.isUploading = false;
+      }
+    });
+  }
 
   exportToCSV(): void {
     const csvData = this.convertToCSV(this.resources);

@@ -183,6 +183,49 @@
   padding: 4px;
 }
 
+/* Import Dialog */
+::ng-deep .import-dialog .k-dialog {
+  width: 600px;
+}
+
+.import-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 10px;
+}
+
+.file-label {
+  margin-bottom: 4px;
+}
+
+.file-preview {
+  font-size: 14px;
+  color: #333;
+}
+
+.loader-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.upload-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: green;
+  margin-top: 16px;
+  font-weight: 500;
+}
+
+.upload-btn {
+  align-self: flex-start;
+}
+
+
+
 
 /* Dialog Style */
 .bulk-edit-dialog-body {
