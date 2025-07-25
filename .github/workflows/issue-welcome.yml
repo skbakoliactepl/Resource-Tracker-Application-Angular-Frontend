@@ -19,5 +19,5 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: "👋 Thanks for opening this issue! We’ll review it shortly. If you’d like to contribute, feel free to check the [Contributing Guide](https://github.com/sakoliactepl/Resource-Tracker-Application-Angular-Frontend/blob/main/CONTRIBUTING.md). 🚀"
+            body: "👋 Thanks for opening this issue! We’ll review it shortly. If you’d like to contribute, feel free to check the [Contributing Guide](https://github.com/sakoliactepl/Resource-Tracker-Application-Angular-Frontend/CONTRIBUTING.md). 🚀"
           })
