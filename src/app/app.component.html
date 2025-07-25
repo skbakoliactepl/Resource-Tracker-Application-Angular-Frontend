@@ -6,6 +6,10 @@
 
   <!-- Outlet -->
   <router-outlet />
+
+  <!-- Footer -->
+  <app-footer></app-footer>
+
   <kendo-notification #notification hidden></kendo-notification>
   <kendo-loader *ngIf="loading$ | async" size="large" type="infinite-spinner" class="loader-overlay"></kendo-loader>
 </main>
