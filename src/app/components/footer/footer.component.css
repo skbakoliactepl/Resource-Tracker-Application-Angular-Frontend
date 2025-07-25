@@ -43,4 +43,16 @@
 
 .footer a:hover {
   text-decoration: underline;
-  color: var(--light-gray-color
+  color: var(--light-gray-color);
+}
+
+@media (min-width: 768px) {
+  .footer-top {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .footer-content {
+    align-items: center;
+  }
+}
