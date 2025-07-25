@@ -1,5 +1,5 @@
 // environment.prod.ts
 export const environment = {
     production: true,
-    apiBaseUrl: 'https://resourcetrackerapi20250709191210-eeh7dvebejaxcecf.canadacentral-01.azurewebsites.net/api/employee'
+    apiBaseUrl: 'https://resource-tracker-api-ajcxauhmgwhadwhx.canadacentral-01.azurewebsites.net/api/Resource'
 };
