@@ -112,6 +112,25 @@
                 <p>Uploading... Please wait</p>
             </div>
 
+            <!-- Upload Message -->
+            <div *ngIf="uploadMessage" class="upload-status"
+                [ngClass]="{ 'success': uploadSuccess, 'error': !uploadSuccess }">
+                <span class="material-icons">{{ uploadSuccess ? 'check_circle' : 'error' }}</span>
+                {{ uploadMessage }}
+            </div>
+
+            <!-- Skipped Resources -->
+            <div *ngIf="skippedResources.length > 0" class="skipped-section">
+                <h4>Skipped Resources:</h4>
+                <div class="skipped-scroll-container">
+                    <ul>
+                        <li *ngFor="let item of skippedResources">
+                            {{ item.fullName }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             <div *ngIf="uploadSuccess" class="upload-success">
                 <span class="material-icons">check_circle</span>
                 Import successful!

@@ -91,8 +91,10 @@ export class ResourceGridComponent {
   showImportDialog = false;
   selectedFile: File | null = null;
   isUploading = false;
-  uploadProgress = 0;
   uploadSuccess = false;
+  uploadProgress: number = 0;
+  uploadMessage = '';
+  skippedResources: any[] = [];
 
   selectedResource?: Resource;
   resourceToDelete?: Resource;
@@ -391,6 +393,8 @@ export class ResourceGridComponent {
     const input = event.target as HTMLInputElement;
     if (input?.files?.length) {
       this.selectedFile = input.files[0];
+      this.uploadMessage = '';
+      this.skippedResources = [];
     }
   }
 
@@ -399,22 +403,50 @@ export class ResourceGridComponent {
 
     this.isUploading = true;
     this.uploadProgress = 0;
+    this.uploadSuccess = false;
+    this.uploadMessage = '';
+    this.skippedResources = [];
 
     this.importService.uploadResourceFile(this.selectedFile).subscribe({
       next: event => {
         if (event.type === HttpEventType.UploadProgress && event.total) {
           this.uploadProgress = Math.round((event.loaded / event.total) * 100);
         } else if (event.type === HttpEventType.Response) {
-          this.uploadSuccess = true;
           this.isUploading = false;
+
+          const response = event.body;
+          console.log("RESPONSE", response);
+
+          if (response?.success) {
+            this.uploadSuccess = true;
+            this.uploadMessage = response.message || 'Resource import successful.';
+            this.skippedResources = [];
+          } else {
+            this.uploadSuccess = false;
+            this.uploadMessage = response?.message || 'Import completed with issues.';
+            this.skippedResources = response?.data || [];
+
+            if (response?.data && response?.data.skippedResources) {
+              this.skippedResources = response.data.skippedResources.map((nameOrObj: any) => {
+                if (typeof nameOrObj === 'string') {
+                  return { fullName: nameOrObj, reason: 'Unknown reason' };
+                } else {
+                  return nameOrObj;
+                }
+              });
+            }
+          }
         }
       },
       error: err => {
         console.error('Upload error', err);
+        this.uploadMessage = 'An error occurred during upload.';
+        this.uploadSuccess = false;
         this.isUploading = false;
       }
     });
   }
+
 
   exportToCSV(): void {
     const csvData = this.convertToCSV(this.resources);
