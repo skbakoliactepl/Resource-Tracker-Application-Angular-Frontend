@@ -1,0 +1,19 @@
+<!-- skill-list.component.html -->
+<div class="skill-list-wrapper">
+  <h2>Manage Skills</h2>
+
+  <button kendoButton (click)="openForm()">Add New Skill</button>
+
+  <kendo-grid [data]="skills" [height]="400">
+    <kendo-grid-column field="skillID" title="ID" [width]="60"></kendo-grid-column>
+    <kendo-grid-column field="skillName" title="Skill Name"></kendo-grid-column>
+    <kendo-grid-column title="Actions" [width]="180">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button kendoButton size="small" (click)="editSkill(dataItem)">Edit</button>
+        <button kendoButton size="small" themeColor="error" (click)="deleteSkill(dataItem.skillID)">Delete</button>
+      </ng-template>
+    </kendo-grid-column>
+  </kendo-grid>
+
+  <app-skill-form *ngIf="showForm" [skill]="selectedSkill" (formClose)="closeForm($event)"></app-skill-form>
+</div>

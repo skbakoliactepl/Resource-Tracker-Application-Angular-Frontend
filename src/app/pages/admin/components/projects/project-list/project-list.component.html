@@ -1,0 +1,22 @@
+<div class="project-list-wrapper">
+  <h2>Manage Projects</h2>
+
+  <button kendoButton (click)="openForm()" themeColor="primary">Add New Project</button>
+
+  <kendo-grid [data]="projects" [height]="400">
+    <kendo-grid-column field="projectID" title="ID" [width]="60"></kendo-grid-column>
+    <kendo-grid-column field="projectName" title="Project Name"></kendo-grid-column>
+    <kendo-grid-column title="Actions" [width]="180">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button kendoButton size="small" (click)="editProject(dataItem)">Edit</button>
+        <button kendoButton size="small" themeColor="error" (click)="deleteProject(dataItem.projectID)">Delete</button>
+      </ng-template>
+    </kendo-grid-column>
+  </kendo-grid>
+
+  <app-project-form
+    *ngIf="showForm"
+    [project]="selectedProject"
+    (formClose)="closeForm($event)">
+  </app-project-form>
+</div>

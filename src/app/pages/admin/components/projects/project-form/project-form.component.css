@@ -1,0 +1,39 @@
+/* project-form.component.css */
+.project-form-wrapper {
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+input[type='text'] {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.required {
+  color: red;
+}
+
+.error-message {
+  color: red;
+  font-size: 13px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}

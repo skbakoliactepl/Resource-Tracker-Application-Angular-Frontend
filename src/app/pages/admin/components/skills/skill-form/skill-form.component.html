@@ -1,0 +1,12 @@
+<form [formGroup]="skillForm" (ngSubmit)="onSubmit()">
+  <label for="skillName">Skill Name *</label>
+  <input id="skillName" type="text" formControlName="skillName" />
+  
+  <div class="actions">
+    <button kendoButton themeColor="primary" type="submit" [disabled]="skillForm.invalid">
+      {{ isEditMode ? 'Update' : 'Add' }} Skill
+    </button>
+    <button kendoButton type="button" (click)="onCancel()">Cancel</button>
+  </div>
+</form>
+
