@@ -12,6 +12,10 @@ export const RoutePaths = {
     editResource: 'edit-resource/:id',
     resourceDetail: 'resource-detail/:id',
 
+    // Admin 
+    admin: 'admin',
+    adminUsers: 'users',
+
     // Wildcard fallback
     wildcard: '**'
 };

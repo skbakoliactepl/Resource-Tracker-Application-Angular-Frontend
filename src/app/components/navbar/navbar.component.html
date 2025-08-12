@@ -7,5 +7,8 @@
         <a [routerLink]="['/', routePaths.appBase]" routerLinkActive="active-link" class="nav-link">Dashboard</a>
         <!-- Logout button -->
         <button (click)="logout()" class="nav-link logout-button">Logout</button>
+        <a [routerLink]="['/', routePaths.appBase, routePaths.admin, routePaths.adminUsers]" class="nav-link">
+            Manage Users
+        </a>
     </div>
 </nav>

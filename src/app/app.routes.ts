@@ -8,6 +8,7 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout.component
 import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
 import { RoutePaths } from './config/route-paths';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { AdminUserManagementComponent } from './components/admin/admin-user-management/admin-user-management.component';
 
 export const routes: Routes = [
     {
@@ -45,6 +46,11 @@ export const routes: Routes = [
                 path: RoutePaths.resourceDetail,
                 component: ResourceDetailComponent,
                 title: 'Resource Detail',
+            },
+            {
+                path: `${RoutePaths.admin}/${RoutePaths.adminUsers}`,
+                component: AdminUserManagementComponent,
+                title: 'Manage Users'
             }
         ]
     },
