@@ -1,13 +1,11 @@
 <nav class="nav-bar">
     <div>
-        <a class="nav-logo" routerLink="/">Resource Tracker</a>
+        <a class="nav-logo" [routerLink]="['/', routePaths.appBase]">Resource Tracker</a>
     </div>
 
     <div class="nav-links">
-        <a routerLink="/" routerLinkActive="active-link" class="nav-link">Dashboard</a>
-        <!-- <a routerLink="/add-new-resource" routerLinkActive="active-link" class="nav-link ">
-            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="add"></mat-icon>
-            Add New Resource
-        </a> -->
+        <a [routerLink]="['/', routePaths.appBase]" routerLinkActive="active-link" class="nav-link">Dashboard</a>
+        <!-- Logout button -->
+        <button (click)="logout()" class="nav-link logout-button">Logout</button>
     </div>
 </nav>

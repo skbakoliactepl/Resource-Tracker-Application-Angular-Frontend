@@ -1,0 +1,15 @@
+<form (ngSubmit)="onSubmit()" class="login-form">
+    <kendo-textbox [(ngModel)]="usernameOrEmail" name="usernameOrEmail" placeholder="Username or Email" required>
+    </kendo-textbox>
+
+    <kendo-textbox [(ngModel)]="password" name="password" type="password" placeholder="Password" required>
+    </kendo-textbox>
+
+    <button kendoButton type="submit" [disabled]="!usernameOrEmail || !password">
+        Login
+    </button>
+
+    <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+    </div>
+</form>

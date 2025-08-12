@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { RoutePaths } from '../../config/route-paths';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,5 +12,12 @@ import { RouterModule } from '@angular/router';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+  routePaths = RoutePaths;
 
+  constructor(private authService: AuthService, private router: Router) { };
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']); // or ['/', 'login'] if using route paths
+  }
 }

@@ -1,0 +1,13 @@
+.login-form {
+    max-width: 320px;
+    margin: 60px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.error-message {
+    color: #d9534f;
+    margin-top: 10px;
+    font-weight: 600;
+}
