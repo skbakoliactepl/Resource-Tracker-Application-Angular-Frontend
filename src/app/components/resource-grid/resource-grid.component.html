@@ -38,7 +38,8 @@
                     </div>
                 </ng-template>
             </kendo-dropdownbutton>
-            <button ngClass="btn" routerLink="/add-new-resource" routerLinkActive="active-link" class="add-btn">
+            <button ngClass="btn" [routerLink]="['/', routePaths.appBase , routePaths.addNewResource]"
+                routerLinkActive="active-link" class="add-btn">
                 <span class="material-icons" style="font-size: 16px;">add</span>
                 Add Resource
             </button>
