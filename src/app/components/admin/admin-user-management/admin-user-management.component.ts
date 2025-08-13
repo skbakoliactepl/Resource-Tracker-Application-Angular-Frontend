@@ -8,6 +8,8 @@ import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 import { TabStripModule } from '@progress/kendo-angular-layout';
+import { AdminService } from '../../../services/admin/admin.service';
+import { ResourceUserModel } from '../../../models/admin/admin.model';
 
 
 interface User {
@@ -43,18 +45,44 @@ export class AdminUserManagementComponent {
   roles = ['Admin', 'Manager', 'User', 'Viewer'];
 
   // Dummy existing users
-  users: User[] = [
-    { userId: 1, username: 'John Doe', email: 'john@example.com', role: 'Admin' },
-    { userId: 2, username: 'Jane Smith', email: 'jane@example.com', role: 'User' },
-    { userId: 3, username: 'Mike Ross', email: 'mike@example.com', role: 'Manager' }
-  ];
+  users: User[] = [];
 
   // Dummy resources (non-users)
-  resources: Resource[] = [
-    { resourceId: 101, fullName: 'Rachel Green', email: 'rachel@example.com' },
-    { resourceId: 102, fullName: 'Chandler Bing', email: 'chandler@example.com' },
-    { resourceId: 103, fullName: 'Phoebe Buffay', email: 'phoebe@example.com' }
-  ];
+  resources: Resource[] = [];
+
+  constructor(private adminService: AdminService) { }
+  ngOnInit() {
+    this.loadResourcesWithStatusAndRoles();
+  }
+
+  loadResourcesWithStatusAndRoles() {
+    this.adminService.getAllResourcesWithUserStatusAndRoles().subscribe({
+      next: (data: ResourceUserModel[]) => {
+        // Separate into users and non-users based on isUser flag
+        this.users = data
+          .filter(d => d.isUser)
+          .map(d => ({
+            userId: d.userID || 0,
+            username: d.username || '',
+            email: d.email || '',
+            role: d.roleName || ''
+          }));
+
+        this.resources = data
+          .filter(d => !d.isUser)
+          .map(d => ({
+            resourceId: d.resourceID,
+            fullName: d.fullName,
+            email: d.email
+          }));
+      },
+      error: err => {
+        console.error('Failed to load resources:', err);
+        // Handle error (show message, etc)
+      }
+    });
+  }
+
 
   get filteredUsers(): User[] {
     return this.users.filter(u =>
@@ -72,14 +100,17 @@ export class AdminUserManagementComponent {
 
   inviteUser(resource: Resource) {
     console.log('Inviting:', resource);
+    // TODO: call API to invite user based on resource info
   }
 
   changeRole(user: User, newRole: string) {
     user.role = newRole;
     console.log('Role changed:', user);
+    // TODO: call API to update role for user
   }
 
   revokeUser(user: User) {
     console.log('Revoking:', user);
+    // TODO: call API to revoke user access
   }
 }

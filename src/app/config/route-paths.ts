@@ -7,7 +7,7 @@ export const RoutePaths = {
     appBase: 'app',
 
     // Main App routes under 'app'
-    resourceGrid: '',
+    resourceGrid: 'resources',
     addNewResource: 'add-new-resource',
     editResource: 'edit-resource/:id',
     resourceDetail: 'resource-detail/:id',
