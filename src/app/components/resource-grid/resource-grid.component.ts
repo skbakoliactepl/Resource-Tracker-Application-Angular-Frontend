@@ -364,7 +364,7 @@ export class ResourceGridComponent {
   triggerEdit(resource: Resource): void {
     console.log("Triggered Edit button", resource);
     this.resourceService.isResourceSelected = true;
-    this.router.navigate([`/edit-resource/${resource.resourceID}`]);
+    this.router.navigate([`${this.routePaths.appBase}/${this.routePaths.editResource.split('/')[0]}/${resource.resourceID}`]);
   }
 
   triggerDetail(resource: Resource) {
