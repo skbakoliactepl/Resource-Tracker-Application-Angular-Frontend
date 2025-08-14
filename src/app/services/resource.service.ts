@@ -42,16 +42,6 @@ export class ResourceService {
 
   update(id: number, resource: UpdateResourceRequest): Observable<void> {
     this.loaderService.show();
-
-    // Convert the dateOfJoining to SQL string format (yyyy-mm-dd)
-    // const formattedDate = resource.dateOfJoining instanceof Date
-    //   ? formateDateOnly(resource.dateOfJoining) : null;
-
-    // const payload: UpdateResourceRequest = {
-    //   resourceID: resource.resourceID!!,
-    //   ...resource,
-    //   doj: formateDateOnly(resource.doj)!
-    // };
     const payload: UpdateResourceRequest = {
       ...resource
     };
