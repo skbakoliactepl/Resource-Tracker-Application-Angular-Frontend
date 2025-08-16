@@ -211,7 +211,7 @@ export class AdminUserManagementComponent {
     this.openConfirmDialog(
       'Confirm Role Change',
       `Are you sure you want to change role of <b>${user.username}</b> to <b>${role.roleName}</b>?`,
-      () => this.executeChangeRole(user, role) // call actual logic
+      () => this.executeChangeRole(user, role), // call actual logic
     );
   }
 
@@ -301,10 +301,12 @@ export class AdminUserManagementComponent {
       this.confirmAction();
     }
     this.closeConfirmDialog();
+    this.loadResourcesWithStatusAndRoles();
   }
 
   closeConfirmDialog() {
     this.confirmDialogVisible = false;
     this.confirmAction = null;
+    this.loadResourcesWithStatusAndRoles();
   }
 }
