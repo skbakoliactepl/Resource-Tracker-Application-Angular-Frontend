@@ -4,23 +4,27 @@ import { FormsModule } from '@angular/forms';
 
 // Kendo UI Imports
 import { GridModule } from '@progress/kendo-angular-grid';
-import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
+import { DropDownListModule, DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 import { TabStripModule } from '@progress/kendo-angular-layout';
 import { AdminService } from '../../../services/admin/admin.service';
-import { ResourceUserModel } from '../../../models/admin/admin.model';
+import { InviteResourceRequestModel, ResourceUserModel, RoleModel, UpdateUserRoleRequest } from '../../../models/admin/admin.model';
+import { IconsModule } from '@progress/kendo-angular-icons';
+import { DialogsModule } from '@progress/kendo-angular-dialog';
+import { ProgressBarModule } from '@progress/kendo-angular-progressbar';
+import { NotificationService } from '@progress/kendo-angular-notification';
 
 
 interface User {
-  userId: number;
+  userID: number;
   username: string;
   email: string;
-  role: string;
+  role: RoleModel;
 }
 
 interface Resource {
-  resourceId: number;
+  resourceID: number;
   fullName: string;
   email: string;
 }
@@ -35,14 +39,21 @@ interface Resource {
     DropDownListModule,
     ButtonsModule,
     InputsModule,
-    TabStripModule
+    TabStripModule,
+    GridModule,
+    DialogsModule,
+    DropDownsModule,
+    ButtonsModule,
+    InputsModule,
+    ProgressBarModule,
+    IconsModule
   ],
   templateUrl: './admin-user-management.component.html',
   styleUrls: ['./admin-user-management.component.css']
 })
 export class AdminUserManagementComponent {
   searchTerm = '';
-  roles = ['Admin', 'Manager', 'User', 'Viewer'];
+  roles: RoleModel[] = [];
 
   // Dummy existing users
   users: User[] = [];
@@ -50,28 +61,57 @@ export class AdminUserManagementComponent {
   // Dummy resources (non-users)
   resources: Resource[] = [];
 
-  constructor(private adminService: AdminService) { }
+  // dialog state
+  showInviteDialog = false;
+  selectedResource: any;
+  selectedRole: RoleModel | null = null;
+  sending = false;
+  sent = false;
+
+  constructor(
+    private adminService: AdminService,
+    private notificationService: NotificationService,
+  ) { }
+
   ngOnInit() {
+    this.loadRoles();
     this.loadResourcesWithStatusAndRoles();
+  }
+
+  loadRoles() {
+    this.adminService.getAllRoles().subscribe({
+      next: (res) => {
+        console.log("ROLES", res);
+        this.roles = res.data;
+      },
+      error: (err) => {
+        console.error('Failed to load roles:', err);
+        this.roles = [];
+      }
+    });
   }
 
   loadResourcesWithStatusAndRoles() {
     this.adminService.getAllResourcesWithUserStatusAndRoles().subscribe({
       next: (data: ResourceUserModel[]) => {
+        console.log("Status data", data);
+
         // Separate into users and non-users based on isUser flag
         this.users = data
           .filter(d => d.isUser)
           .map(d => ({
-            userId: d.userID || 0,
+            userID: d.userID || 0,
             username: d.username || '',
             email: d.email || '',
-            role: d.roleName || ''
+            role: { roleID: d.roleID ?? 0, roleName: d.roleName ?? '' }
           }));
+
+        console.log("USERS", this.users);
 
         this.resources = data
           .filter(d => !d.isUser)
           .map(d => ({
-            resourceId: d.resourceID,
+            resourceID: d.resourceID,
             fullName: d.fullName,
             email: d.email
           }));
@@ -99,18 +139,95 @@ export class AdminUserManagementComponent {
   }
 
   inviteUser(resource: Resource) {
-    console.log('Inviting:', resource);
-    // TODO: call API to invite user based on resource info
+    this.selectedResource = resource;
+    this.selectedRole = null;
+    this.sending = false;
+    this.sent = false;
+    this.showInviteDialog = true;
   }
 
-  changeRole(user: User, newRole: string) {
-    user.role = newRole;
-    console.log('Role changed:', user);
-    // TODO: call API to update role for user
+  sendInvitation() {
+    if (!this.selectedRole) return;
+    console.log("SELECTED ROLE ", this.selectedRole);
+    console.log("SELECTED RESOURCE", this.selectedResource);
+
+
+    const model: InviteResourceRequestModel = {
+      resourceID: this.selectedResource.resourceID,
+      email: this.selectedResource.email,
+      roleID: this.selectedRole.roleID
+    };
+
+    this.sending = true;
+    console.log("payload", model);
+
+    this.adminService.inviteResource(model).subscribe({
+      next: (res) => {
+        setTimeout(() => {
+          this.sending = false;
+          this.sent = true;
+        }, 1500); // simulate sending animation
+      },
+      error: (err) => {
+        this.sending = false;
+        alert('Failed to send invitation');
+      }
+    });
   }
+
+  changeRole(user: User, newRoleId: number) {
+    const selectedRole = this.roles.find(r => r.roleID === newRoleId);
+    if (selectedRole) {
+      user.role = { roleID: selectedRole.roleID ?? 0, roleName: selectedRole.roleName };
+    }
+
+    const payload: UpdateUserRoleRequest = {
+      userID: user.userID,
+      roleID: newRoleId
+    };
+
+    this.adminService.assignUserRole(payload).subscribe({
+      next: () => {
+        this.notificationService.show({
+          content: "Role updated successfully",
+          type: { style: "success", icon: true },
+          hideAfter: 3000
+        });
+      },
+      error: (err) => console.error("Failed to update role:", err)
+    });
+  }
+
 
   revokeUser(user: User) {
     console.log('Revoking:', user);
-    // TODO: call API to revoke user access
+    this.adminService.revokeUser(user.userID).subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.notificationService.show({
+            content: res.message || "User revoked successfully!",
+            type: { style: "success", icon: true },
+            hideAfter: 5000,
+            animation: { type: "slide", duration: 300 },
+          });
+        } else {
+          this.notificationService.show({
+            content: res.message || "Failed to revoke user.",
+            type: { style: "error", icon: true },
+            hideAfter: 5000,
+            animation: { type: "slide", duration: 300 },
+          });
+        }
+      },
+      error: (err) => {
+        this.notificationService.show({
+          content: "An error occurred while revoking the user.",
+          type: { style: "error", icon: true },
+          hideAfter: 5000,
+          animation: { type: "slide", duration: 300 },
+        });
+        console.error('Revoke User API error:', err);
+      }
+    });
   }
 }

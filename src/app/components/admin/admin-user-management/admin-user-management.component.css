@@ -58,3 +58,33 @@ button[kendoButton].danger:hover {
 .k-grid tr:hover {
     background-color: var(--light-gray-color);
 }
+
+
+.invite-dialog h3 {
+    margin: 0 0 10px;
+}
+
+.invite-dialog p {
+    margin: 4px 0;
+}
+
+.sending-section {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.sent-section {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.sent-section .success-icon {
+    color: green;
+    font-size: 40px;
+}
+
+.sent-section .success-text {
+    font-weight: bold;
+    color: green;
+    margin-top: 8px;
+}

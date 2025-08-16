@@ -17,7 +17,9 @@
                     <kendo-grid-column field="role" title="Role" [width]="180">
                         <ng-template kendoGridCellTemplate let-dataItem>
                             <kendo-dropdownlist [data]="roles" [(ngModel)]="dataItem.role"
-                                (valueChange)="changeRole(dataItem, $event)"></kendo-dropdownlist>
+                                (valueChange)="changeRole(dataItem, $event)" textField="roleName" valueField="roleID"
+                                [defaultItem]="{ roleID: null, roleName: 'Select Role...' }">
+                            </kendo-dropdownlist>
                         </ng-template>
                     </kendo-grid-column>
                     <kendo-grid-column title="Actions" [width]="150">
@@ -49,4 +51,40 @@
             </ng-template>
         </kendo-tabstrip-tab>
     </kendo-tabstrip>
+
+
+    <!-- Invitation Dialog -->
+    <kendo-dialog *ngIf="showInviteDialog" (close)="showInviteDialog = false" title="Invite Resource">
+        <div class="invite-dialog">
+            <h3>{{ selectedResource?.fullName }}</h3>
+            <p><strong>ID:</strong> {{ selectedResource?.resourceID }}</p>
+            <p><strong>Email:</strong> {{ selectedResource?.email }}</p>
+
+            <label>Select Role:</label>
+            <kendo-dropdownlist [data]="roles" [(ngModel)]="selectedRole"
+                [defaultItem]="{ roleID: null, roleName: 'Select Role...' }" style="width:100%" textField="roleName"
+                valueField="roleID">
+            </kendo-dropdownlist>
+
+            <!-- Sending animation -->
+            <div *ngIf="sending" class="sending-section">
+                <p>Sending invitation...</p>
+                <kendo-progressbar [value]="70" [animation]="true"></kendo-progressbar>
+            </div>
+
+            <!-- Success animation -->
+            <div *ngIf="sent" class="sent-section">
+                <kendo-icon name="check-circle" class="success-icon"></kendo-icon>
+                <p class="success-text">Invitation Sent Successfully!</p>
+            </div>
+        </div>
+
+        <kendo-dialog-actions>
+            <button kendoButton (click)="showInviteDialog = false">Cancel</button>
+            <button kendoButton [disabled]="!selectedRole || sending || sent" (click)="sendInvitation()"
+                themeColor="primary">
+                Send Invitation
+            </button>
+        </kendo-dialog-actions>
+    </kendo-dialog>
 </div>
