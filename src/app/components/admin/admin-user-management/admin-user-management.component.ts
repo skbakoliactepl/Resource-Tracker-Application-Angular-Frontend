@@ -265,6 +265,8 @@ export class AdminUserManagementComponent {
           });
           this.loadResourcesWithStatusAndRoles();
         } else {
+          console.log("ERROR MESSAGE: ", res.message);
+
           this.notificationService.show({
             content: res.message || "Failed to revoke user.",
             type: { style: "error", icon: true },
@@ -275,12 +277,12 @@ export class AdminUserManagementComponent {
       },
       error: (err) => {
         this.notificationService.show({
-          content: "An error occurred while revoking the user.",
+          content: `${err.error.message}`,
           type: { style: "error", icon: true },
           hideAfter: 5000,
           animation: { type: "slide", duration: 300 },
         });
-        console.error('Revoke User API error:', err);
+        console.error('Revoke User API error:', err.error.message);
       }
     });
   }

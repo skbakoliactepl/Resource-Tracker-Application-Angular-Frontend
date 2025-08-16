@@ -18,13 +18,15 @@
                         <ng-template kendoGridCellTemplate let-dataItem>
                             <kendo-dropdownlist [data]="roles" [(ngModel)]="dataItem.role"
                                 (valueChange)="changeRole(dataItem, $event)" textField="roleName" valueField="roleID"
-                                [defaultItem]="{ roleID: null, roleName: 'Select Role...' }">
+                                [defaultItem]="{ roleID: null, roleName: 'Select Role...' }"
+                                [disabled]="dataItem.userID === 4">
                             </kendo-dropdownlist>
                         </ng-template>
                     </kendo-grid-column>
                     <kendo-grid-column title="Actions" [width]="150">
                         <ng-template kendoGridCellTemplate let-dataItem>
-                            <button kendoButton look="outline" class="danger" (click)="revokeUser(dataItem)">
+                            <button kendoButton look="outline" class="danger" (click)="revokeUser(dataItem)"
+                                [disabled]="dataItem.userID === 4">
                                 Revoke
                             </button>
                         </ng-template>
