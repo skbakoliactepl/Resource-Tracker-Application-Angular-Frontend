@@ -67,6 +67,15 @@ export class AdminUserManagementComponent {
   selectedRole: RoleModel | null = null;
   sending = false;
   sent = false;
+  progressValue = 0;
+  progressInterval: any;
+
+  // Confirmation dialog state
+  confirmDialogVisible = false;
+  confirmDialogTitle = '';
+  confirmDialogMessage = '';
+  confirmAction: (() => void) | null = null;
+
 
   constructor(
     private adminService: AdminService,
@@ -148,9 +157,6 @@ export class AdminUserManagementComponent {
 
   sendInvitation() {
     if (!this.selectedRole) return;
-    console.log("SELECTED ROLE ", this.selectedRole);
-    console.log("SELECTED RESOURCE", this.selectedResource);
-
 
     const model: InviteResourceRequestModel = {
       resourceID: this.selectedResource.resourceID,
@@ -158,33 +164,78 @@ export class AdminUserManagementComponent {
       roleID: this.selectedRole.roleID
     };
 
+    this.progressValue = 0;
     this.sending = true;
-    console.log("payload", model);
+    this.sent = false;
+
+    this.progressInterval = setInterval(() => {
+      if (this.progressValue < 90) {
+        this.progressValue += 7; // increase smoothly
+      }
+    }, 100);
 
     this.adminService.inviteResource(model).subscribe({
       next: (res) => {
-        setTimeout(() => {
-          this.sending = false;
-          this.sent = true;
-        }, 1500); // simulate sending animation
+        clearInterval(this.progressInterval);
+        const finishInterval = setInterval(() => {
+          if (this.progressValue < 100) {
+            this.progressValue += 7;
+          } else {
+            clearInterval(finishInterval);
+            this.sending = false;
+            this.sent = true;
+
+            this.loadResourcesWithStatusAndRoles();
+            this.notificationService.show({
+              content: "Invitation sent successfully",
+              type: { style: "success", icon: true },
+              hideAfter: 3000
+            });
+          }
+        }, 100);
       },
       error: (err) => {
+        clearInterval(this.progressInterval);
         this.sending = false;
-        alert('Failed to send invitation');
+        this.progressValue = 0;
+        this.notificationService.show({
+          content: "Failed to send invitation",
+          type: { style: "error", icon: true },
+          hideAfter: 3000
+        });
       }
     });
   }
 
-  changeRole(user: User, newRoleId: number) {
-    const selectedRole = this.roles.find(r => r.roleID === newRoleId);
+  changeRole(user: User, role: RoleModel) {
+    this.openConfirmDialog(
+      'Confirm Role Change',
+      `Are you sure you want to change role of <b>${user.username}</b> to <b>${role.roleName}</b>?`,
+      () => this.executeChangeRole(user, role) // call actual logic
+    );
+  }
+
+  revokeUser(user: User) {
+    this.openConfirmDialog(
+      'Confirm Revoke',
+      `Are you sure you want to revoke <b>${user.username}</b>?`,
+      () => this.executeRevokeUser(user)
+    );
+  }
+
+  private executeChangeRole(user: User, role: RoleModel) {
+    const selectedRole = this.roles.find(r => r.roleID === role.roleID);
     if (selectedRole) {
       user.role = { roleID: selectedRole.roleID ?? 0, roleName: selectedRole.roleName };
     }
 
     const payload: UpdateUserRoleRequest = {
       userID: user.userID,
-      roleID: newRoleId
+      roleID: role.roleID
     };
+
+    console.log("PAYLOAD", payload);
+
 
     this.adminService.assignUserRole(payload).subscribe({
       next: () => {
@@ -193,13 +244,15 @@ export class AdminUserManagementComponent {
           type: { style: "success", icon: true },
           hideAfter: 3000
         });
+
+        this.loadResourcesWithStatusAndRoles();
       },
       error: (err) => console.error("Failed to update role:", err)
     });
   }
 
 
-  revokeUser(user: User) {
+  private executeRevokeUser(user: User) {
     console.log('Revoking:', user);
     this.adminService.revokeUser(user.userID).subscribe({
       next: (res) => {
@@ -210,6 +263,7 @@ export class AdminUserManagementComponent {
             hideAfter: 5000,
             animation: { type: "slide", duration: 300 },
           });
+          this.loadResourcesWithStatusAndRoles();
         } else {
           this.notificationService.show({
             content: res.message || "Failed to revoke user.",
@@ -229,5 +283,26 @@ export class AdminUserManagementComponent {
         console.error('Revoke User API error:', err);
       }
     });
+  }
+
+  // Method to open confirmation dialog
+  openConfirmDialog(title: string, message: string, action: () => void) {
+    this.confirmDialogTitle = title;
+    this.confirmDialogMessage = message;
+    this.confirmAction = action;
+    this.confirmDialogVisible = true;
+  }
+
+  // Execute confirm action
+  confirm() {
+    if (this.confirmAction) {
+      this.confirmAction();
+    }
+    this.closeConfirmDialog();
+  }
+
+  closeConfirmDialog() {
+    this.confirmDialogVisible = false;
+    this.confirmAction = null;
   }
 }

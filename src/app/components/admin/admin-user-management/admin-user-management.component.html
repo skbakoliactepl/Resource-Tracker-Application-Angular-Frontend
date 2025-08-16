@@ -69,7 +69,8 @@
             <!-- Sending animation -->
             <div *ngIf="sending" class="sending-section">
                 <p>Sending invitation...</p>
-                <kendo-progressbar [value]="70" [animation]="true"></kendo-progressbar>
+                <kendo-progressbar [value]="progressValue" [animation]="{duration: 400}"
+                    [animation]="true"></kendo-progressbar>
             </div>
 
             <!-- Success animation -->
@@ -85,6 +86,16 @@
                 themeColor="primary">
                 Send Invitation
             </button>
+        </kendo-dialog-actions>
+    </kendo-dialog>
+
+    <!-- Confirmation Dialog -->
+    <kendo-dialog *ngIf="confirmDialogVisible" (close)="closeConfirmDialog()" [title]="confirmDialogTitle">
+        <p [innerHTML]="confirmDialogMessage"></p>
+
+        <kendo-dialog-actions>
+            <button kendoButton (click)="closeConfirmDialog()">Cancel</button>
+            <button kendoButton themeColor="primary" (click)="confirm()">Confirm</button>
         </kendo-dialog-actions>
     </kendo-dialog>
 </div>
