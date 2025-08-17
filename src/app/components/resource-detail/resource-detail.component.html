@@ -4,7 +4,7 @@
     <div class="details-header-row-actions">
       <div class="header-action-btn">
         <input type="checkbox" [checked]="editMode" (change)=" toggleEditMode()" id="edit-mode"
-          class="checkbox-accent" />
+          class="checkbox-accent" [disabled]="true"/>
         <label class="edit-toggle" for="edit-mode">
           Enable Editing
         </label>
