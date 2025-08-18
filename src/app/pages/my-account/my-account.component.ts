@@ -35,18 +35,19 @@ export class MyAccountComponent {
 
         this.authService.getUserByUsername(currentUser?.username).subscribe({
           next: (res) => {
-            console.log("RES", res);
-
             this.user.userID = res.userID;
+
             // Fetch resource info using UserID
             this.resourceService.getByEmail(currentUser?.email)
               .pipe(finalize(() => console.log('Resource fetch complete')))
               .subscribe({
                 next: (res) => {
+                  this.user.fullName = res.fullName;
                   this.user.designation = res.designationName;
                   this.user.resourceID = res.resourceID;
                   this.user.address = res.locationName;
                   this.user.projects = res.projects;
+                  this.user.role = currentUser?.role;
                 },
                 error: (err) => {
                   console.error('Error fetching resource info:', err);
