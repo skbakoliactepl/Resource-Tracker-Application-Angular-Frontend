@@ -1,0 +1,138 @@
+.account-page {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+kendo-card {
+    width: 100% !important;
+}
+
+kendo-card .k-card {
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+.profile-card {
+    width: 100%;
+    display: block;
+}
+
+.profile-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.profile-header .k-avatar {
+    width: 3.5rem;
+    min-height: 3.5rem;
+}
+
+.divider {
+    width: 100%;
+    border: none;
+    border-top: 1px solid gray;
+}
+
+.k-avatar-text {
+    font-size: 3rem !important;
+}
+
+.profile-header .k-avatar-initials {
+    font-size: 3rem !important;
+    line-height: 1 !important;
+}
+
+
+.profile-info {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile-info p:nth-of-type(2) {
+    font-weight: bold;
+}
+
+
+.role-badge {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    width: 10px;
+}
+
+.full-width-card {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.account-details-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.account-details-table td {
+    padding: 0.5rem 1rem;
+    vertical-align: middle;
+}
+
+.account-details-table .label {
+    color: #555;
+    width: 150px;
+}
+
+.account-details-table .value {
+    font-weight: 500;
+    color: #333;
+    text-align: left;
+    padding-left: 10rem;
+}
+
+.account-details-table .extra {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.account-details-table tr+tr td {
+    border-top: 1px solid #ccc;
+}
+
+.reset-password-dialog .dialog-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px 0;
+}
+
+.reset-password-dialog .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.reset-password-dialog label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.reset-password-dialog .k-textbox {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.reset-password-dialog kendo-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 10px;
+}

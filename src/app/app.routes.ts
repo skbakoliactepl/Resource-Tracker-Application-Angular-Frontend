@@ -9,6 +9,7 @@ import { LoginLayoutComponent } from './layouts/login-layout/login-layout.compon
 import { RoutePaths } from './config/route-paths';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { AdminUserManagementComponent } from './components/admin/admin-user-management/admin-user-management.component';
+import { MyAccountComponent } from './pages/my-account/my-account.component';
 
 export const routes: Routes = [
     {
@@ -53,6 +54,12 @@ export const routes: Routes = [
                 title: 'Manage Users'
             }
         ]
+    },
+    {
+        path: RoutePaths.myAccount,
+        component: MyAccountComponent,
+        canActivate: [AuthGuard],
+        title: 'My Account'
     },
     {
         path: RoutePaths.wildcard,
