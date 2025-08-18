@@ -16,6 +16,9 @@ export const RoutePaths = {
     admin: 'admin',
     adminUsers: 'users',
 
+    // My-Account
+    myAccount: 'my-account',
+    
     // Wildcard fallback
     wildcard: '**'
 };

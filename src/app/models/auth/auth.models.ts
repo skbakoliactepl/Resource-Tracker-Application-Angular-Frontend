@@ -12,7 +12,20 @@ export interface LoginResponse {
 }
 
 export interface User {
+  fullName?: string;
+  userID?: number;
   username: string;
   email: string;
   role: string;
+  organization?: string;
+  projects?: string;
+  designation?: string;
+  resourceID?: number;
+  address?: string;
+}
+
+export interface ResetPasswordRequest {
+  userID: number;
+  newPassword?: string;
+  currentPassword?: string;
 }

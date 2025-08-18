@@ -1,0 +1,103 @@
+<div class="account-page">
+
+    <!-- Profile Card -->
+    <kendo-card class="profile-card full-width-card">
+        <kendo-card-header>
+            <div class="profile-header">
+                <kendo-avatar shape="circle" [initials]="user.fullName || 'U'"></kendo-avatar>
+                <hr class="divider">
+                <table class="account-details-table">
+                    <tbody>
+                        <tr>
+                            <td class="label">Fullname</td>
+                            <td class="value">{{ user.fullName }}</td>
+                            <td class="role-badge">{{ user.role }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </kendo-card-header>
+    </kendo-card>
+
+    <!-- Account Details Card -->
+    <kendo-card class="full-width-card">
+        <kendo-card-header>
+            <h3>Account Details</h3>
+        </kendo-card-header>
+        <kendo-card-body>
+            <table class="account-details-table">
+                <tbody>
+                    <tr>
+                        <td class="label">Username</td>
+                        <td class="value">{{ user.username }}</td>
+                        <td class="extra">Some random text</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Organization</td>
+                        <td class="value">Cambridge Technology Enterprises Limited</td>
+                        <td class="extra">Extra info here</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Project</td>
+                        <td class="value">{{ user.projects}}</td>
+                        <td class="extra">Extra info here</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Designation</td>
+                        <td class="value">{{ user.designation }}</td>
+                        <td class="extra">Extra info here</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Employee ID</td>
+                        <td class="value">{{ user.resourceID }}</td>
+                        <td class="extra">Extra info here</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Address</td>
+                        <td class="value">{{ user.address }}</td>
+                        <td class="extra">Extra info here</td>
+                    </tr>
+                </tbody>
+            </table>
+        </kendo-card-body>
+    </kendo-card>
+
+
+    <!-- Security Card -->
+    <kendo-card>
+        <kendo-card-header>
+            <h3>Security</h3>
+        </kendo-card-header>
+        <kendo-card-body>
+            <button kendoButton look="flat" themeColor="primary" (click)="resetPassword()">
+                Reset Password
+            </button>
+        </kendo-card-body>
+    </kendo-card>
+
+    <!-- Reset Password Dialog -->
+    <kendo-dialog *ngIf="showResetDialog" (close)="cancelResetPassword()" class="reset-password-dialog">
+        <kendo-dialog-titlebar>
+            Reset Password
+        </kendo-dialog-titlebar>
+
+        <div class="dialog-body">
+            <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <input type="password" id="currentPassword" [(ngModel)]="currentPassword" class="k-textbox" />
+            </div>
+
+            <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" [(ngModel)]="newPassword" class="k-textbox" />
+            </div>
+        </div>
+
+        <kendo-dialog-actions>
+            <button kendoButton look="flat" (click)="cancelResetPassword()">Cancel</button>
+            <button kendoButton [disabled]="!newPassword" look='default'
+                (click)="confirmResetPassword()">Confirm</button>
+        </kendo-dialog-actions>
+    </kendo-dialog>
+
+</div>

@@ -54,3 +54,10 @@
 .logout-button:hover {
     text-decoration: underline;
 }
+
+.profile-button {
+    outline: none;
+    border: none;
+    background-color: transparent;
+    color: white;
+}

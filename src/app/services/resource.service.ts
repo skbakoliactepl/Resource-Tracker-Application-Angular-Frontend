@@ -76,6 +76,15 @@ export class ResourceService {
     );
   }
 
+  getByEmail(email: string): Observable<ResourceResponse> {
+    this.loaderService.show();
+    const emailEncoded = encodeURIComponent(email); // encode @ and other special chars
+    return this.http.get<ResourceResponse>(`${this.URL}/by-email/${emailEncoded}`).pipe(
+      map(res => ({ ...res, doj: new Date(res.doj) })),
+      finalize(() => this.loaderService.hide())
+    );
+  }
+
   getFullDetailsById(id: number): Observable<FullResourceResponse> {
     this.loaderService.show();
     return this.http.get<{ data: FullResourceResponse }>(`${this.URL}/full/${id}`).pipe(
