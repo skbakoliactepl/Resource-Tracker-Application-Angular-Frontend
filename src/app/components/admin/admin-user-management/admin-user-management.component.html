@@ -10,11 +10,14 @@
         <!-- Existing Users Tab -->
         <kendo-tabstrip-tab title="Existing Users" [selected]="true">
             <ng-template kendoTabContent>
-                <kendo-grid [kendoGridBinding]="filteredUsers" [sortable]="true" [pageable]="true" [pageSize]="8">
+                <kendo-grid [kendoGridBinding]="filteredUsers" [sortable]="true"
+                    [pageable]="{ buttonCount: 5, pageSizes: [5, 10, 20, 50], info: true }" [pageSize]="8"
+                    [resizable]="true" (pageChange)="pageChange($event)" [skip]="skip">
                     <kendo-grid-column field="userID" title="User ID" [width]="80"></kendo-grid-column>
-                    <kendo-grid-column field="username" title="Username"></kendo-grid-column>
-                    <kendo-grid-column field="email" title="Email"></kendo-grid-column>
-                    <kendo-grid-column field="role" title="Role" [width]="180">
+                    <kendo-grid-column field="fullName" title="FullName" [width]="150"></kendo-grid-column>
+                    <kendo-grid-column field="username" title="Username" [width]="150"></kendo-grid-column>
+                    <kendo-grid-column field="email" title="Email" [width]="200"></kendo-grid-column>
+                    <kendo-grid-column field="role" title="Role" [width]="140">
                         <ng-template kendoGridCellTemplate let-dataItem>
                             <kendo-dropdownlist [data]="roles" [(ngModel)]="dataItem.role"
                                 (valueChange)="changeRole(dataItem, $event)" textField="roleName" valueField="roleID"
@@ -23,7 +26,7 @@
                             </kendo-dropdownlist>
                         </ng-template>
                     </kendo-grid-column>
-                    <kendo-grid-column title="Actions" [width]="150">
+                    <kendo-grid-column title="Actions" [width]="120">
                         <ng-template kendoGridCellTemplate let-dataItem>
                             <button kendoButton look="outline" class="danger" (click)="revokeUser(dataItem)"
                                 [disabled]="dataItem.userID === 4">
@@ -38,8 +41,18 @@
         <!-- Not Users Tab -->
         <kendo-tabstrip-tab title="Not Users">
             <ng-template kendoTabContent>
-                <kendo-grid [kendoGridBinding]="filteredResources" [sortable]="true" [pageable]="true" [pageSize]="8">
-                    <kendo-grid-column field="resourceId" title="Resource ID" [width]="100"></kendo-grid-column>
+                <kendo-grid 
+                    [kendoGridBinding]="filteredResources" 
+                    [sortable]="true" 
+                    [pageable]="true" 
+                    [pageSize]="8" 
+                    [resizable]="true"
+                    [pageable]="{ buttonCount: 5, pageSizes: [5, 10, 20, 50], info: true }"
+                    [pageSize]="resourcesPageSize"
+                    [skip]="resourcesSkip"
+                    (pageChange)="resourcesPageChange($event)"
+                >
+                    <kendo-grid-column field="resourceID" title="Resource ID" [width]="100"></kendo-grid-column>
                     <kendo-grid-column field="fullName" title="Full Name"></kendo-grid-column>
                     <kendo-grid-column field="email" title="Email"></kendo-grid-column>
                     <kendo-grid-column title="Actions" [width]="150">

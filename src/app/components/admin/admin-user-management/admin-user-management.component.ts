@@ -18,6 +18,7 @@ import { NotificationService } from '@progress/kendo-angular-notification';
 
 interface User {
   userID: number;
+  fullName: string;
   username: string;
   email: string;
   role: RoleModel;
@@ -77,6 +78,15 @@ export class AdminUserManagementComponent {
   confirmAction: (() => void) | null = null;
 
 
+  // Kendo Grid 
+  public pageSize = 10;
+  public skip = 0;
+
+  // For "Not Users" tab pagination
+  public resourcesPageSize = 10;
+  public resourcesSkip = 0;
+
+
   constructor(
     private adminService: AdminService,
     private notificationService: NotificationService,
@@ -100,6 +110,16 @@ export class AdminUserManagementComponent {
     });
   }
 
+  public pageChange(event: any): void {
+    this.skip = event.skip;
+    this.pageSize = event.take;
+  }
+
+  public resourcesPageChange(event: any): void {
+    this.resourcesSkip = event.skip;
+    this.resourcesPageSize = event.take;
+  }
+
   loadResourcesWithStatusAndRoles() {
     this.adminService.getAllResourcesWithUserStatusAndRoles().subscribe({
       next: (data: ResourceUserModel[]) => {
@@ -110,19 +130,20 @@ export class AdminUserManagementComponent {
           .filter(d => d.isUser)
           .map(d => ({
             userID: d.userID || 0,
+            fullName: d.fullName || '',
             username: d.username || '',
             email: d.email || '',
             role: { roleID: d.roleID ?? 0, roleName: d.roleName ?? '' }
           }));
 
-        console.log("USERS", this.users);
+        console.log("USERS", data);
 
         this.resources = data
           .filter(d => !d.isUser)
           .map(d => ({
-            resourceID: d.resourceID,
-            fullName: d.fullName,
-            email: d.email
+            resourceID: d.resourceID || 0,
+            fullName: d.fullName || '',
+            email: d.email || ''
           }));
       },
       error: err => {
