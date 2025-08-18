@@ -7,7 +7,7 @@
     <div class="resource-table-header">
         <div class="resource-table-btns-group">
             <button class="delete-selected-btn btn" (click)="confirmBulkDelete()"
-                [disabled]="selectedToDelete.length === 0">
+                [disabled]="selectedToDelete.length === 0" *appHasRole="['Admin', 'HR']">
                 <span class="material-icons" style="font-size: 16px;">delete</span>
                 {{selectedToDelete.length > 1 ? 'Delete All' : 'Delete'}}
             </button>
@@ -17,18 +17,19 @@
                 Detail
             </button>
             <button class="edit-selected-btn btn" [disabled]="selectedToDelete.length < 1"
-                (click)="openBulkEditDialog()">
+                (click)="openBulkEditDialog()" *appHasRole="['Admin', 'Manager']">
                 <span class="material-icons" style="font-size: 16px;">edit</span>
                 Edit Selected
             </button>
         </div>
         <div class="resource-table-btns-group">
-            <button class="btn import-btn" (click)="openImportDialog()">
+            <button class="btn import-btn" (click)="openImportDialog()" *appHasRole="['Admin', 'HR']">
                 <span class="material-icons" style="font-size: 16px;">upload_file</span>
                 Import
             </button>
 
-            <kendo-dropdownbutton [data]="exportOptions" [fillMode]="'none'" ngClass="export-btn-group">
+            <kendo-dropdownbutton [data]="exportOptions" [fillMode]="'none'" ngClass="export-btn-group"
+                *appHasRole="['Admin', 'HR', 'Manager']">
                 <span class="material-icons" style="font-size: 16px;">file_download</span>
                 Export
                 <ng-template kendoDropDownButtonItemTemplate let-dataItem class="export-btn btn">
@@ -38,7 +39,8 @@
                     </div>
                 </ng-template>
             </kendo-dropdownbutton>
-            <button ngClass="btn" routerLink="/add-new-resource" routerLinkActive="active-link" class="add-btn">
+            <button ngClass="btn" [routerLink]="['/', routePaths.appBase , routePaths.addNewResource]"
+                routerLinkActive="active-link" class="add-btn" *appHasRole="['Admin', 'HR', 'Manager']">
                 <span class="material-icons" style="font-size: 16px;">add</span>
                 Add Resource
             </button>
@@ -74,11 +76,12 @@
         <kendo-grid-column title="Actions" [width]="170">
             <ng-template kendoGridCellTemplate let-dataItem>
                 <div class="action-btn">
-                    <button (click)="triggerEdit(dataItem)" class="resource-grid-action-btn">Edit</button>
+                    <button (click)="triggerEdit(dataItem)" class="resource-grid-action-btn"
+                        *appHasRole="['Admin', 'Manager']"> Edit</button>
                     <button (click)="triggerDetail(dataItem)"
                         class="resource-grid-action-btn detail-action-btn">Detail</button>
-                    <button (click)="openConfirmDialog(dataItem)"
-                        class="resource-grid-action-btn delete-action-btn">Delete</button>
+                    <button (click)="openConfirmDialog(dataItem)" class="resource-grid-action-btn delete-action-btn"
+                        *appHasRole="['Admin', 'HR']">Delete</button>
                 </div>
             </ng-template>
         </kendo-grid-column>
@@ -205,5 +208,4 @@
         </kendo-dialog-actions>
     </kendo-dialog>
     }
-
 </section>

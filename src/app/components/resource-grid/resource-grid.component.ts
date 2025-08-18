@@ -31,6 +31,8 @@ import { DesignationService } from '../../services/designations/designation.serv
 import { ImportService } from '../../services/import/import.service.ts.service';
 import { HttpEventType } from '@angular/common/http';
 import { ProgressBarModule } from '@progress/kendo-angular-progressbar';
+import { RoutePaths } from '../../config/route-paths';
+import { HasRoleDirective } from '../../shared/directives/has-role.directive';
 
 type ExportOption = {
   text: string;
@@ -55,7 +57,8 @@ type ExportOption = {
     DropDownsModule,
     FormsModule,
     ReactiveFormsModule,
-    ProgressBarModule
+    ProgressBarModule,
+    HasRoleDirective
   ],
   styles: [`
       .export-btn-group {
@@ -72,6 +75,7 @@ type ExportOption = {
 })
 
 export class ResourceGridComponent {
+  routePaths = RoutePaths;
   @ViewChild(GridComponent) grid!: GridComponent;
   pdfExport!: PDFExportComponent;
 
@@ -279,7 +283,7 @@ export class ResourceGridComponent {
 
   confirmDetail(): void {
     if (!(this.selectedToDelete.length === 0) || !(this.selectedToDelete.length > 1) && (this.resourceIdToView)) {
-      this.router.navigate([`/resource-detail/${this.resourceIdToView}`]);
+      this.router.navigate([`${this.routePaths.appBase}/${this.routePaths.resourceDetail.split('/')[0]}/${this.resourceIdToView}`]);
     }
   };
 
@@ -362,12 +366,12 @@ export class ResourceGridComponent {
   triggerEdit(resource: Resource): void {
     console.log("Triggered Edit button", resource);
     this.resourceService.isResourceSelected = true;
-    this.router.navigate([`/edit-resource/${resource.resourceID}`]);
+    this.router.navigate([`${this.routePaths.appBase}/${this.routePaths.editResource.split('/')[0]}/${resource.resourceID}`]);
   }
 
   triggerDetail(resource: Resource) {
     console.log("Detail button Triggered!", resource.resourceID);
-    this.router.navigate([`/resource-detail/${resource.resourceID}`]);
+    this.router.navigate([`${this.routePaths.appBase}/${this.routePaths.resourceDetail.split('/')[0]}/${resource.resourceID}`]);
   };
 
 

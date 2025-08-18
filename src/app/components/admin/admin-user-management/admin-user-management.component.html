@@ -1,0 +1,103 @@
+<div class="admin-user-container">
+    <h2 class="page-title">User Management</h2>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <input kendoTextBox [(ngModel)]="searchTerm" placeholder="Search by name or email..." />
+    </div>
+
+    <kendo-tabstrip>
+        <!-- Existing Users Tab -->
+        <kendo-tabstrip-tab title="Existing Users" [selected]="true">
+            <ng-template kendoTabContent>
+                <kendo-grid [kendoGridBinding]="filteredUsers" [sortable]="true" [pageable]="true" [pageSize]="8">
+                    <kendo-grid-column field="userID" title="User ID" [width]="80"></kendo-grid-column>
+                    <kendo-grid-column field="username" title="Username"></kendo-grid-column>
+                    <kendo-grid-column field="email" title="Email"></kendo-grid-column>
+                    <kendo-grid-column field="role" title="Role" [width]="180">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                            <kendo-dropdownlist [data]="roles" [(ngModel)]="dataItem.role"
+                                (valueChange)="changeRole(dataItem, $event)" textField="roleName" valueField="roleID"
+                                [defaultItem]="{ roleID: null, roleName: 'Select Role...' }"
+                                [disabled]="dataItem.userID === 4">
+                            </kendo-dropdownlist>
+                        </ng-template>
+                    </kendo-grid-column>
+                    <kendo-grid-column title="Actions" [width]="150">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                            <button kendoButton look="outline" class="danger" (click)="revokeUser(dataItem)"
+                                [disabled]="dataItem.userID === 4">
+                                Revoke
+                            </button>
+                        </ng-template>
+                    </kendo-grid-column>
+                </kendo-grid>
+            </ng-template>
+        </kendo-tabstrip-tab>
+
+        <!-- Not Users Tab -->
+        <kendo-tabstrip-tab title="Not Users">
+            <ng-template kendoTabContent>
+                <kendo-grid [kendoGridBinding]="filteredResources" [sortable]="true" [pageable]="true" [pageSize]="8">
+                    <kendo-grid-column field="resourceId" title="Resource ID" [width]="100"></kendo-grid-column>
+                    <kendo-grid-column field="fullName" title="Full Name"></kendo-grid-column>
+                    <kendo-grid-column field="email" title="Email"></kendo-grid-column>
+                    <kendo-grid-column title="Actions" [width]="150">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                            <button kendoButton look="outline" (click)="inviteUser(dataItem)">
+                                Invite
+                            </button>
+                        </ng-template>
+                    </kendo-grid-column>
+                </kendo-grid>
+            </ng-template>
+        </kendo-tabstrip-tab>
+    </kendo-tabstrip>
+
+
+    <!-- Invitation Dialog -->
+    <kendo-dialog *ngIf="showInviteDialog" (close)="showInviteDialog = false" title="Invite Resource">
+        <div class="invite-dialog">
+            <h3>{{ selectedResource?.fullName }}</h3>
+            <p><strong>ID:</strong> {{ selectedResource?.resourceID }}</p>
+            <p><strong>Email:</strong> {{ selectedResource?.email }}</p>
+
+            <label>Select Role:</label>
+            <kendo-dropdownlist [data]="roles" [(ngModel)]="selectedRole"
+                [defaultItem]="{ roleID: null, roleName: 'Select Role...' }" style="width:100%" textField="roleName"
+                valueField="roleID">
+            </kendo-dropdownlist>
+
+            <!-- Sending animation -->
+            <div *ngIf="sending" class="sending-section">
+                <p>Sending invitation...</p>
+                <kendo-progressbar [value]="progressValue" [animation]="{duration: 400}"
+                    [animation]="true"></kendo-progressbar>
+            </div>
+
+            <!-- Success animation -->
+            <div *ngIf="sent" class="sent-section">
+                <kendo-icon name="check-circle" class="success-icon"></kendo-icon>
+                <p class="success-text">Invitation Sent Successfully!</p>
+            </div>
+        </div>
+
+        <kendo-dialog-actions>
+            <button kendoButton (click)="showInviteDialog = false">Cancel</button>
+            <button kendoButton [disabled]="!selectedRole || sending || sent" (click)="sendInvitation()"
+                themeColor="primary">
+                Send Invitation
+            </button>
+        </kendo-dialog-actions>
+    </kendo-dialog>
+
+    <!-- Confirmation Dialog -->
+    <kendo-dialog *ngIf="confirmDialogVisible" (close)="closeConfirmDialog()" [title]="confirmDialogTitle">
+        <p [innerHTML]="confirmDialogMessage"></p>
+
+        <kendo-dialog-actions>
+            <button kendoButton (click)="closeConfirmDialog()">Cancel</button>
+            <button kendoButton themeColor="primary" (click)="confirm()">Confirm</button>
+        </kendo-dialog-actions>
+    </kendo-dialog>
+</div>

@@ -39,3 +39,18 @@
     font-size: 20px;
     line-height: 1;
 }
+
+
+/* Logout Button */
+.logout-button {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 1rem;
+    padding: 0;
+}
+
+.logout-button:hover {
+    text-decoration: underline;
+}
