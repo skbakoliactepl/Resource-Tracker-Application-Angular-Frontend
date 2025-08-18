@@ -28,8 +28,10 @@ export class AuthService {
         this.currentUserSubject.next({
           username: data.usernameOrEmail,
           email: '', // optional, or decode from token if you want
-          role: response.role
+          role: response.roleName
         });
+        console.log("CURRENT USER", response);
+
       })
     );
   }
@@ -51,13 +53,23 @@ export class AuthService {
   private loadUserFromStorage() {
     const token = this.getToken();
     if (token) {
-      // Optionally decode token to get user info and role
+      const decoded = this.decodeToken(token);
       // For now, just mark user as logged in
       this.currentUserSubject.next({
-        username: '',
-        email: '',
-        role: '' // decode if you want
+        username: decoded?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] || '',
+        email: decoded?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] || '',
+        role: decoded?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || ''
       });
+    }
+  }
+
+  private decodeToken(token: string): any {
+    try {
+      const payload = token.split('.')[1];
+      console.log("DECODED Payload", JSON.parse(atob(payload)));
+      return JSON.parse(atob(payload));
+    } catch (e) {
+      return null;
     }
   }
 }

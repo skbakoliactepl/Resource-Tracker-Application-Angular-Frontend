@@ -8,7 +8,7 @@ export interface LoginRequest {
 export interface LoginResponse {
   token: string;
   expiresIn: number;  // e.g. seconds or timestamp depending on your API
-  role: string;       // role returned from backend JWT or login API
+  roleName: string;       // role returned from backend JWT or login API
 }
 
 export interface User {

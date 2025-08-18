@@ -32,6 +32,7 @@ import { ImportService } from '../../services/import/import.service.ts.service';
 import { HttpEventType } from '@angular/common/http';
 import { ProgressBarModule } from '@progress/kendo-angular-progressbar';
 import { RoutePaths } from '../../config/route-paths';
+import { HasRoleDirective } from '../../shared/directives/has-role.directive';
 
 type ExportOption = {
   text: string;
@@ -56,7 +57,8 @@ type ExportOption = {
     DropDownsModule,
     FormsModule,
     ReactiveFormsModule,
-    ProgressBarModule
+    ProgressBarModule,
+    HasRoleDirective
   ],
   styles: [`
       .export-btn-group {
