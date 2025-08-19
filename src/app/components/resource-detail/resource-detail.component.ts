@@ -13,6 +13,7 @@ import { DialogComponent, KENDO_DIALOGS } from '@progress/kendo-angular-dialog';
 import { NotificationService } from '@progress/kendo-angular-notification';
 import { UpdateResourceRequest } from '../../models';
 import { ResourceViewModel } from '../../models/resources/resource-view.model';
+import { HasRoleDirective } from '../../shared/directives/has-role.directive';
 
 
 @Component({
@@ -28,6 +29,7 @@ import { ResourceViewModel } from '../../models/resources/resource-view.model';
     ButtonsModule,
     InputsModule,
     KENDO_DIALOGS,
+    HasRoleDirective
   ],
   templateUrl: './resource-detail.component.html',
   styleUrl: './resource-detail.component.css'

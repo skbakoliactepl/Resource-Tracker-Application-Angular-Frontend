@@ -1,7 +1,7 @@
 <div class="resource-detail-container">
   <div class="header-row">
     <h2>Resource Details</h2>
-    <div class="details-header-row-actions">
+    <div class="details-header-row-actions" *appHasRole="['Admin', 'HR',]">
       <div class="header-action-btn">
         <input type="checkbox" [checked]="editMode" (change)=" toggleEditMode()" id="edit-mode"
           class="checkbox-accent" [disabled]="true"/>
