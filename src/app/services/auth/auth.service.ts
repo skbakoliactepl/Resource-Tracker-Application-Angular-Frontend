@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
-import { LoginRequest, LoginResponse, User } from '../../models/auth/auth.models';
+import { LoginRequest, LoginResponse, ResetPasswordRequest, User } from '../../models/auth/auth.models';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -31,7 +31,6 @@ export class AuthService {
           role: response.roleName
         });
         console.log("CURRENT USER", response);
-
       })
     );
   }
@@ -71,5 +70,28 @@ export class AuthService {
     } catch (e) {
       return null;
     }
+  }
+
+  resetPassword(request: ResetPasswordRequest): Observable<any> {
+    return this.http.post(`${this.authUrl}/reset-password`, request).pipe(
+      tap(response => {
+        console.log('Password reset response:', response);
+      }),
+      catchError((error: any) => {
+        console.error('Error resetting password:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+
+  getUserByUsername(username: string): Observable<any> {
+    return this.http.get<{ Success: boolean; data: any }>(`${this.authUrl}/get-user-by-username/${username}`)
+      .pipe(
+        tap(response => {
+          console.log("USER DETAILS", response?.data);
+        }),
+        map(response => response.data)
+      );
   }
 }

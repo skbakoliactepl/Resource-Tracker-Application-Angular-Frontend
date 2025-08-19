@@ -10,6 +10,21 @@
             *appHasRole="['Admin']">
             Manage Users
         </a>
-        <button (click)="logout()" class="nav-link logout-button">Logout</button>
+
+        <!-- Profile Menu -->
+        <button mat-icon-button [matMenuTriggerFor]="profileMenu" class="profile-button">
+            <mat-icon>account_circle</mat-icon>
+        </button>
+
+        <mat-menu #profileMenu="matMenu">
+            <button mat-menu-item [routerLink]="['/', routePaths.myAccount]">
+                <mat-icon>person</mat-icon>
+                <span>My Account</span>
+            </button>
+            <button mat-menu-item (click)="logout()">
+                <mat-icon>logout</mat-icon>
+                <span>Logout</span>
+            </button>
+        </mat-menu>
     </div>
 </nav>

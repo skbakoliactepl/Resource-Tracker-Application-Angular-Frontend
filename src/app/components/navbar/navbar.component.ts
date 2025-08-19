@@ -4,11 +4,12 @@ import { Router, RouterModule } from '@angular/router';
 import { RoutePaths } from '../../config/route-paths';
 import { AuthService } from '../../services/auth/auth.service';
 import { HasRoleDirective } from '../../shared/directives/has-role.directive';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [MatIconModule, RouterModule, HasRoleDirective],
+  imports: [MatIconModule, RouterModule, HasRoleDirective, MatIconModule, MatMenuModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
