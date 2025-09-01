@@ -30,7 +30,7 @@ export class AuthService {
           email: '', // optional, or decode from token if you want
           role: response.roleName
         });
-        console.log("CURRENT USER", response);
+        // console.log("CURRENT USER", response);
       })
     );
   }
@@ -65,7 +65,7 @@ export class AuthService {
   private decodeToken(token: string): any {
     try {
       const payload = token.split('.')[1];
-      console.log("DECODED Payload", JSON.parse(atob(payload)));
+      // console.log("DECODED Payload", JSON.parse(atob(payload)));
       return JSON.parse(atob(payload));
     } catch (e) {
       return null;

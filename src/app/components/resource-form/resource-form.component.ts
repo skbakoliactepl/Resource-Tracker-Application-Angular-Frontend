@@ -73,7 +73,7 @@ export class ResourceFormComponent implements OnInit {
     this.initializeForm();
     this.managerService.getActiveManagers().subscribe({
       next: (response) => {
-        console.log("Manager", response.data);
+        // console.log("Manager", response.data);
         this.managers = response.data;
       },
       error: (err) => {
@@ -83,7 +83,7 @@ export class ResourceFormComponent implements OnInit {
 
     this.skillService.getActiveSkills().subscribe({
       next: (response) => {
-        console.log("Skills", response.data);
+        // console.log("Skills", response.data);
         this.skillsList = response.data;
       },
       error: (err) => {
@@ -93,7 +93,7 @@ export class ResourceFormComponent implements OnInit {
 
     this.projectService.getAllProjects().subscribe({
       next: (response) => {
-        console.log("Projects", response.data);
+        // console.log("Projects", response.data);
         this.projects = response.data;
       },
       error: (err) => {
@@ -103,7 +103,7 @@ export class ResourceFormComponent implements OnInit {
 
     this.locationService.getActiveLocations().subscribe({
       next: (response) => {
-        console.log("Locations", response.data);
+        // console.log("Locations", response.data);
         this.locations = response.data;
       },
       error: (err) => {
@@ -113,7 +113,7 @@ export class ResourceFormComponent implements OnInit {
 
     this.designationService.getActiveDesignations().subscribe({
       next: (response) => {
-        console.log("Designations", response.data);
+        // console.log("Designations", response.data);
         this.designations = response.data;
       },
       error: (err) => {
@@ -165,7 +165,6 @@ export class ResourceFormComponent implements OnInit {
   onSubmit(): void {
     if (this.resourceForm.valid) {
       const formValue = this.resourceForm.value as CreateResourceRequest;
-      console.log("FORMValue", formValue);
 
       this.resourceService.add(formValue).subscribe({
         next: () => {

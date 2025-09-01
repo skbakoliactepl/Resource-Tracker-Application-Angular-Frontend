@@ -100,7 +100,7 @@ export class AdminUserManagementComponent {
   loadRoles() {
     this.adminService.getAllRoles().subscribe({
       next: (res) => {
-        console.log("ROLES", res);
+        // console.log("ROLES", res);
         this.roles = res.data;
       },
       error: (err) => {
@@ -123,7 +123,7 @@ export class AdminUserManagementComponent {
   loadResourcesWithStatusAndRoles() {
     this.adminService.getAllResourcesWithUserStatusAndRoles().subscribe({
       next: (data: ResourceUserModel[]) => {
-        console.log("Status data", data);
+        // console.log("Status data", data);
 
         // Separate into users and non-users based on isUser flag
         this.users = data
@@ -136,7 +136,7 @@ export class AdminUserManagementComponent {
             role: { roleID: d.roleID ?? 0, roleName: d.roleName ?? '' }
           }));
 
-        console.log("USERS", data);
+        // console.log("USERS", data);
 
         this.resources = data
           .filter(d => !d.isUser)
@@ -255,8 +255,6 @@ export class AdminUserManagementComponent {
       roleID: role.roleID
     };
 
-    console.log("PAYLOAD", payload);
-
 
     this.adminService.assignUserRole(payload).subscribe({
       next: () => {
@@ -274,7 +272,6 @@ export class AdminUserManagementComponent {
 
 
   private executeRevokeUser(user: User) {
-    console.log('Revoking:', user);
     this.adminService.revokeUser(user.userID).subscribe({
       next: (res) => {
         if (res.success) {
@@ -286,8 +283,6 @@ export class AdminUserManagementComponent {
           });
           this.loadResourcesWithStatusAndRoles();
         } else {
-          console.log("ERROR MESSAGE: ", res.message);
-
           this.notificationService.show({
             content: res.message || "Failed to revoke user.",
             type: { style: "error", icon: true },

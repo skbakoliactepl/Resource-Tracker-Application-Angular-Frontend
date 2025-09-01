@@ -46,12 +46,19 @@
             </button>
         </div>
     </div>
+    <div class="k-grid-toolbar">
+        <input kendoTextBox placeholder="Search by Name or Email..." [(ngModel)]="globalSearchTerm"
+            (ngModelChange)="onSearchChange($event)" class="grid-search" />
+    </div>
 
-    <kendo-grid kendoGridSelectBy="resourceID" [kendoGridBinding]="resources" [height]="500" [style.width.%]="100"
-        [pageSize]="10" [pageable]="true" [sortable]="true" [groupable]="true" [reorderable]="true" [resizable]="true"
-        [navigable]="['table', 'pager']" [height]="500" [columnMenu]="{ filter: true }" class="resource-list"
-        [(selectedKeys)]="selectedToDelete" [selectable]="{ mode: 'multiple', drag: true }"
-        (rowClick)="onRowClick($event)" (cellClick)="onRowClick($event)" #grid>
+    <kendo-grid kendoGridSelectBy="resourceID" [data]="gridData.data" [height]="500" [style.width.%]="100"
+        [pageSize]="state.pageSize" [pageable]="{ buttonCount: 5, pageSizes: [5, 8, 10, 20, 50], info: true }"
+        [sortable]="true" [groupable]="true" [reorderable]="true" [resizable]="true"
+        [skip]="(state.page - 1) * state.pageSize" [navigable]="['table', 'pager']" [height]="500"
+        [columnMenu]="{ filter: true }" class="resource-list" (dataStateChange)="dataStateChange($event)"
+        (pageChange)="onPageChange($event)" (sortChange)="onSortChange($event)" [(selectedKeys)]="selectedToDelete"
+        [selectable]="{ mode: 'multiple', drag: true }" (rowClick)="onRowClick($event)" (cellClick)="onRowClick($event)"
+        #grid>
         <kendo-grid-checkbox-column [width]="45" [headerClass]="{ 'text-center': true }"
             [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true">
         </kendo-grid-checkbox-column>
@@ -87,7 +94,7 @@
         </kendo-grid-column>
         <kendo-grid-pdf [allPages]="true" paperSize="A4" [repeatHeaders]="true" [landscape]="true"
             [fileName]="getPdfName()"></kendo-grid-pdf>
-
+        <label>Page Size:</label>
     </kendo-grid>
 
     <!-- Import Dialog -->

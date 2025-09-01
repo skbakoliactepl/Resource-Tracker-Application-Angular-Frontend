@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { GridComponent, GridModule } from '@progress/kendo-angular-grid';
-import { Resource } from '../../models/resources/resource.model';
+import { DataStateChangeEvent, GridComponent, GridModule } from '@progress/kendo-angular-grid';
+import { GridDataResult, Resource } from '../../models/resources/resource.model';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
 import { ResourceService } from '../../services/resource.service';
@@ -33,6 +33,8 @@ import { HttpEventType } from '@angular/common/http';
 import { ProgressBarModule } from '@progress/kendo-angular-progressbar';
 import { RoutePaths } from '../../config/route-paths';
 import { HasRoleDirective } from '../../shared/directives/has-role.directive';
+import { GridState } from '../../models/resources/resource-grid-state';
+import { State } from '@progress/kendo-data-query';
 
 type ExportOption = {
   text: string;
@@ -113,6 +115,7 @@ export class ResourceGridComponent {
     projectID: null,
     remarks: ''
   };
+
   public exportOptions: ExportOption[] = [
     {
       text: "PDF",
@@ -130,6 +133,17 @@ export class ResourceGridComponent {
       action: () => this.exportToJSON()
     }
   ];
+
+  public gridData: GridDataResult<Resource> = { data: [], total: 0 };
+  public globalSearchTerm: string = '';
+  public state: GridState = {
+    page: 1,
+    pageSize: 8,
+    sortField: 'fullName',
+    sortDirection: 'asc',
+    filters: {},
+    searchTerm: ''
+  };
 
 
   constructor(
@@ -157,7 +171,7 @@ export class ResourceGridComponent {
     this.loadResources();
     this.managerService.getActiveManagers().subscribe({
       next: (response) => {
-        console.log("Manager", response.data);
+        // console.log("Manager", response.data);
         this.managers = response.data;
       },
       error: (err) => {
@@ -167,7 +181,7 @@ export class ResourceGridComponent {
 
     this.projectService.getAllProjects().subscribe({
       next: (response) => {
-        console.log("Projects", response.data);
+        // console.log("Projects", response.data);
         this.projects = response.data;
       },
       error: (err) => {
@@ -177,7 +191,7 @@ export class ResourceGridComponent {
 
     this.locationService.getActiveLocations().subscribe({
       next: (response) => {
-        console.log("Locations", response.data);
+        // console.log("Locations", response.data);
         this.locations = response.data;
       },
       error: (err) => {
@@ -187,7 +201,7 @@ export class ResourceGridComponent {
 
     this.designationService.getActiveDesignations().subscribe({
       next: (response) => {
-        console.log("Designations", response.data);
+        // console.log("Designations", response.data);
         this.designations = response.data;
       },
       error: (err) => {
@@ -196,12 +210,99 @@ export class ResourceGridComponent {
     });
   }
 
+
+  // triggered when user pages/sorts/filters
+  public dataStateChange(event: any): void {
+    console.log("data state change triggered : ", event);
+
+    // Paging
+    const skip = event.skip ?? 0;
+    const take = event.take ?? 10;
+    this.state.page = Math.floor(skip / take) + 1;
+    this.state.pageSize = take;
+
+    // Sorting
+    if (event.sort && event.sort.length > 0) {
+      this.state.sortField = event.sort[0].field ?? 'fullName';
+      this.state.sortDirection = event.sort[0].dir ?? 'asc';
+    }
+
+    // Filters
+    const filters: { [key: string]: any } = {};
+    if (event.filter && event.filter.filters && event.filter.filters.length > 0) {
+      event.filter.filters.forEach((f: any) => {
+        if (f.field && f.value !== null && f.value !== undefined) {
+          filters[f.field] = f.value;
+        }
+      });
+    }
+    this.state.filters = filters;
+
+    // Search term (example: use one global search input)
+    this.state.searchTerm = this.globalSearchTerm ?? '';
+
+    // Fetch resources
+    this.loadResources();
+  }
+
   loadResources() {
-    this.resourceService.getAll().subscribe(data => {
-      console.log("data", data);
-      this.resources = data;
+    this.state.searchTerm = this.globalSearchTerm || '';
+    console.log("this.state: ", this.state);
+
+    this.resourceService.getPaged(this.state).subscribe({
+      next: (result) => {
+        console.log("Resources Data from Page: ", result);
+
+        this.gridData = {
+          data: result.data,
+          total: result.total
+        };
+      },
+      error: (err) => console.error('Error fetching resources:', err)
     });
   }
+
+  onSearchChange(value: string) {
+    this.state.page = 1; // reset to first page on new search
+    this.state.searchTerm = value; // pass to backend
+    this.loadResources();
+  }
+
+  onPageChange(event: any) {
+    console.log("onPageChange Triggered: ", event);
+    console.log("this.state: ", this.state);
+
+
+    this.state.page = event.skip / event.take + 1;
+    this.state.pageSize = event.take;
+    this.state.sortField = this.state.sortField || 'fullName';
+    this.state.sortDirection = this.state.sortDirection || 'asc';
+    this.loadResources();
+  }
+
+  onSortChange(event: any) {
+    console.log("ON SORT CHNAGES TRIGGEREDf", event);
+    if (event.sort && event.sort.length > 0) {
+
+      const firstSort = event.sort[0];
+      this.state.sortField = firstSort?.field || 'fullName';
+      this.state.sortDirection = firstSort?.dir || 'asc';
+    } else {
+      this.state.sortField = 'fullName';
+      this.state.sortDirection = 'asc';
+    }
+
+    this.loadResources();
+  }
+
+
+  onPageSizeChange(event: any) {
+    console.log("On Page Size change: ", event);
+
+    this.state.page = 1;  // reset to first page
+    this.loadResources();
+  }
+
 
   editResource(resource: UpdateResourceRequest) {
     // Add Edit Resource Logic
