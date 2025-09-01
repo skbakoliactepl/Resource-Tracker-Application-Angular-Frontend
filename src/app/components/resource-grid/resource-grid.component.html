@@ -51,8 +51,9 @@
             (ngModelChange)="onSearchChange($event)" class="grid-search" />
     </div>
 
-    <kendo-grid kendoGridSelectBy="resourceID" [data]="gridData.data" [height]="500" [style.width.%]="100"
-        [pageSize]="state.pageSize" [pageable]="{ buttonCount: 5, pageSizes: [5, 8, 10, 20, 50], info: true }"
+    <kendo-grid kendoGridSelectBy="resourceID" [data]="gridData" [height]="500" [style.width.%]="100"
+        [pageSize]="state.pageSize"
+        [pageable]="{ buttonCount: 5, pageSizes: [5, 8, 10, 20, 50], info: true,previousNext: true, responsive: true }"
         [sortable]="true" [groupable]="true" [reorderable]="true" [resizable]="true"
         [skip]="(state.page - 1) * state.pageSize" [navigable]="['table', 'pager']" [height]="500"
         [columnMenu]="{ filter: true }" class="resource-list" (dataStateChange)="dataStateChange($event)"
