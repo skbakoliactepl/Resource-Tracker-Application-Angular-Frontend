@@ -36,6 +36,7 @@ import { RoutePaths } from '../../config/route-paths';
 import { HasRoleDirective } from '../../shared/directives/has-role.directive';
 import { GridState } from '../../models/resources/resource-grid-state';
 import { State } from '@progress/kendo-data-query';
+import { Designation } from '../../models/designations/designation.model';
 
 type ExportOption = {
   text: string;
@@ -147,6 +148,9 @@ export class ResourceGridComponent {
     searchTerm: ''
   };
   tagMapper = () => "";
+  public filteredDesignations: ActiveDesignationViewModel[] = [];
+  public filteredLocations: ActiveLocationViewModel[] = [];
+  public filteredManagers: ActiveManagerViewModel[] = [];
 
   constructor(
     private resourceService: ResourceService,
@@ -175,6 +179,7 @@ export class ResourceGridComponent {
       next: (response) => {
         // console.log("Manager", response.data);
         this.managers = response.data;
+        this.filteredManagers = [...response.data];
       },
       error: (err) => {
         console.error('Error fetching managers', err);
@@ -195,6 +200,7 @@ export class ResourceGridComponent {
       next: (response) => {
         // console.log("Locations", response.data);
         this.locations = response.data;
+        this.filteredLocations = [...response.data];
       },
       error: (err) => {
         console.error('Error fetching locations', err);
@@ -205,6 +211,7 @@ export class ResourceGridComponent {
       next: (response) => {
         // console.log("Designations", response.data);
         this.designations = response.data;
+        this.filteredDesignations = [...response.data];
       },
       error: (err) => {
         console.error('Error fetching designations', err);
@@ -294,6 +301,24 @@ export class ResourceGridComponent {
 
     this.state.page = 1;
     this.loadResources();
+  }
+
+  onDesignationFilter(value: string): void {
+    this.filteredDesignations = this.designations.filter(d =>
+      d.designationName.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+
+  onLocationFilter(value: string): void {
+    this.filteredLocations = this.locations.filter(l =>
+      l.locationName.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+
+  onManagerFilter(value: string): void {
+    this.filteredManagers = this.managers.filter(m =>
+      m.managerName.toLowerCase().includes(value.toLowerCase())
+    );
   }
 
   clearFilters(): void {

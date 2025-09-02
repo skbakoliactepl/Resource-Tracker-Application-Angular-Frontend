@@ -53,21 +53,25 @@
 
         <div class="filter-container">
             <!-- Filters -->
-            <kendo-dropdownlist [data]="designations" [(ngModel)]="state.filters['designationName']"
+            <kendo-dropdownlist [data]="filteredDesignations" [(ngModel)]="state.filters['designationName']"
                 [textField]="'designationName'" [valueField]="'designationName'"
                 [defaultItem]="{ designationName: 'All Designations', designationID: null }" [filterable]="true"
-                (valueChange)="onFilterChange()" class="filter-dropdown" [valuePrimitive]="true">
+                (filterChange)="onDesignationFilter($event)" (valueChange)="onFilterChange()" class="filter-dropdown"
+                [valuePrimitive]="true">
             </kendo-dropdownlist>
 
-            <kendo-dropdownlist [data]="locations" [(ngModel)]="state.filters['locationName']"
+            <kendo-dropdownlist [data]="filteredLocations" [(ngModel)]="state.filters['locationName']"
                 [textField]="'locationName'" [valueField]="'locationName'"
                 [defaultItem]="{ locationName: 'All Locations', locationID: null }" [filterable]="true"
-                [valuePrimitive]="true" (valueChange)="onFilterChange()" class="filter-dropdown">
+                (filterChange)="onLocationFilter($event)" [valuePrimitive]="true" (valueChange)="onFilterChange()"
+                class="filter-dropdown">
             </kendo-dropdownlist>
 
-            <kendo-dropdownlist [data]="managers" [(ngModel)]="state.filters['managerName']" [textField]="'managerName'"
-                [valueField]="'managerName'" [defaultItem]="{ managerName: 'All Managers', managerID: null }"
-                [valuePrimitive]="true" [filterable]="true" (valueChange)="onFilterChange()" class="filter-dropdown">
+            <kendo-dropdownlist [data]="filteredManagers" [(ngModel)]="state.filters['managerName']"
+                [textField]="'managerName'" [valueField]="'managerName'"
+                [defaultItem]="{ managerName: 'All Managers', managerID: null }"
+                (filterChange)="onManagerFilter($event)" [valuePrimitive]="true" [filterable]="true"
+                (valueChange)="onFilterChange()" class="filter-dropdown">
             </kendo-dropdownlist>
 
             <kendo-dropdownlist [data]="yesNoOptions" [(ngModel)]="state.filters['billable']" [textField]="'text'"
@@ -86,16 +90,15 @@
             <!-- Skills -->
             <kendo-multiselect [data]="skills" [(ngModel)]="state.filters['skills']" [textField]="'skillName'"
                 [valueField]="'skillName'" [valuePrimitive]="true" [filterable]="true" [autoClose]="false"
-                 placeholder="Select Skills"
-                (valueChange)="onFilterChange('skills', $event)" class="filter-dropdown">
+                placeholder="Select Skills" (valueChange)="onFilterChange('skills', $event)" class="filter-dropdown">
             </kendo-multiselect>
 
 
             <!-- Projects -->
             <kendo-multiselect [data]="projects" [(ngModel)]="state.filters['projects']" [textField]="'projectName'"
                 [valueField]="'projectName'" [valuePrimitive]="true" [filterable]="true" [autoClose]="false"
-                 placeholder="Select Projects"
-                (valueChange)="onFilterChange('projects', $event)" class="filter-dropdown">
+                placeholder="Select Projects" (valueChange)="onFilterChange('projects', $event)"
+                class="filter-dropdown">
             </kendo-multiselect>
         </div>
     </div>
