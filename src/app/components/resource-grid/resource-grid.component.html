@@ -88,17 +88,17 @@
         <!-- skills-projects container -->
         <div class="skills-projects-container">
             <!-- Skills -->
-            <kendo-multiselect [data]="skills" [(ngModel)]="state.filters['skills']" [textField]="'skillName'"
+            <kendo-multiselect [data]="filteredSkills" [(ngModel)]="state.filters['skills']" [textField]="'skillName'"
                 [valueField]="'skillName'" [valuePrimitive]="true" [filterable]="true" [autoClose]="false"
-                placeholder="Select Skills" (valueChange)="onFilterChange('skills', $event)" class="filter-dropdown">
+                (filterChange)="onSkillFilter($event)" [filterable]="true" placeholder="Select Skills"
+                (valueChange)="onFilterChange('skills', $event)" class="filter-dropdown">
             </kendo-multiselect>
 
-
             <!-- Projects -->
-            <kendo-multiselect [data]="projects" [(ngModel)]="state.filters['projects']" [textField]="'projectName'"
-                [valueField]="'projectName'" [valuePrimitive]="true" [filterable]="true" [autoClose]="false"
-                placeholder="Select Projects" (valueChange)="onFilterChange('projects', $event)"
-                class="filter-dropdown">
+            <kendo-multiselect [data]="filteredProjects" [(ngModel)]="state.filters['projects']"
+                [textField]="'projectName'" (filterChange)="onProjectFilter($event)" [valueField]="'projectName'"
+                [valuePrimitive]="true" [filterable]="true" [autoClose]="false" placeholder="Select Projects"
+                [filterable]="true" (valueChange)="onFilterChange('projects', $event)" class="filter-dropdown">
             </kendo-multiselect>
         </div>
     </div>

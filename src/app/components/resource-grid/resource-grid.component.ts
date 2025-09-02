@@ -151,6 +151,8 @@ export class ResourceGridComponent {
   public filteredDesignations: ActiveDesignationViewModel[] = [];
   public filteredLocations: ActiveLocationViewModel[] = [];
   public filteredManagers: ActiveManagerViewModel[] = [];
+  public filteredSkills: ActiveSkillViewModel[] = [];
+  public filteredProjects: ActiveProjectViewModel[] = [];
 
   constructor(
     private resourceService: ResourceService,
@@ -190,6 +192,7 @@ export class ResourceGridComponent {
       next: (response) => {
         // console.log("Projects", response.data);
         this.projects = response.data;
+        this.filteredProjects = [...response.data];
       },
       error: (err) => {
         console.error('Error fetching projects', err);
@@ -221,6 +224,7 @@ export class ResourceGridComponent {
     this.skillService.getActiveSkills().subscribe({
       next: (response) => {
         this.skills = response.data;
+        this.filteredSkills = [...response.data];
       },
       error: (err) => {
         console.error('Error fetching skills', err);
@@ -323,6 +327,18 @@ export class ResourceGridComponent {
   onManagerFilter(value: string): void {
     this.filteredManagers = this.managers.filter(m =>
       m.managerName.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+
+  onSkillFilter(value: string): void {
+    this.filteredSkills = this.skills.filter(s =>
+      s.skillName.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+
+  onProjectFilter(value: string): void {
+    this.filteredProjects = this.projects.filter(p =>
+      p.projectName.toLowerCase().includes(value.toLowerCase())
     );
   }
 
