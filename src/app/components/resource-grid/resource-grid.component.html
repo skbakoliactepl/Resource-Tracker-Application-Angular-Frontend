@@ -56,22 +56,22 @@
             <kendo-dropdownlist [data]="filteredDesignations" [(ngModel)]="state.filters['designationName']"
                 [textField]="'designationName'" [valueField]="'designationName'"
                 [defaultItem]="{ designationName: 'All Designations', designationID: null }" [filterable]="true"
-                (filterChange)="onDesignationFilter($event)" (valueChange)="onFilterChange()" class="filter-dropdown"
-                [valuePrimitive]="true">
+                (filterChange)="onDesignationFilter($event)" (valueChange)="onFilterChange('designationName', $event)"
+                class="filter-dropdown" [valuePrimitive]="true">
             </kendo-dropdownlist>
 
             <kendo-dropdownlist [data]="filteredLocations" [(ngModel)]="state.filters['locationName']"
                 [textField]="'locationName'" [valueField]="'locationName'"
                 [defaultItem]="{ locationName: 'All Locations', locationID: null }" [filterable]="true"
-                (filterChange)="onLocationFilter($event)" [valuePrimitive]="true" (valueChange)="onFilterChange()"
-                class="filter-dropdown">
+                (filterChange)="onLocationFilter($event)" [valuePrimitive]="true"
+                (valueChange)="onFilterChange('locationName', $event)" class="filter-dropdown">
             </kendo-dropdownlist>
 
             <kendo-dropdownlist [data]="filteredManagers" [(ngModel)]="state.filters['managerName']"
                 [textField]="'managerName'" [valueField]="'managerName'"
                 [defaultItem]="{ managerName: 'All Managers', managerID: null }"
                 (filterChange)="onManagerFilter($event)" [valuePrimitive]="true" [filterable]="true"
-                (valueChange)="onFilterChange()" class="filter-dropdown">
+                (valueChange)="onFilterChange('managerName', $event)" class="filter-dropdown">
             </kendo-dropdownlist>
 
             <kendo-dropdownlist [data]="yesNoOptions" [(ngModel)]="state.filters['billable']" [textField]="'text'"

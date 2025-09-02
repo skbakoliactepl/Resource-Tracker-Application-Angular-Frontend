@@ -292,11 +292,16 @@ export class ResourceGridComponent {
 
   // Filter
   onFilterChange(field?: string, newValue?: any[]): void {
-    console.log("ONFILTERCHANGE: ", newValue);
+    console.log("NEW VALUE: ", newValue);
+    console.log("NEW VALUE: ", field);
 
-    console.log(`Filter '${field}' changed:`, this.state.filters);
+
     if (field) {
-      this.state.filters[field] = newValue;   // ensures skills → ['C#'], projects → ['HILLS']
+      if (newValue && newValue.toString().startsWith("All ")) {
+        this.state.filters[field] = null;
+      } else {
+        this.state.filters[field] = newValue;   // ensures skills → ['C#'], projects → ['HILLS']
+      }
     }
 
     this.state.page = 1;
