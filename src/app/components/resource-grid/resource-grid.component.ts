@@ -223,6 +223,8 @@ export class ResourceGridComponent {
 
     // Sorting
     if (event.sort && event.sort.length > 0) {
+      console.log("sortField: ", event.sort[0].field);
+
       this.state.sortField = event.sort[0].field ?? 'fullName';
       this.state.sortDirection = event.sort[0].dir ?? 'asc';
     }
@@ -251,7 +253,7 @@ export class ResourceGridComponent {
 
     this.resourceService.getPaged(this.state).subscribe({
       next: (result) => {
-        console.log("Resources Data from Page: ", result);
+        console.log("Resources Data from Page: ", JSON.stringify(result.data));
 
         this.gridData = {
           data: result.data,
@@ -281,16 +283,15 @@ export class ResourceGridComponent {
   }
 
   onSortChange(event: any) {
-    console.log("ON SORT CHNAGES TRIGGEREDf", event);
-    if (event.sort && event.sort.length > 0) {
-
-      const firstSort = event.sort[0];
-      this.state.sortField = firstSort?.field || 'fullName';
-      this.state.sortDirection = firstSort?.dir || 'asc';
+    console.log("ON SORT CHNAGES TRIGGEREDf", event[0]);
+    if (event[0].field) {
+      this.state.sortField = event[0]?.field || 'fullName';
+      this.state.sortDirection = event[0]?.dir || 'asc';
     } else {
       this.state.sortField = 'fullName';
       this.state.sortDirection = 'asc';
     }
+    console.log("THIS STATE AFTER ONSORTCHANGE: ", this.state);
 
     this.loadResources();
   }
