@@ -118,6 +118,7 @@ export class ResourceGridComponent {
     projectID: null,
     remarks: ''
   };
+  pdfFileName: string = '';
 
   public exportOptions: ExportOption[] = [
     {
@@ -176,6 +177,7 @@ export class ResourceGridComponent {
       billable: [null],
       remarks: ""
     });
+    this.pdfFileName = `resource_list_${new Date().toString()}`;
     this.loadResources();
     this.managerService.getActiveManagers().subscribe({
       next: (response) => {
@@ -563,11 +565,6 @@ export class ResourceGridComponent {
     this.router.navigate([`${this.routePaths.appBase}/${this.routePaths.resourceDetail.split('/')[0]}/${resource.resourceID}`]);
   };
 
-
-  getPdfName(): string {
-    const pdfName = `resource_list_${new Date().toString()}`;
-    return pdfName;
-  };
 
   // Import Dialog Methods
   openImportDialog() {
