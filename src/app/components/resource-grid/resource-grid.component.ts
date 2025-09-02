@@ -14,6 +14,7 @@ import {
   KENDO_GRID,
   KENDO_GRID_PDF_EXPORT,
 } from "@progress/kendo-angular-grid";
+import { KENDO_INPUTS } from "@progress/kendo-angular-inputs";
 import { pdf } from '@progress/kendo-drawing';
 import { NotificationService } from '@progress/kendo-angular-notification';
 import { UpdateResourceRequest } from '../../models'; import { DropDownsModule, MultiSelectModule } from '@progress/kendo-angular-dropdowns';
@@ -60,7 +61,7 @@ type ExportOption = {
     FormsModule,
     ReactiveFormsModule,
     ProgressBarModule,
-    HasRoleDirective
+    HasRoleDirective,
   ],
   styles: [`
       .export-btn-group {
@@ -92,6 +93,7 @@ export class ResourceGridComponent {
   projects: ActiveProjectViewModel[] = [];
   locations: ActiveLocationViewModel[] = [];
   designations: ActiveDesignationViewModel[] = [];
+  skills: ActiveSkillViewModel[] = [];
 
   // Import Variables
   showImportDialog = false;
@@ -144,7 +146,7 @@ export class ResourceGridComponent {
     filters: {},
     searchTerm: ''
   };
-
+  tagMapper = () => "";
 
   constructor(
     private resourceService: ResourceService,
@@ -208,6 +210,15 @@ export class ResourceGridComponent {
         console.error('Error fetching designations', err);
       }
     });
+
+    this.skillService.getActiveSkills().subscribe({
+      next: (response) => {
+        this.skills = response.data;
+      },
+      error: (err) => {
+        console.error('Error fetching skills', err);
+      }
+    });
   }
 
 
@@ -250,10 +261,12 @@ export class ResourceGridComponent {
   loadResources() {
     this.state.searchTerm = this.globalSearchTerm || '';
     console.log("this.state: ", this.state);
+    console.log("PAYLOAD IN LOADRESOURCES:", JSON.stringify(this.state.filters));
+
 
     this.resourceService.getPaged(this.state).subscribe({
       next: (result) => {
-        console.log("Resources Data from Page: ", JSON.stringify(result.data));
+        // console.log("Resources Data from Page: ", JSON.stringify(result.data));
 
         this.gridData = {
           data: result.data,
@@ -269,6 +282,34 @@ export class ResourceGridComponent {
     this.state.searchTerm = value; // pass to backend
     this.loadResources();
   }
+
+  // Filter
+  onFilterChange(field?: string, newValue?: any[]): void {
+    console.log("ONFILTERCHANGE: ", newValue);
+
+    console.log(`Filter '${field}' changed:`, this.state.filters);
+    if (field) {
+      this.state.filters[field] = newValue;   // ensures skills → ['C#'], projects → ['HILLS']
+    }
+
+    this.state.page = 1;
+    this.loadResources();
+  }
+
+  clearFilters(): void {
+    // Reset filters object
+    this.state.filters = {};
+
+    // Reset pagination
+    this.state.page = 1;
+
+    console.log("Filters cleared:", this.state);
+
+    // Reload data
+    this.loadResources();
+  }
+
+
 
   onPageChange(event: any) {
     console.log("onPageChange Triggered: ", event);

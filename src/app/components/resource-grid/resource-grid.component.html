@@ -46,9 +46,58 @@
             </button>
         </div>
     </div>
+
     <div class="k-grid-toolbar">
         <input kendoTextBox placeholder="Search by Name or Email..." [(ngModel)]="globalSearchTerm"
             (ngModelChange)="onSearchChange($event)" class="grid-search" />
+
+        <div class="filter-container">
+            <!-- Filters -->
+            <kendo-dropdownlist [data]="designations" [(ngModel)]="state.filters['designationName']"
+                [textField]="'designationName'" [valueField]="'designationName'"
+                [defaultItem]="{ designationName: 'All Designations', designationID: null }" [filterable]="true"
+                (valueChange)="onFilterChange()" class="filter-dropdown" [valuePrimitive]="true">
+            </kendo-dropdownlist>
+
+            <kendo-dropdownlist [data]="locations" [(ngModel)]="state.filters['locationName']"
+                [textField]="'locationName'" [valueField]="'locationName'"
+                [defaultItem]="{ locationName: 'All Locations', locationID: null }" [filterable]="true"
+                [valuePrimitive]="true" (valueChange)="onFilterChange()" class="filter-dropdown">
+            </kendo-dropdownlist>
+
+            <kendo-dropdownlist [data]="managers" [(ngModel)]="state.filters['managerName']" [textField]="'managerName'"
+                [valueField]="'managerName'" [defaultItem]="{ managerName: 'All Managers', managerID: null }"
+                [valuePrimitive]="true" [filterable]="true" (valueChange)="onFilterChange()" class="filter-dropdown">
+            </kendo-dropdownlist>
+
+            <kendo-dropdownlist [data]="yesNoOptions" [(ngModel)]="state.filters['billable']" [textField]="'text'"
+                [valueField]="'value'" [defaultItem]="{ text: 'All Billable', value: null }" [filterable]="false"
+                [valuePrimitive]="true" (valueChange)="onFilterChange()" class="filter-dropdown">
+            </kendo-dropdownlist>
+
+            <!-- Clear Filters -->
+            <button kendoButton class="ml-2 filter-clear-btn" (click)="clearFilters()">
+                Clear Filters
+            </button>
+        </div>
+
+        <!-- skills-projects container -->
+        <div class="skills-projects-container">
+            <!-- Skills -->
+            <kendo-multiselect [data]="skills" [(ngModel)]="state.filters['skills']" [textField]="'skillName'"
+                [valueField]="'skillName'" [valuePrimitive]="true" [filterable]="true" [autoClose]="false"
+                 placeholder="Select Skills"
+                (valueChange)="onFilterChange('skills', $event)" class="filter-dropdown">
+            </kendo-multiselect>
+
+
+            <!-- Projects -->
+            <kendo-multiselect [data]="projects" [(ngModel)]="state.filters['projects']" [textField]="'projectName'"
+                [valueField]="'projectName'" [valuePrimitive]="true" [filterable]="true" [autoClose]="false"
+                 placeholder="Select Projects"
+                (valueChange)="onFilterChange('projects', $event)" class="filter-dropdown">
+            </kendo-multiselect>
+        </div>
     </div>
 
     <kendo-grid kendoGridSelectBy="resourceID" [data]="gridData" [height]="500" [style.width.%]="100"
