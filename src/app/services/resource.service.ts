@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { finalize, map, Observable } from 'rxjs';
 import { LoaderServiceService } from './loader-service.service';
-import { ResourceResponse, Resource, CreateResourceRequest, UpdateResourceRequest } from '../models';
+import { ResourceResponse, Resource, CreateResourceRequest, UpdateResourceRequest, GridDataResult } from '../models';
 import { __values } from 'tslib';
 import { formateDateOnly } from '../shared/utils/date-utils';
 import { environment } from '../../environments/environment';
 import { FullResourceResponse } from '../models/resources/resource-full-detail-model';
+import { GridState } from '../models/resources/resource-grid-state';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,16 @@ export class ResourceService {
   private resources: Resource[] = [];
   isResourceSelected: boolean = false;
   private readonly URL: string = environment.apiBaseUrl;
+
+  // ✅ NEW: Get paginated, filtered, sorted resources
+  getPaged(state: GridState): Observable<GridDataResult<Resource>> {
+    this.loaderService.show();
+    console.log("Payload for getPaged: ", state);
+
+    return this.http
+      .post<GridDataResult<Resource>>(`${this.URL}/paged`, state)
+      .pipe(finalize(() => this.loaderService.hide()));
+  }
 
   getAll(): Observable<Resource[]> {
     this.loaderService.show();

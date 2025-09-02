@@ -47,11 +47,71 @@
         </div>
     </div>
 
-    <kendo-grid kendoGridSelectBy="resourceID" [kendoGridBinding]="resources" [height]="500" [style.width.%]="100"
-        [pageSize]="10" [pageable]="true" [sortable]="true" [groupable]="true" [reorderable]="true" [resizable]="true"
-        [navigable]="['table', 'pager']" [height]="500" [columnMenu]="{ filter: true }" class="resource-list"
-        [(selectedKeys)]="selectedToDelete" [selectable]="{ mode: 'multiple', drag: true }"
-        (rowClick)="onRowClick($event)" (cellClick)="onRowClick($event)" #grid>
+    <div class="k-grid-toolbar">
+        <input kendoTextBox placeholder="Search by Name or Email..." [(ngModel)]="globalSearchTerm"
+            (ngModelChange)="onSearchChange($event)" class="grid-search" />
+
+        <div class="filter-container">
+            <!-- Filters -->
+            <kendo-dropdownlist [data]="filteredDesignations" [(ngModel)]="state.filters['designationName']"
+                [textField]="'designationName'" [valueField]="'designationName'"
+                [defaultItem]="{ designationName: 'All Designations', designationID: null }" [filterable]="true"
+                (filterChange)="onDesignationFilter($event)" (valueChange)="onFilterChange('designationName', $event)"
+                class="filter-dropdown" [valuePrimitive]="true">
+            </kendo-dropdownlist>
+
+            <kendo-dropdownlist [data]="filteredLocations" [(ngModel)]="state.filters['locationName']"
+                [textField]="'locationName'" [valueField]="'locationName'"
+                [defaultItem]="{ locationName: 'All Locations', locationID: null }" [filterable]="true"
+                (filterChange)="onLocationFilter($event)" [valuePrimitive]="true"
+                (valueChange)="onFilterChange('locationName', $event)" class="filter-dropdown">
+            </kendo-dropdownlist>
+
+            <kendo-dropdownlist [data]="filteredManagers" [(ngModel)]="state.filters['managerName']"
+                [textField]="'managerName'" [valueField]="'managerName'"
+                [defaultItem]="{ managerName: 'All Managers', managerID: null }"
+                (filterChange)="onManagerFilter($event)" [valuePrimitive]="true" [filterable]="true"
+                (valueChange)="onFilterChange('managerName', $event)" class="filter-dropdown">
+            </kendo-dropdownlist>
+
+            <kendo-dropdownlist [data]="yesNoOptions" [(ngModel)]="state.filters['billable']" [textField]="'text'"
+                [valueField]="'value'" [defaultItem]="{ text: 'All Billable', value: null }" [filterable]="false"
+                [valuePrimitive]="true" (valueChange)="onFilterChange()" class="filter-dropdown">
+            </kendo-dropdownlist>
+
+            <!-- Clear Filters -->
+            <button kendoButton class="ml-2 filter-clear-btn" (click)="clearFilters()">
+                Clear Filters
+            </button>
+        </div>
+
+        <!-- skills-projects container -->
+        <div class="skills-projects-container">
+            <!-- Skills -->
+            <kendo-multiselect [data]="filteredSkills" [(ngModel)]="state.filters['skills']" [textField]="'skillName'"
+                [valueField]="'skillName'" [valuePrimitive]="true" [filterable]="true" [autoClose]="false"
+                (filterChange)="onSkillFilter($event)" [filterable]="true" placeholder="Select Skills"
+                (valueChange)="onFilterChange('skills', $event)" class="filter-dropdown">
+            </kendo-multiselect>
+
+            <!-- Projects -->
+            <kendo-multiselect [data]="filteredProjects" [(ngModel)]="state.filters['projects']"
+                [textField]="'projectName'" (filterChange)="onProjectFilter($event)" [valueField]="'projectName'"
+                [valuePrimitive]="true" [filterable]="true" [autoClose]="false" placeholder="Select Projects"
+                [filterable]="true" (valueChange)="onFilterChange('projects', $event)" class="filter-dropdown">
+            </kendo-multiselect>
+        </div>
+    </div>
+
+    <kendo-grid kendoGridSelectBy="resourceID" [data]="gridData" [height]="500" [style.width.%]="100"
+        [pageSize]="state.pageSize"
+        [pageable]="{ buttonCount: 5, pageSizes: [5, 8, 10, 20, 50], info: true,previousNext: true, responsive: true }"
+        [sortable]="true" [groupable]="true" [reorderable]="true" [resizable]="true"
+        [skip]="(state.page - 1) * state.pageSize" [navigable]="['table', 'pager']" [height]="500"
+        [columnMenu]="{ filter: true }" class="resource-list" (dataStateChange)="dataStateChange($event)"
+        (pageChange)="onPageChange($event)" (sortChange)="onSortChange($event)" [(selectedKeys)]="selectedToDelete"
+        [selectable]="{ mode: 'multiple', drag: true }" (rowClick)="onRowClick($event)" (cellClick)="onRowClick($event)"
+        #grid>
         <kendo-grid-checkbox-column [width]="45" [headerClass]="{ 'text-center': true }"
             [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true">
         </kendo-grid-checkbox-column>
@@ -86,8 +146,8 @@
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-pdf [allPages]="true" paperSize="A4" [repeatHeaders]="true" [landscape]="true"
-            [fileName]="getPdfName()"></kendo-grid-pdf>
-
+            [fileName]="pdfFileName"></kendo-grid-pdf>
+        <label>Page Size:</label>
     </kendo-grid>
 
     <!-- Import Dialog -->

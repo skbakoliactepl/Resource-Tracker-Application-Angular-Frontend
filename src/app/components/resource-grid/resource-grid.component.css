@@ -286,6 +286,47 @@
 }
 
 
+/* Grid Toolbar */
+.k-grid-toolbar .grid-search {
+  width: 100%;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid gray;
+  outline: none;
+  margin-block-end: 1rem;
+}
+
+.filter-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+  align-items: center;
+  margin-block-end: 1rem;
+}
+
+.skills-projects-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  align-items: start;
+  margin-block: 0.5rem;
+}
+
+.filter-dropdown {
+  width: 100%;
+}
+
+.filter-dropdown input {
+  accent-color: var(--primary-color);
+}
+
+.filter-clear-btn {
+  max-width: fit-content;
+}
+
+
+
 /* Media Query */
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {

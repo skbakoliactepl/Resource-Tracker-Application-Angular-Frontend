@@ -65,7 +65,6 @@ export class ResourceDetailComponent {
   }
 
   toggleEditMode() {
-    console.log("modes", this.editMode, this.isModified(), this.showConfirmationDialog);
     if (this.editMode && this.isModified()) {
       this.dialogAction = 'toggle-off';
       this.showConfirmationDialog = true;

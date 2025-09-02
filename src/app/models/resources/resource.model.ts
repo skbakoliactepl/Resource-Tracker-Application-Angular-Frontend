@@ -11,3 +11,8 @@ export interface Resource {
   doj: Date;
   remarks: string;
 }
+
+export interface GridDataResult<T> {
+  data: T[];
+  total: number;
+}

@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { GridComponent, GridModule } from '@progress/kendo-angular-grid';
-import { Resource } from '../../models/resources/resource.model';
+import { DataStateChangeEvent, GridComponent, GridModule } from '@progress/kendo-angular-grid';
+import { GridDataResult, Resource } from '../../models/resources/resource.model';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
 import { ResourceService } from '../../services/resource.service';
@@ -14,6 +14,7 @@ import {
   KENDO_GRID,
   KENDO_GRID_PDF_EXPORT,
 } from "@progress/kendo-angular-grid";
+import { KENDO_INPUTS } from "@progress/kendo-angular-inputs";
 import { pdf } from '@progress/kendo-drawing';
 import { NotificationService } from '@progress/kendo-angular-notification';
 import { UpdateResourceRequest } from '../../models'; import { DropDownsModule, MultiSelectModule } from '@progress/kendo-angular-dropdowns';
@@ -33,6 +34,9 @@ import { HttpEventType } from '@angular/common/http';
 import { ProgressBarModule } from '@progress/kendo-angular-progressbar';
 import { RoutePaths } from '../../config/route-paths';
 import { HasRoleDirective } from '../../shared/directives/has-role.directive';
+import { GridState } from '../../models/resources/resource-grid-state';
+import { State } from '@progress/kendo-data-query';
+import { Designation } from '../../models/designations/designation.model';
 
 type ExportOption = {
   text: string;
@@ -58,7 +62,7 @@ type ExportOption = {
     FormsModule,
     ReactiveFormsModule,
     ProgressBarModule,
-    HasRoleDirective
+    HasRoleDirective,
   ],
   styles: [`
       .export-btn-group {
@@ -90,6 +94,7 @@ export class ResourceGridComponent {
   projects: ActiveProjectViewModel[] = [];
   locations: ActiveLocationViewModel[] = [];
   designations: ActiveDesignationViewModel[] = [];
+  skills: ActiveSkillViewModel[] = [];
 
   // Import Variables
   showImportDialog = false;
@@ -113,6 +118,8 @@ export class ResourceGridComponent {
     projectID: null,
     remarks: ''
   };
+  pdfFileName: string = '';
+
   public exportOptions: ExportOption[] = [
     {
       text: "PDF",
@@ -131,6 +138,22 @@ export class ResourceGridComponent {
     }
   ];
 
+  public gridData: GridDataResult<Resource> = { data: [], total: 0 };
+  public globalSearchTerm: string = '';
+  public state: GridState = {
+    page: 1,
+    pageSize: 8,
+    sortField: 'fullName',
+    sortDirection: 'asc',
+    filters: {},
+    searchTerm: ''
+  };
+  tagMapper = () => "";
+  public filteredDesignations: ActiveDesignationViewModel[] = [];
+  public filteredLocations: ActiveLocationViewModel[] = [];
+  public filteredManagers: ActiveManagerViewModel[] = [];
+  public filteredSkills: ActiveSkillViewModel[] = [];
+  public filteredProjects: ActiveProjectViewModel[] = [];
 
   constructor(
     private resourceService: ResourceService,
@@ -154,11 +177,13 @@ export class ResourceGridComponent {
       billable: [null],
       remarks: ""
     });
+    this.pdfFileName = `resource_list_${new Date().toString()}`;
     this.loadResources();
     this.managerService.getActiveManagers().subscribe({
       next: (response) => {
-        console.log("Manager", response.data);
+        // console.log("Manager", response.data);
         this.managers = response.data;
+        this.filteredManagers = [...response.data];
       },
       error: (err) => {
         console.error('Error fetching managers', err);
@@ -167,8 +192,9 @@ export class ResourceGridComponent {
 
     this.projectService.getAllProjects().subscribe({
       next: (response) => {
-        console.log("Projects", response.data);
+        // console.log("Projects", response.data);
         this.projects = response.data;
+        this.filteredProjects = [...response.data];
       },
       error: (err) => {
         console.error('Error fetching projects', err);
@@ -177,8 +203,9 @@ export class ResourceGridComponent {
 
     this.locationService.getActiveLocations().subscribe({
       next: (response) => {
-        console.log("Locations", response.data);
+        // console.log("Locations", response.data);
         this.locations = response.data;
+        this.filteredLocations = [...response.data];
       },
       error: (err) => {
         console.error('Error fetching locations', err);
@@ -187,21 +214,185 @@ export class ResourceGridComponent {
 
     this.designationService.getActiveDesignations().subscribe({
       next: (response) => {
-        console.log("Designations", response.data);
+        // console.log("Designations", response.data);
         this.designations = response.data;
+        this.filteredDesignations = [...response.data];
       },
       error: (err) => {
         console.error('Error fetching designations', err);
       }
     });
+
+    this.skillService.getActiveSkills().subscribe({
+      next: (response) => {
+        this.skills = response.data;
+        this.filteredSkills = [...response.data];
+      },
+      error: (err) => {
+        console.error('Error fetching skills', err);
+      }
+    });
+  }
+
+
+  // triggered when user pages/sorts/filters
+  public dataStateChange(event: any): void {
+    console.log("data state change triggered : ", event);
+
+    // Paging
+    const skip = event.skip ?? 0;
+    const take = event.take ?? 10;
+    this.state.page = Math.floor(skip / take) + 1;
+    this.state.pageSize = take;
+
+    // Sorting
+    if (event.sort && event.sort.length > 0) {
+      console.log("sortField: ", event.sort[0].field);
+
+      this.state.sortField = event.sort[0].field ?? 'fullName';
+      this.state.sortDirection = event.sort[0].dir ?? 'asc';
+    }
+
+    // Filters
+    const filters: { [key: string]: any } = {};
+    if (event.filter && event.filter.filters && event.filter.filters.length > 0) {
+      event.filter.filters.forEach((f: any) => {
+        if (f.field && f.value !== null && f.value !== undefined) {
+          filters[f.field] = f.value;
+        }
+      });
+    }
+    this.state.filters = filters;
+
+    // Search term (example: use one global search input)
+    this.state.searchTerm = this.globalSearchTerm ?? '';
+
+    // Fetch resources
+    this.loadResources();
   }
 
   loadResources() {
-    this.resourceService.getAll().subscribe(data => {
-      console.log("data", data);
-      this.resources = data;
+    this.state.searchTerm = this.globalSearchTerm || '';
+    console.log("this.state: ", this.state);
+    console.log("PAYLOAD IN LOADRESOURCES:", JSON.stringify(this.state.filters));
+
+
+    this.resourceService.getPaged(this.state).subscribe({
+      next: (result) => {
+        // console.log("Resources Data from Page: ", JSON.stringify(result.data));
+
+        this.gridData = {
+          data: result.data,
+          total: result.total
+        };
+      },
+      error: (err) => console.error('Error fetching resources:', err)
     });
   }
+
+  onSearchChange(value: string) {
+    this.state.page = 1; // reset to first page on new search
+    this.state.searchTerm = value; // pass to backend
+    this.loadResources();
+  }
+
+  // Filter
+  onFilterChange(field?: string, newValue?: any[]): void {
+    console.log("NEW VALUE: ", newValue);
+    console.log("NEW VALUE: ", field);
+
+
+    if (field) {
+      if (newValue && newValue.toString().startsWith("All ")) {
+        this.state.filters[field] = null;
+      } else {
+        this.state.filters[field] = newValue;   // ensures skills → ['C#'], projects → ['HILLS']
+      }
+    }
+
+    this.state.page = 1;
+    this.loadResources();
+  }
+
+  onDesignationFilter(value: string): void {
+    this.filteredDesignations = this.designations.filter(d =>
+      d.designationName.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+
+  onLocationFilter(value: string): void {
+    this.filteredLocations = this.locations.filter(l =>
+      l.locationName.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+
+  onManagerFilter(value: string): void {
+    this.filteredManagers = this.managers.filter(m =>
+      m.managerName.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+
+  onSkillFilter(value: string): void {
+    this.filteredSkills = this.skills.filter(s =>
+      s.skillName.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+
+  onProjectFilter(value: string): void {
+    this.filteredProjects = this.projects.filter(p =>
+      p.projectName.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+
+  clearFilters(): void {
+    // Reset filters object
+    this.state.filters = {};
+
+    // Reset pagination
+    this.state.page = 1;
+
+    console.log("Filters cleared:", this.state);
+
+    // Reload data
+    this.loadResources();
+  }
+
+
+
+  onPageChange(event: any) {
+    console.log("onPageChange Triggered: ", event);
+    console.log("this.state: ", this.state);
+
+
+    this.state.page = event.skip / event.take + 1;
+    this.state.pageSize = event.take;
+    this.state.sortField = this.state.sortField || 'fullName';
+    this.state.sortDirection = this.state.sortDirection || 'asc';
+    this.loadResources();
+  }
+
+  onSortChange(event: any) {
+    console.log("ON SORT CHNAGES TRIGGEREDf", event[0]);
+    if (event[0].field) {
+      this.state.sortField = event[0]?.field || 'fullName';
+      this.state.sortDirection = event[0]?.dir || 'asc';
+    } else {
+      this.state.sortField = 'fullName';
+      this.state.sortDirection = 'asc';
+    }
+    console.log("THIS STATE AFTER ONSORTCHANGE: ", this.state);
+
+    this.loadResources();
+  }
+
+
+  onPageSizeChange(event: any) {
+    console.log("On Page Size change: ", event);
+
+    this.state.page = 1;  // reset to first page
+    this.loadResources();
+  }
+
 
   editResource(resource: UpdateResourceRequest) {
     // Add Edit Resource Logic
@@ -374,11 +565,6 @@ export class ResourceGridComponent {
     this.router.navigate([`${this.routePaths.appBase}/${this.routePaths.resourceDetail.split('/')[0]}/${resource.resourceID}`]);
   };
 
-
-  getPdfName(): string {
-    const pdfName = `resource_list_${new Date().toString()}`;
-    return pdfName;
-  };
 
   // Import Dialog Methods
   openImportDialog() {

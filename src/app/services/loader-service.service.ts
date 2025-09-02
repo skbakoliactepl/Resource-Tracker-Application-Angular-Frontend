@@ -11,12 +11,10 @@ export class LoaderServiceService {
   readonly loading$ = this._loading.asObservable();
 
   show(): void {
-    console.log('Loader shown');
     this._loading.next(true);
   }
 
   hide(): void {
-    console.log('Loader hidden');
     this._loading.next(false);
   }
 }
